@@ -16,8 +16,7 @@
 
 ---
 
-**Live Demo:** [https://poseidon-crm.netlify.app](https://poseidon-crm.netlify.app)
-
+**Live Demo:** (https://a7med606.github.io/CRM/)
 ---
 
 ## ✨ Features
