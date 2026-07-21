@@ -1,852 +1,1875 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Poseidon CRM - نظام إدارة الحجوزات والنقل">
-    <title>Poseidon CRM - نظام إدارة الحجوزات والنقل</title>
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/dashboard.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔱</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poseidon CRM - نظام إدارة الحجوزات والنقل</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#2563eb;--primary-light:#3b82f6;--primary-dark:#1d4ed8;--success:#16a34a;--success-light:#22c55e;--warning:#d97706;--warning-light:#f59e0b;--danger:#dc2626;--danger-light:#ef4444;--sidebar-bg:#0f172a;--sidebar-hover:#1e293b;--sidebar-active:#1e3a5f;--card-bg:#ffffff;--bg:#f1f5f9;--text:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;--radius:12px;--radius-sm:8px;--shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);--shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--transition:all .2s ease}
+html{font-family:'Cairo',sans-serif;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+input,select,textarea,button{font-family:inherit}
+a{text-decoration:none;color:inherit}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+
+/* Login Screen */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-card{background:#fff;border-radius:var(--radius);padding:40px;width:420px;max-width:95vw;box-shadow:var(--shadow-lg);text-align:center}
+.login-logo{font-size:48px;margin-bottom:8px}
+.login-title{font-size:24px;font-weight:800;color:var(--sidebar-bg);margin-bottom:4px}
+.login-subtitle{font-size:14px;color:var(--text-secondary);margin-bottom:28px}
+.form-group{margin-bottom:16px;text-align:right}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;transition:var(--transition);background:#f8fafc;direction:rtl}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15);background:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{background:#15803d}
+.btn-warning{background:var(--warning);color:#fff}
+.btn-warning:hover{background:#b45309}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#b91c1c}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:rgba(37,99,235,.05)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-lg{padding:12px 28px;font-size:16px}
+.btn-block{width:100%}
+.login-btn{width:100%;padding:12px;font-size:16px;margin-top:8px}
+.demo-divider{display:flex;align-items:center;gap:12px;margin:24px 0 16px;color:var(--text-secondary);font-size:13px}
+.demo-divider::before,.demo-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.demo-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.demo-btn{padding:10px 12px;border-radius:var(--radius-sm);border:2px solid var(--border);background:#f8fafc;cursor:pointer;transition:var(--transition);font-family:inherit;font-size:13px;font-weight:600}
+.demo-btn:hover{border-color:var(--primary);background:rgba(37,99,235,.05);transform:translateY(-1px)}
+.demo-btn .demo-role{display:block;font-size:11px;color:var(--text-secondary);font-weight:400;margin-top:2px}
+
+/* App Layout */
+.app{display:none;min-height:100vh}
+.app.active{display:flex}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:280px;background:var(--sidebar-bg);color:#fff;z-index:1000;display:flex;flex-direction:column;transition:var(--transition);overflow:hidden}
+.sidebar.collapsed{transform:translateX(100%)}
+.sidebar-header{padding:20px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:12px}
+.sidebar-brand{font-size:20px;font-weight:800;white-space:nowrap}
+.sidebar-brand span{color:var(--primary-light)}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
+.sidebar-nav::-webkit-scrollbar{width:4px}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px}
+.nav-section{margin-bottom:8px}
+.nav-section-title{font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 12px 4px;letter-spacing:1px}
+.nav-link{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);color:rgba(255,255,255,.7);cursor:pointer;transition:var(--transition);font-size:14px;font-weight:500;margin-bottom:2px;white-space:nowrap}
+.nav-link:hover{background:var(--sidebar-hover);color:#fff}
+.nav-link.active{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.4)}
+.nav-link .nav-icon{font-size:18px;width:24px;text-align:center;flex-shrink:0}
+.sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,.1)}
+.sidebar-user{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.sidebar-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
+.sidebar-user-info{flex:1;min-width:0}
+.sidebar-user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user-role{font-size:11px;color:rgba(255,255,255,.5)}
+.btn-logout{width:100%;padding:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:#fff}
+
+/* Main Content */
+.main{margin-right:280px;flex:1;min-height:100vh;transition:var(--transition)}
+.main.expanded{margin-right:0}
+.topbar{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px;z-index:100}
+.topbar-hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;padding:4px;color:var(--text)}
+.topbar-title{font-size:18px;font-weight:700;flex:1}
+.topbar-search{position:relative}
+.topbar-search input{padding:8px 14px 8px 36px;border:2px solid var(--border);border-radius:20px;font-size:13px;width:240px;transition:var(--transition);background:#f8fafc}
+.topbar-search input:focus{outline:none;border-color:var(--primary);width:300px}
+.topbar-search .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-secondary);font-size:14px}
+.topbar-bell{position:relative;background:none;border:none;font-size:22px;cursor:pointer;padding:4px}
+.topbar-bell .badge{position:absolute;top:-2px;left:-2px;background:var(--danger);color:#fff;font-size:10px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
+.topbar-date{font-size:13px;color:var(--text-secondary);white-space:nowrap}
+.content{padding:24px}
+
+/* Pages */
+.page{display:none}
+.page.active{display:block}
+
+/* Stat Cards */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:var(--transition);border:1px solid var(--border)}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.stat-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.stat-card-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:24px}
+.stat-card-value{font-size:28px;font-weight:800;line-height:1.2}
+.stat-card-label{font-size:13px;color:var(--text-secondary);margin-top:2px}
+.stat-card-change{font-size:12px;font-weight:600;margin-top:8px;display:flex;align-items:center;gap:4px}
+.stat-card-change.up{color:var(--success)}
+.stat-card-change.down{color:var(--danger)}
+
+/* Cards */
+.card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.card-title{font-size:16px;font-weight:700}
+.card-body{padding:20px}
+.card-footer{padding:12px 20px;border-top:1px solid var(--border);background:#f8fafc}
+
+/* Tables */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:12px 16px;text-align:right;font-size:13px;border-bottom:1px solid var(--border)}
+th{background:#f8fafc;font-weight:600;color:var(--text-secondary);font-size:12px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+tr:hover td{background:#f8fafc}
+.table-actions{display:flex;gap:6px;flex-wrap:nowrap}
+
+/* Badges */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.badge-success{background:#dcfce7;color:#166534}.badge-success::before{background:#16a34a}
+.badge-warning{background:#fef3c7;color:#92400e}.badge-warning::before{background:#d97706}
+.badge-danger{background:#fee2e2;color:#991b1b}.badge-danger::before{background:#dc2626}
+.badge-info{background:#dbeafe;color:#1e40af}.badge-info::before{background:#2563eb}
+.badge-secondary{background:#f1f5f9;color:#475569}.badge-secondary::before{background:#64748b}
+.badge-purple{background:#f3e8ff;color:#6b21a8}.badge-purple::before{background:#9333ea}
+
+/* Status dot */
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.status-dot.green{background:var(--success)}
+.status-dot.amber{background:var(--warning)}
+.status-dot.red{background:var(--danger)}
+.status-dot.blue{background:var(--primary)}
+
+/* Filters Bar */
+.filters-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.filter-group{display:flex;align-items:center;gap:6px}
+.filter-group label{font-size:12px;font-weight:600;color:var(--text-secondary);white-space:nowrap}
+.filter-group select,.filter-group input{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:#fff}
+
+/* Upload Area */
+.upload-area{border:2px dashed var(--border);border-radius:var(--radius);padding:48px 24px;text-align:center;cursor:pointer;transition:var(--transition);background:#f8fafc}
+.upload-area:hover,.upload-area.dragover{border-color:var(--primary);background:rgba(37,99,235,.05)}
+.upload-area .upload-icon{font-size:48px;margin-bottom:12px}
+.upload-area .upload-text{font-size:16px;font-weight:600;margin-bottom:4px}
+.upload-area .upload-hint{font-size:13px;color:var(--text-secondary)}
+
+/* Trips Grid */
+.trips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.trip-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition)}
+.trip-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.trip-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.trip-route{font-size:16px;font-weight:700}
+.trip-date{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+.trip-details{display:flex;gap:16px;flex-wrap:wrap}
+.trip-detail{font-size:13px;color:var(--text-secondary)}
+.trip-detail strong{color:var(--text);font-weight:600}
+
+/* Kanban Board */
+.kanban-board{display:flex;gap:16px;overflow-x:auto;padding-bottom:16px;min-height:500px}
+.kanban-column{min-width:280px;max-width:320px;flex:1;background:#f1f5f9;border-radius:var(--radius);padding:12px;display:flex;flex-direction:column}
+.kanban-column-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:8px 12px;background:var(--card-bg);border-radius:var(--radius-sm);box-shadow:var(--shadow)}
+.kanban-column-title{font-size:13px;font-weight:700}
+.kanban-column-count{background:var(--primary);color:#fff;font-size:11px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.kanban-cards{flex:1;display:flex;flex-direction:column;gap:8px;min-height:100px}
+.kanban-card{background:var(--card-bg);border-radius:var(--radius-sm);padding:12px;box-shadow:var(--shadow);cursor:pointer;transition:var(--transition);border:1px solid var(--border)}
+.kanban-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.kanban-card-title{font-size:13px;font-weight:600;margin-bottom:6px}
+.kanban-card-meta{font-size:11px;color:var(--text-secondary);display:flex;flex-direction:column;gap:2px}
+.kanban-card-actions{margin-top:8px;display:flex;gap:4px;flex-wrap:wrap}
+
+/* Driver View */
+.driver-info-card{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.driver-info-card h2{font-size:20px;margin-bottom:4px}
+.driver-info-card p{opacity:.8;font-size:14px}
+.driver-sheets{display:grid;gap:16px}
+.driver-sheet-card{background:var(--card-bg);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--border)}
+.driver-sheet-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.driver-sheet-items{margin-top:8px}
+
+/* Manifest Print */
+.manifest-print{background:#fff;padding:32px;border:1px solid var(--border);border-radius:var(--radius)}
+.manifest-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--primary);padding-bottom:16px;margin-bottom:20px}
+.manifest-title{font-size:22px;font-weight:800;color:var(--primary)}
+.manifest-subtitle{font-size:13px;color:var(--text-secondary);margin-top:4px}
+.manifest-info{font-size:13px;text-align:left;line-height:1.8}
+.manifest-table{width:100%;border-collapse:collapse;margin-bottom:24px}
+.manifest-table th{background:var(--primary);color:#fff;padding:10px 12px;font-size:12px}
+.manifest-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border)}
+.manifest-table tr:nth-child(even) td{background:#f8fafc}
+.manifest-signatures{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;margin-top:32px;padding-top:20px;border-top:2px solid var(--border)}
+.signature-line{text-align:center}
+.signature-line .line{border-bottom:1px solid #000;width:80%;margin:0 auto 8px}
+.signature-line .label{font-size:12px;color:var(--text-secondary)}
+
+/* Settings */
+.settings-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0;flex-wrap:wrap}
+.settings-tab{padding:10px 20px;border:none;background:none;font-family:inherit;font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:var(--transition)}
+.settings-tab:hover{color:var(--text)}
+.settings-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.settings-panel{display:none}
+.settings-panel.active{display:block}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.settings-row:last-child{border-bottom:none}
+.settings-row-info h4{font-size:14px;font-weight:600;margin-bottom:2px}
+.settings-row-info p{font-size:12px;color:var(--text-secondary)}
+.toggle{position:relative;width:44px;height:24px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle .slider{position:absolute;inset:0;background:#cbd5e1;border-radius:24px;transition:var(--transition)}
+.toggle .slider::before{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;right:3px;transition:var(--transition);box-shadow:var(--shadow)}
+.toggle input:checked+.slider{background:var(--primary)}
+.toggle input:checked+.slider::before{transform:translateX(-20px)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card-bg);border-radius:var(--radius);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700}
+.modal-close{background:none;border:none;font-size:24px;cursor:pointer;padding:4px;color:var(--text-secondary);transition:var(--transition)}
+.modal-close:hover{color:var(--danger)}
+.modal-body{padding:20px}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-start}
+
+/* Toast */
+.toast-container{position:fixed;top:20px;left:20px;z-index:9000;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 20px;border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);animation:slideInLeft .3s ease;min-width:280px;max-width:400px}
+.toast.success{background:var(--success)}
+.toast.error{background:var(--danger)}
+.toast.warning{background:var(--warning)}
+.toast.info{background:var(--primary)}
+@keyframes slideInLeft{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes slideOutLeft{from{transform:translateX(0);opacity:1}to{transform:translateX(-100%);opacity:0}}
+
+/* Activity List */
+.activity-list{list-style:none}
+.activity-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.activity-content{flex:1}
+.activity-text{font-size:13px;line-height:1.5}
+.activity-time{font-size:11px;color:var(--text-secondary);margin-top:2px}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:16px}
+.page-btn{padding:6px 12px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;transition:var(--transition);font-family:inherit}
+.page-btn:hover{border-color:var(--primary);color:var(--primary)}
+.page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.page-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Error text */
+.error-text{color:var(--danger);font-size:12px;margin-top:4px;display:none}
+
+/* Empty state */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text-secondary)}
+.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
+.empty-state p{font-size:14px}
+
+/* Responsive */
+@media(max-width:768px){
+.sidebar{transform:translateX(100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-right:0}
+.topbar-hamburger{display:block}
+.topbar-search input{width:160px}
+.topbar-search input:focus{width:200px}
+.topbar-date{display:none}
+.stats-grid{grid-template-columns:1fr 1fr}
+.trips-grid{grid-template-columns:1fr}
+.kanban-board{flex-direction:column}
+.kanban-column{max-width:100%;min-width:auto}
+.manifest-header{flex-direction:column;gap:16px}
+.manifest-signatures{grid-template-columns:1fr}
+.demo-buttons{grid-template-columns:1fr}
+}
+@media(max-width:480px){
+.stats-grid{grid-template-columns:1fr}
+.content{padding:16px}
+}
+
+/* Print */
+@media print{
+.sidebar,.topbar,.modal-overlay,.toast-container,.btn,.filters-bar,.pagination{display:none!important}
+.main{margin-right:0!important}
+.content{padding:0}
+.card{box-shadow:none;border:1px solid #ddd}
+}
+
+/* Skeleton loading */
+.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:skeleton 1.5s infinite;border-radius:var(--radius-sm)}
+@keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Validation error */
+.input-error{border-color:var(--danger)!important}
+.validation-msg{color:var(--danger);font-size:12px;margin-top:4px;display:none}
+.validation-msg.show{display:block}
+
+/* Notification dropdown */
+.notif-dropdown{position:absolute;top:100%;left:0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-lg);width:320px;max-height:400px;overflow-y:auto;display:none;z-index:200;border:1px solid var(--border)}
+.notif-dropdown.show{display:block}
+.notif-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px}
+.notif-item{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer;transition:var(--transition)}
+.notif-item:hover{background:#f8fafc}
+.notif-item .notif-time{font-size:11px;color:var(--text-secondary);margin-top:4px}
+.notif-item.unread{background:rgba(37,99,235,.03);border-right:3px solid var(--primary)}
+</style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-screen">
-        <div class="login-container">
-            <div class="login-brand">
-                <div class="brand-icon">🔱</div>
-                <h1>Poseidon CRM</h1>
-                <p>نظام إدارة الحجوزات والنقل</p>
-            </div>
-            <form id="loginForm" class="login-form">
-                <div class="form-group">
-                    <label for="loginEmail">البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" placeholder="admin@poseidon.com" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword">كلمة المرور</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginRole">الدور</label>
-                    <select id="loginRole" required>
-                        <option value="">اختر الدور...</option>
-                        <option value="admin">Administrator - التحكم الكامل</option>
-                        <option value="agency">Tourism Agency - وكالة السياحة</option>
-                        <option value="transport">Transport Company - شركة النقل</option>
-                        <option value="driver">Driver - سائق</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">تسجيل الدخول</button>
-                <div class="demo-accounts">
-                    <p>حسابات تجريبية:</p>
-                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('admin')">Admin</button>
-                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('agency')">Agency</button>
-                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('transport')">Transport</button>
-                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('driver')">Driver</button>
-                </div>
-            </form>
-        </div>
+
+<!-- Login Screen -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="login-logo">🔱</div>
+    <h1 class="login-title">Poseidon CRM</h1>
+    <p class="login-subtitle">نظام إدارة الحجوزات والنقل السياحي</p>
+    <form id="loginForm" onsubmit="return login(event)">
+      <div class="form-group">
+        <label>البريد الإلكتروني</label>
+        <input type="email" id="loginEmail" placeholder="admin@poseidon.com" required>
+      </div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" required>
+      </div>
+      <div class="form-group">
+        <label>الدور</label>
+        <select id="loginRole" required>
+          <option value="">اختر الدور...</option>
+          <option value="admin">مدير النظام</option>
+          <option value="agency">وكالة</option>
+          <option value="transport">نقل</option>
+          <option value="driver">سائق</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary login-btn">تسجيل الدخول</button>
+    </form>
+    <div class="demo-divider">حسابات تجريبية</div>
+    <div class="demo-buttons">
+      <button class="demo-btn" onclick="demoLogin('admin')">👑 مدير النظام<span class="demo-role">admin@poseidon.com</span></button>
+      <button class="demo-btn" onclick="demoLogin('agency')">🏢 وكالة<span class="demo-role">agency@poseidon.com</span></button>
+      <button class="demo-btn" onclick="demoLogin('transport')">🚚 نقل<span class="demo-role">transport@poseidon.com</span></button>
+      <button class="demo-btn" onclick="demoLogin('driver')">🚗 سائق<span class="demo-role">driver@poseidon.com</span></button>
     </div>
+  </div>
+</div>
 
-    <!-- Main App -->
-    <div id="app" class="app hidden">
-        <!-- Sidebar -->
-        <aside id="sidebar" class="sidebar">
-            <div class="sidebar-header">
-                <div class="brand">
-                    <span class="brand-icon-sm">🔱</span>
-                    <span class="brand-text">Poseidon CRM</span>
-                </div>
-                <button id="sidebarToggle" class="sidebar-toggle" aria-label="إغلاق القائمة">✕</button>
-            </div>
-            
-            <nav class="sidebar-nav">
-                <div class="nav-section">
-                    <span class="nav-section-title">الرئيسية</span>
-                    <a href="#" class="nav-link active" data-page="dashboard" data-roles="admin,agency,transport,driver">
-                        <span class="nav-icon">📊</span>
-                        <span class="nav-text">لوحة التحكم</span>
-                    </a>
-                </div>
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container"></div>
 
-                <div class="nav-section" data-roles="admin,agency">
-                    <span class="nav-section-title">الحجوزات</span>
-                    <a href="#" class="nav-link" data-page="bookings" data-roles="admin,agency">
-                        <span class="nav-icon">📋</span>
-                        <span class="nav-text">الحجوزات</span>
-                        <span class="nav-badge" id="bookingsBadge">12</span>
-                    </a>
-                    <a href="#" class="nav-link" data-page="import" data-roles="admin,agency">
-                        <span class="nav-icon">📥</span>
-                        <span class="nav-text">استيراد Excel</span>
-                    </a>
-                </div>
-
-                <div class="nav-section" data-roles="admin">
-                    <span class="nav-section-title">الرحلات</span>
-                    <a href="#" class="nav-link" data-page="trips" data-roles="admin">
-                        <span class="nav-icon">🚌</span>
-                        <span class="nav-text">الرحلات</span>
-                    </a>
-                    <a href="#" class="nav-link" data-page="tracking" data-roles="admin,agency">
-                        <span class="nav-icon">📡</span>
-                        <span class="nav-text">التتبع المباشر</span>
-                    </a>
-                </div>
-
-                <div class="nav-section" data-roles="admin,transport">
-                    <span class="nav-section-title">النقل</span>
-                    <a href="#" class="nav-link" data-page="transfers" data-roles="admin,transport">
-                        <span class="nav-icon">🚚</span>
-                        <span class="nav-text">شيتات النقل</span>
-                    </a>
-                    <a href="#" class="nav-link" data-page="manifest" data-roles="admin,transport">
-                        <span class="nav-icon">📄</span>
-                        <span class="nav-text">المانيفست</span>
-                    </a>
-                </div>
-
-                <div class="nav-section" data-roles="driver">
-                    <span class="nav-section-title">السائق</span>
-                    <a href="#" class="nav-link" data-page="driver" data-roles="driver">
-                        <span class="nav-icon">🚗</span>
-                        <span class="nav-text">شيتي</span>
-                    </a>
-                </div>
-
-                <div class="nav-section" data-roles="admin">
-                    <span class="nav-section-title">الإدارة</span>
-                    <a href="#" class="nav-link" data-page="audit" data-roles="admin">
-                        <span class="nav-icon">📜</span>
-                        <span class="nav-text">سجل التدقيق</span>
-                    </a>
-                    <a href="#" class="nav-link" data-page="settings" data-roles="admin">
-                        <span class="nav-icon">⚙️</span>
-                        <span class="nav-text">الإعدادات</span>
-                    </a>
-                </div>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">A</div>
-                    <div class="user-details">
-                        <span class="user-name" id="userName">Admin User</span>
-                        <span class="user-role" id="userRole">Administrator</span>
-                    </div>
-                </div>
-                <button class="btn btn-ghost btn-sm btn-logout" onclick="logout()">
-                    <span>🚪</span>
-                    <span>خروج</span>
-                </button>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Bar -->
-            <header class="topbar">
-                <button id="menuToggle" class="menu-toggle" aria-label="فتح القائمة">☰</button>
-                <div class="topbar-title">
-                    <h2 id="pageTitle">لوحة التحكم</h2>
-                </div>
-                <div class="topbar-actions">
-                    <div class="search-box">
-                        <input type="text" placeholder="بحث..." id="globalSearch">
-                        <span class="search-icon">🔍</span>
-                    </div>
-                    <div class="notification-bell" id="notificationBell">
-                        <span>🔔</span>
-                        <span class="notification-count" id="notificationCount">3</span>
-                    </div>
-                    <div class="topbar-date" id="currentDate"></div>
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <div class="page-content" id="pageContent">
-                <!-- Dashboard Page -->
-                <div id="page-dashboard" class="page active">
-                    <!-- Stats Cards -->
-                    <div class="stats-grid">
-                        <div class="stat-card stat-primary">
-                            <div class="stat-icon">📋</div>
-                            <div class="stat-info">
-                                <span class="stat-value" id="totalBookings">156</span>
-                                <span class="stat-label">إجمالي الحجوزات</span>
-                            </div>
-                            <div class="stat-trend up">+12%</div>
-                        </div>
-                        <div class="stat-card stat-success">
-                            <div class="stat-icon">✅</div>
-                            <div class="stat-info">
-                                <span class="stat-value" id="approvedBookings">89</span>
-                                <span class="stat-label">حجوزات موافقة</span>
-                            </div>
-                            <div class="stat-trend up">+8%</div>
-                        </div>
-                        <div class="stat-card stat-warning">
-                            <div class="stat-icon">⏳</div>
-                            <div class="stat-info">
-                                <span class="stat-value" id="pendingBookings">23</span>
-                                <span class="stat-label">حجوزات معلقة</span>
-                            </div>
-                            <div class="stat-trend down">-3%</div>
-                        </div>
-                        <div class="stat-card stat-info">
-                            <div class="stat-icon">🚌</div>
-                            <div class="stat-info">
-                                <span class="stat-value" id="activeTrips">8</span>
-                                <span class="stat-label">رحلات نشطة</span>
-                            </div>
-                            <div class="stat-trend up">+2</div>
-                        </div>
-                    </div>
-
-                    <!-- Charts Row -->
-                    <div class="charts-row">
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3>الحجوزات حسب الحالة</h3>
-                                <select class="chart-filter">
-                                    <option>هذا الأسبوع</option>
-                                    <option>هذا الشهر</option>
-                                    <option>هذا العام</option>
-                                </select>
-                            </div>
-                            <div class="chart-body">
-                                <canvas id="bookingsChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3>الرحلات النشطة</h3>
-                            </div>
-                            <div class="chart-body">
-                                <div class="live-trips-list" id="liveTripsList">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Activity -->
-                    <div class="activity-card">
-                        <div class="activity-header">
-                            <h3>آخر النشاطات</h3>
-                            <a href="#" class="btn btn-ghost btn-sm" data-page="audit">عرض الكل</a>
-                        </div>
-                        <div class="activity-list" id="recentActivity">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bookings Page -->
-                <div id="page-bookings" class="page">
-                    <div class="page-header">
-                        <div class="page-header-actions">
-                            <div class="filter-group">
-                                <select id="bookingStatusFilter">
-                                    <option value="">كل الحالات</option>
-                                    <option value="new">جديد</option>
-                                    <option value="pending">معلق</option>
-                                    <option value="approved">موافق</option>
-                                    <option value="rejected">مرفوض</option>
-                                    <option value="in_transit">في النقل</option>
-                                    <option value="completed">مكتمل</option>
-                                    <option value="cancelled">ملغي</option>
-                                </select>
-                                <select id="bookingTripFilter">
-                                    <option value="">كل الرحلات</option>
-                                </select>
-                                <input type="date" id="bookingDateFilter">
-                            </div>
-                            <button class="btn btn-primary" onclick="showAddBookingModal()">
-                                <span>+</span> حجز جديد
-                            </button>
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table class="data-table" id="bookingsTable">
-                            <thead>
-                                <tr>
-                                    <th><input type="checkbox" id="selectAllBookings"></th>
-                                    <th>رقم الحجز</th>
-                                    <th>اسم المسافر</th>
-                                    <th>الهاتف</th>
-                                    <th>الرحلة</th>
-                                    <th>التاريخ</th>
-                                    <th>العدد</th>
-                                    <th>الحالة</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="bookingsTableBody">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pagination" id="bookingsPagination"></div>
-                </div>
-
-                <!-- Import Page -->
-                <div id="page-import" class="page">
-                    <div class="import-container">
-                        <div class="import-upload-area" id="uploadArea">
-                            <div class="upload-icon">📁</div>
-                            <h3>ارفع ملف Excel</h3>
-                            <p>اسحب الملف هنا أو اضغط للاختيار</p>
-                            <p class="upload-formats">الصيغ المدعومة: .xlsx, .csv (حد أقصى: 10MB)</p>
-                            <input type="file" id="fileInput" accept=".xlsx,.csv" hidden>
-                            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">اختيار ملف</button>
-                        </div>
-                        
-                        <div class="import-preview hidden" id="importPreview">
-                            <div class="preview-header">
-                                <h3>معاينة البيانات</h3>
-                                <div class="preview-stats">
-                                    <span class="stat-pill success" id="validCount">0 صحيح</span>
-                                    <span class="stat-pill danger" id="errorCount">0 خطأ</span>
-                                    <span class="stat-pill info" id="totalCount">0 إجمالي</span>
-                                </div>
-                            </div>
-                            <div class="table-container">
-                                <table class="data-table" id="previewTable">
-                                    <thead id="previewTableHead"></thead>
-                                    <tbody id="previewTableBody"></tbody>
-                                </table>
-                            </div>
-                            <div class="validation-errors hidden" id="validationErrors">
-                                <h4>⚠️ أخطاء التحقق</h4>
-                                <div id="errorList"></div>
-                            </div>
-                            <div class="preview-actions">
-                                <button class="btn btn-ghost" onclick="cancelImport()">إلغاء</button>
-                                <button class="btn btn-primary" id="confirmImportBtn" onclick="confirmImport()">تأكيد الاستيراد</button>
-                            </div>
-                        </div>
-
-                        <div class="import-history">
-                            <h3>سجل الاستيراد السابق</h3>
-                            <div class="table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>رقم الدفعة</th>
-                                            <th>الملف</th>
-                                            <th>التاريخ</th>
-                                            <th>العدد</th>
-                                            <th>الحالة</th>
-                                            <th>إجراءات</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="importHistoryBody">
-                                        <!-- Populated by JS -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trips Page -->
-                <div id="page-trips" class="page">
-                    <div class="page-header">
-                        <div class="page-header-actions">
-                            <div class="filter-group">
-                                <input type="date" id="tripDateFilter">
-                                <select id="tripStatusFilter">
-                                    <option value="">كل الحالات</option>
-                                    <option value="active">نشط</option>
-                                    <option value="completed">مكتمل</option>
-                                    <option value="cancelled">ملغي</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-primary" onclick="showAddTripModal()">
-                                <span>+</span> رحلة جديدة
-                            </button>
-                        </div>
-                    </div>
-                    <div class="trips-grid" id="tripsGrid">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-                <!-- Transfer Sheets Page -->
-                <div id="page-transfers" class="page">
-                    <div class="page-header">
-                        <div class="page-header-actions">
-                            <div class="filter-group">
-                                <select id="transferStatusFilter">
-                                    <option value="">كل الحالات</option>
-                                    <option value="pending">قيد التوزيع</option>
-                                    <option value="assigned">تم التعيين</option>
-                                    <option value="in_transit">في الطريق</option>
-                                    <option value="completed">مكتمل</option>
-                                </select>
-                                <select id="transferDriverFilter">
-                                    <option value="">كل السائقين</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-primary" onclick="generateTransferSheets()">
-                                <span>📄</span> إنشاء شيتات
-                            </button>
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table class="data-table" id="transfersTable">
-                            <thead>
-                                <tr>
-                                    <th>رقم الشيت</th>
-                                    <th>السائق</th>
-                                    <th>الرحلة</th>
-                                    <th>الركاب</th>
-                                    <th>الحالة</th>
-                                    <th>إجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transfersTableBody">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- Manifest Page -->
-                <div id="page-manifest" class="page">
-                    <div class="page-header">
-                        <div class="page-header-actions">
-                            <div class="filter-group">
-                                <input type="date" id="manifestDateFilter">
-                                <select id="manifestTripFilter">
-                                    <option value="">كل الرحلات</option>
-                                </select>
-                                <select id="manifestCompanyFilter">
-                                    <option value="">كل شركات النقل</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-primary" onclick="printManifest()">
-                                <span>🖨️</span> طباعة المانيفست
-                            </button>
-                        </div>
-                    </div>
-                    <div class="manifest-container" id="manifestContainer">
-                        <div class="manifest-document" id="manifestDocument">
-                            <div class="manifest-header">
-                                <div class="manifest-logo">🔱</div>
-                                <div class="manifest-title">
-                                    <h1>مانيفست النقل</h1>
-                                    <p id="manifestDate"></p>
-                                </div>
-                            </div>
-                            <div class="manifest-info">
-                                <div class="info-row">
-                                    <span><strong>الرحلة:</strong> <span id="manifestTripName"></span></span>
-                                    <span><strong>شركة النقل:</strong> <span id="manifestCompany"></span></span>
-                                    <span><strong>السائق:</strong> <span id="manifestDriver"></span></span>
-                                </div>
-                            </div>
-                            <table class="data-table manifest-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>اسم المسافر</th>
-                                        <th>الهاتف</th>
-                                        <th>الرقم</th>
-                                        <th>الوقت</th>
-                                        <th>الوقت</th>
-                                        <th>الوقت</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="manifestTableBody">
-                                    <!-- Populated by JS -->
-                                </tbody>
-                            </table>
-                            <div class="manifest-footer">
-                                <div class="signature-box">
-                                    <p>توقيع السائق</p>
-                                    <div class="signature-line"></div>
-                                </div>
-                                <div class="signature-box">
-                                    <p>توقيع المدير</p>
-                                    <div class="signature-line"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Live Tracking Page -->
-                <div id="page-tracking" class="page">
-                    <div class="tracking-container">
-                        <div class="tracking-board" id="trackingBoard">
-                            <div class="tracking-column">
-                                <div class="column-header">
-                                    <h3>جديد</h3>
-                                    <span class="column-count" id="newCount">0</span>
-                                </div>
-                                <div class="column-body" id="newColumn">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                            <div class="tracking-column">
-                                <div class="column-header">
-                                    <h3>معلق</h3>
-                                    <span class="column-count" id="pendingCount">0</span>
-                                </div>
-                                <div class="column-body" id="pendingColumn">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                            <div class="tracking-column">
-                                <div class="column-header">
-                                    <h3>موافق</h3>
-                                    <span class="column-count" id="approvedCount">0</span>
-                                </div>
-                                <div class="column-body" id="approvedColumn">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                            <div class="tracking-column">
-                                <div class="column-header">
-                                    <h3>في النقل</h3>
-                                    <span class="column-count" id="transitCount">0</span>
-                                </div>
-                                <div class="column-body" id="transitColumn">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                            <div class="tracking-column">
-                                <div class="column-header">
-                                    <h3>مكتمل</h3>
-                                    <span class="column-count" id="completedCount">0</span>
-                                </div>
-                                <div class="column-body" id="completedColumn">
-                                    <!-- Populated by JS -->
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Driver Page -->
-                <div id="page-driver" class="page">
-                    <div class="driver-container">
-                        <div class="driver-header">
-                            <div class="driver-info-card">
-                                <div class="driver-avatar">🚗</div>
-                                <div class="driver-details">
-                                    <h2 id="driverName">أحمد محمد</h2>
-                                    <p id="driverPhone">+20 123 456 7890</p>
-                                    <span class="status-badge active">متاح</span>
-                                </div>
-                            </div>
-                            <div class="driver-stats">
-                                <div class="driver-stat">
-                                    <span class="stat-value" id="driverTodayTrips">3</span>
-                                    <span class="stat-label">رحلات اليوم</span>
-                                </div>
-                                <div class="driver-stat">
-                                    <span class="stat-value" id="driverTodayPassengers">45</span>
-                                    <span class="stat-label">ركاب اليوم</span>
-                                </div>
-                                <div class="driver-stat">
-                                    <span class="stat-value" id="driverCompleted">2</span>
-                                    <span class="stat-label">مكتمل</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="driver-sheets" id="driverSheets">
-                            <!-- Populated by JS -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Audit Log Page -->
-                <div id="page-audit" class="page">
-                    <div class="page-header">
-                        <div class="page-header-actions">
-                            <div class="filter-group">
-                                <select id="auditEntityFilter">
-                                    <option value="">كل الكيانات</option>
-                                    <option value="booking">حجوزات</option>
-                                    <option value="trip">رحلات</option>
-                                    <option value="transfer">شيتات نقل</option>
-                                    <option value="user">مستخدمين</option>
-                                    <option value="settings">إعدادات</option>
-                                </select>
-                                <select id="auditActionFilter">
-                                    <option value="">كل العمليات</option>
-                                    <option value="create">إنشاء</option>
-                                    <option value="update">تعديل</option>
-                                    <option value="delete">حذف</option>
-                                    <option value="approve">موافقة</option>
-                                    <option value="reject">رفض</option>
-                                </select>
-                                <input type="date" id="auditDateFilter">
-                            </div>
-                            <button class="btn btn-ghost" onclick="exportAuditLog()">
-                                <span>📥</span> تصدير CSV
-                            </button>
-                        </div>
-                    </div>
-                    <div class="table-container">
-                        <table class="data-table" id="auditTable">
-                            <thead>
-                                <tr>
-                                    <th>الوقت</th>
-                                    <th>المستخدم</th>
-                                    <th>الكيان</th>
-                                    <th>العملية</th>
-                                    <th>الوصف</th>
-                                    <th>IP</th>
-                                    <th>تفاصيل</th>
-                                </tr>
-                            </thead>
-                            <tbody id="auditTableBody">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="pagination" id="auditPagination"></div>
-                </div>
-
-                <!-- Settings Page -->
-                <div id="page-settings" class="page">
-                    <div class="settings-container">
-                        <div class="settings-tabs">
-                            <button class="settings-tab active" data-tab="whatsapp">WhatsApp</button>
-                            <button class="settings-tab" data-tab="approval">الموافقة التلقائية</button>
-                            <button class="settings-tab" data-tab="import-settings">الاستيراد</button>
-                            <button class="settings-tab" data-tab="encryption">التشفير</button>
-                            <button class="settings-tab" data-tab="audit-settings">سجل التدقيق</button>
-                        </div>
-
-                        <!-- WhatsApp Settings -->
-                        <div class="settings-panel active" id="tab-whatsapp">
-                            <h3>إعدادات WhatsApp API</h3>
-                            <div class="settings-grid">
-                                <div class="form-group">
-                                    <label>WhatsApp API Token</label>
-                                    <input type="password" id="whatsappToken" placeholder="أدخل API Token">
-                                </div>
-                                <div class="form-group">
-                                    <label>Phone Number ID</label>
-                                    <input type="text" id="whatsappPhoneId" placeholder="رقم الهاتف المرتبط بالـ API">
-                                </div>
-                                <div class="form-group">
-                                    <label>Business Account ID</label>
-                                    <input type="text" id="whatsappBusinessId" placeholder="معرف حساب الأعمال">
-                                </div>
-                            </div>
-                            <div class="settings-toggles">
-                                <div class="toggle-item">
-                                    <span>إشعارات الوكالة</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="notifyAgency" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>إشعارات شركة النقل</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="notifyTransport" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>إشعارات السائقين</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="notifyDrivers" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="settings-actions">
-                                <button class="btn btn-ghost">اختبار الإرسال</button>
-                                <button class="btn btn-primary" onclick="saveSettings('whatsapp')">حفظ الإعدادات</button>
-                            </div>
-                        </div>
-
-                        <!-- Approval Settings -->
-                        <div class="settings-panel" id="tab-approval">
-                            <h3>إعدادات الموافقة التلقائية</h3>
-                            <div class="settings-grid">
-                                <div class="toggle-item">
-                                    <span>تفعيل الموافقة التلقائية</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="autoApproval">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="form-group">
-                                    <label>الحد الأدنى للعدد</label>
-                                    <input type="number" id="minPassengers" value="5" min="1">
-                                </div>
-                                <div class="form-group">
-                                    <label>نافذة الموافقة الزمنية (ساعات)</label>
-                                    <input type="number" id="approvalWindow" value="24" min="1">
-                                </div>
-                            </div>
-                            <div class="settings-actions">
-                                <button class="btn btn-primary" onclick="saveSettings('approval')">حفظ الإعدادات</button>
-                            </div>
-                        </div>
-
-                        <!-- Import Settings -->
-                        <div class="settings-panel" id="tab-import-settings">
-                            <h3>إعدادات الاستيراد</h3>
-                            <div class="settings-grid">
-                                <div class="form-group">
-                                    <label>الحد الأقصى لحجم الملف (MB)</label>
-                                    <input type="number" id="maxFileSize" value="10" min="1" max="50">
-                                </div>
-                                <div class="form-group">
-                                    <label>الصيغ المسموحة</label>
-                                    <input type="text" id="allowedFormats" value=".xlsx, .csv" disabled>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>التحقق التلقائي</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="autoValidation" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>إخطار عند الأخطاء</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="errorNotification" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="settings-actions">
-                                <button class="btn btn-primary" onclick="saveSettings('import')">حفظ الإعدادات</button>
-                            </div>
-                        </div>
-
-                        <!-- Encryption Settings -->
-                        <div class="settings-panel" id="tab-encryption">
-                            <h3>إدارة مفتاح التشفير</h3>
-                            <div class="settings-grid">
-                                <div class="form-group">
-                                    <label>مفتاح AES-256</label>
-                                    <div class="input-with-action">
-                                        <input type="password" id="encryptionKey" placeholder="المفتاح المستخدم للتشفير">
-                                        <button class="btn btn-ghost btn-sm" onclick="toggleKeyVisibility('encryptionKey')">👁️</button>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>تدوير المفتاح (أيام)</label>
-                                    <input type="number" id="keyRotation" value="90" min="30">
-                                </div>
-                                <div class="encryption-status">
-                                    <div class="status-item success">
-                                        <span>✅</span>
-                                        <span>التشفير نشط</span>
-                                    </div>
-                                    <div class="status-item">
-                                        <span>🔄</span>
-                                        <span>آخر تدوير: قبل 45 يوم</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="settings-actions">
-                                <button class="btn btn-warning" onclick="rotateKey()">تدوير المفتاح</button>
-                                <button class="btn btn-primary" onclick="saveSettings('encryption')">حفظ الإعدادات</button>
-                            </div>
-                        </div>
-
-                        <!-- Audit Settings -->
-                        <div class="settings-panel" id="tab-audit-settings">
-                            <h3>إعدادات سجل التدقيق</h3>
-                            <div class="settings-grid">
-                                <div class="form-group">
-                                    <label>مدة الاحتفاظ (أيام)</label>
-                                    <input type="number" id="auditRetention" value="365" min="30">
-                                </div>
-                                <div class="toggle-item">
-                                    <span>تتبع الحجوزات</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="trackBookings" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>تتبع المصادقة</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="trackAuth" checked>
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                                <div class="toggle-item">
-                                    <span>تصدير تلقائي</span>
-                                    <label class="toggle">
-                                        <input type="checkbox" id="autoExport">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="settings-actions">
-                                <button class="btn btn-primary" onclick="saveSettings('audit')">حفظ الإعدادات</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+<!-- Modal -->
+<div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle" class="modal-title"></h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
     </div>
+    <div id="modalBody" class="modal-body"></div>
+    <div id="modalFooter" class="modal-footer"></div>
+  </div>
+</div>
 
-    <!-- Modals -->
-    <div class="modal-overlay hidden" id="modalOverlay">
-        <div class="modal" id="modal">
-            <div class="modal-header">
-                <h3 id="modalTitle">Modal Title</h3>
-                <button class="modal-close" onclick="closeModal()">✕</button>
-            </div>
-            <div class="modal-body" id="modalBody">
-                <!-- Dynamic content -->
-            </div>
-            <div class="modal-footer" id="modalFooter">
-                <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
-                <button class="btn btn-primary" id="modalConfirmBtn">تأكيد</button>
-            </div>
-        </div>
+<!-- App Container -->
+<div id="appContainer" class="app">
+  <!-- Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <span style="font-size:28px">🔱</span>
+      <span class="sidebar-brand">Poseidon <span>CRM</span></span>
     </div>
-
-    <!-- Notification Panel -->
-    <div class="notification-panel hidden" id="notificationPanel">
-        <div class="notification-header">
-            <h3>الإشعارات</h3>
-            <button class="btn btn-ghost btn-sm" onclick="clearNotifications()">مسح الكل</button>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="nav-section">
+        <div class="nav-section-title">القائمة الرئيسية</div>
+        <div class="nav-link active" data-page="dashboard" data-roles="admin,agency,transport,driver" onclick="navigateTo('dashboard')">
+          <span class="nav-icon">📊</span>لوحة التحكم
         </div>
-        <div class="notification-list" id="notificationList">
-            <!-- Populated by JS -->
+        <div class="nav-link" data-page="bookings" data-roles="admin,agency" onclick="navigateTo('bookings')">
+          <span class="nav-icon">📋</span>الحجوزات
         </div>
+        <div class="nav-link" data-page="import" data-roles="admin,agency" onclick="navigateTo('import')">
+          <span class="nav-icon">📥</span>استيراد Excel
+        </div>
+        <div class="nav-link" data-page="trips" data-roles="admin" onclick="navigateTo('trips')">
+          <span class="nav-icon">🚌</span>الرحلات
+        </div>
+        <div class="nav-link" data-page="tracking" data-roles="admin,agency" onclick="navigateTo('tracking')">
+          <span class="nav-icon">📡</span>تتبع مباشر
+        </div>
+        <div class="nav-link" data-page="transfers" data-roles="admin,transport" onclick="navigateTo('transfers')">
+          <span class="nav-icon">🚚</span>شيتات النقل
+        </div>
+        <div class="nav-link" data-page="manifest" data-roles="admin,transport" onclick="navigateTo('manifest')">
+          <span class="nav-icon">📄</span>المانيفست
+        </div>
+        <div class="nav-link" data-page="driver" data-roles="driver" onclick="navigateTo('driver')">
+          <span class="nav-icon">🚗</span>شيت السائق
+        </div>
+        <div class="nav-link" data-page="audit" data-roles="admin" onclick="navigateTo('audit')">
+          <span class="nav-icon">📜</span>سجل التدقيق
+        </div>
+        <div class="nav-link" data-page="settings" data-roles="admin" onclick="navigateTo('settings')">
+          <span class="nav-icon">⚙️</span>الإعدادات
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div id="sidebarAvatar" class="sidebar-avatar" style="background:var(--primary);color:#fff">م</div>
+        <div class="sidebar-user-info">
+          <div id="sidebarUserName" class="sidebar-user-name">المستخدم</div>
+          <div id="sidebarUserRole" class="sidebar-user-role">مدير</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="logout()">🚪 تسجيل الخروج</button>
     </div>
+  </aside>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+  <!-- Main Content -->
+  <main class="main" id="mainContent">
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
+      <h2 id="pageTitle" class="topbar-title">لوحة التحكم</h2>
+      <div class="topbar-search">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="بحث..." id="globalSearch" onkeyup="handleGlobalSearch(event)">
+      </div>
+      <div style="position:relative">
+        <button class="topbar-bell" onclick="toggleNotifications()">🔔<span id="notifBadge" class="badge">3</span></button>
+        <div id="notifDropdown" class="notif-dropdown">
+          <div class="notif-header">الإشعارات</div>
+          <div id="notifList"></div>
+        </div>
+      </div>
+      <span class="topbar-date" id="currentDate"></span>
+    </header>
 
-    <script src="js/data.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/bookings.js"></script>
-    <script src="js/import.js"></script>
-    <script src="js/trips.js"></script>
-    <script src="js/transfers.js"></script>
-    <script src="js/manifest.js"></script>
-    <script src="js/tracking.js"></script>
-    <script src="js/driver.js"></script>
-    <script src="js/audit.js"></script>
-    <script src="js/settings.js"></script>
+    <div class="content">
+      <!-- Dashboard Page -->
+      <div id="page-dashboard" class="page active">
+        <div class="stats-grid" id="statsGrid"></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">النشاط الأخير</span>
+            </div>
+            <div class="card-body">
+              <ul class="activity-list" id="activityList"></ul>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">الرحلات النشطة</span>
+            </div>
+            <div class="card-body" id="activeTripsWidget"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bookings Page -->
+      <div id="page-bookings" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">إدارة الحجوزات</span>
+            <button class="btn btn-primary btn-sm" onclick="showAddBookingModal()">➕ إضافة حجز</button>
+          </div>
+          <div class="card-body">
+            <div class="filters-bar">
+              <div class="filter-group">
+                <label>الحالة:</label>
+                <select id="filterBookingStatus" onchange="renderBookingsTable()">
+                  <option value="">الكل</option>
+                  <option value="new">جديد</option>
+                  <option value="pending">قيد المراجعة</option>
+                  <option value="approved">موافق عليه</option>
+                  <option value="rejected">مرفوض</option>
+                  <option value="completed">مكتمل</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>من تاريخ:</label>
+                <input type="date" id="filterDateFrom" onchange="renderBookingsTable()">
+              </div>
+              <div class="filter-group">
+                <label>إلى تاريخ:</label>
+                <input type="date" id="filterDateTo" onchange="renderBookingsTable()">
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>اسم العميل</th>
+                    <th>الهاتف</th>
+                    <th>الرحلة</th>
+                    <th>التاريخ</th>
+                    <th>عدد الأشخاص</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="bookingsTableBody"></tbody>
+              </table>
+            </div>
+            <div id="bookingsPagination" class="pagination"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Import Page -->
+      <div id="page-import" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">استيراد حجوزات من Excel</span>
+          </div>
+          <div class="card-body">
+            <div id="uploadArea" class="upload-area" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">
+              <div class="upload-icon">📁</div>
+              <div class="upload-text">اسحب الملف هنا أو انقر للاختيار</div>
+              <div class="upload-hint">يدعم ملفات .xlsx و .csv</div>
+            </div>
+            <input type="file" id="fileInput" accept=".xlsx,.csv" style="display:none" onchange="handleFileUpload(event)">
+            <div id="importPreview" style="display:none;margin-top:20px">
+              <div class="card-header" style="margin:-20px -20px 16px;padding:16px 20px">
+                <span class="card-title">معاينة البيانات</span>
+                <div style="display:flex;gap:8px">
+                  <span id="importCount" class="badge badge-info">0 سجل</span>
+                  <button class="btn btn-success btn-sm" onclick="confirmImport()">تأكيد الاستيراد</button>
+                </div>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>#</th><th>اسم العميل</th><th>الهاتف</th><th>الرحلة</th><th>التاريخ</th><th>العدد</th><th>الحالة</th></tr></thead>
+                  <tbody id="importPreviewBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div id="importErrors" style="display:none;margin-top:16px">
+              <div class="card-header" style="margin:-20px -20px 16px;padding:16px 20px;border-color:var(--danger)">
+                <span class="card-title" style="color:var(--danger)">⚠️ أخطاء في البيانات</span>
+              </div>
+              <div id="importErrorsList" style="padding:16px"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trips Page -->
+      <div id="page-trips" class="page">
+        <div class="card" style="margin-bottom:16px">
+          <div class="card-header">
+            <span class="card-title">الرحلات</span>
+            <button class="btn btn-primary btn-sm" onclick="showAddTripModal()">➕ إضافة رحلة</button>
+          </div>
+        </div>
+        <div class="trips-grid" id="tripsGrid"></div>
+      </div>
+
+      <!-- Tracking Page -->
+      <div id="page-tracking" class="page">
+        <div class="card" style="margin-bottom:16px;padding:12px 16px">
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <span style="font-weight:700;font-size:14px">تتبع الحجوزات</span>
+            <div style="display:flex;gap:8px;margin-right:auto">
+              <span class="badge badge-info">جديد: <strong id="trackNew">0</strong></span>
+              <span class="badge badge-warning">قيد المراجعة: <strong id="trackPending">0</strong></span>
+              <span class="badge badge-success">موافق: <strong id="trackApproved">0</strong></span>
+              <span class="badge badge-purple">في الطريق: <strong id="trackTransit">0</strong></span>
+              <span class="badge badge-secondary">مكتمل: <strong id="trackCompleted">0</strong></span>
+            </div>
+          </div>
+        </div>
+        <div class="kanban-board" id="kanbanBoard"></div>
+      </div>
+
+      <!-- Transfers Page -->
+      <div id="page-transfers" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">شيتات النقل</span>
+            <button class="btn btn-primary btn-sm" onclick="generateTransferSheets()">🔄 توليد شيتات جديدة</button>
+          </div>
+          <div class="card-body">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>الرحلة</th>
+                    <th>التاريخ</th>
+                    <th>عدد الركاب</th>
+                    <th>السائق</th>
+                    <th>الحافلة</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="transfersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manifest Page -->
+      <div id="page-manifest" class="page">
+        <div style="margin-bottom:16px;display:flex;gap:8px;justify-content:flex-end">
+          <select id="manifestTripSelect" class="form-group" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm)" onchange="renderManifest()"></select>
+          <button class="btn btn-primary btn-sm" onclick="printManifest()">🖨️ طباعة</button>
+        </div>
+        <div id="manifestContent" class="manifest-print"></div>
+      </div>
+
+      <!-- Driver Page -->
+      <div id="page-driver" class="page">
+        <div id="driverContent"></div>
+      </div>
+
+      <!-- Audit Page -->
+      <div id="page-audit" class="page">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">سجل التدقيق</span>
+            <button class="btn btn-outline btn-sm" onclick="exportAuditLog()">📥 تصدير السجل</button>
+          </div>
+          <div class="card-body">
+            <div class="filters-bar">
+              <div class="filter-group">
+                <label>النوع:</label>
+                <select id="filterAuditType" onchange="renderAuditLog()">
+                  <option value="">الكل</option>
+                  <option value="login">تسجيل دخول</option>
+                  <option value="booking">حجز</option>
+                  <option value="transfer">نقل</option>
+                  <option value="settings">إعدادات</option>
+                  <option value="system">نظام</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>من تاريخ:</label>
+                <input type="date" id="filterAuditFrom" onchange="renderAuditLog()">
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>التاريخ والوقت</th>
+                    <th>المستخدم</th>
+                    <th>النوع</th>
+                    <th>الوصف</th>
+                    <th>التفاصيل</th>
+                  </tr>
+                </thead>
+                <tbody id="auditTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Page -->
+      <div id="page-settings" class="page">
+        <div class="card">
+          <div class="card-body">
+            <div class="settings-tabs" id="settingsTabs">
+              <button class="settings-tab active" onclick="switchSettingsTab('whatsapp')">📱 واتساب</button>
+              <button class="settings-tab" onclick="switchSettingsTab('approval')">✅ الموافقات</button>
+              <button class="settings-tab" onclick="switchSettingsTab('importSettings')">📥 الاستيراد</button>
+              <button class="settings-tab" onclick="switchSettingsTab('encryption')">🔐 التشفير</button>
+              <button class="settings-tab" onclick="switchSettingsTab('auditSettings')">📜 التدقيق</button>
+            </div>
+
+            <div id="settings-whatsapp" class="settings-panel active">
+              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات واتساب</h3>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>إرسال تلقائي</h4><p>إرسال رسالة تأكيد عبر واتساب عند الموافقة على الحجز</p></div>
+                <label class="toggle"><input type="checkbox" id="settingWhatsappAuto" checked><span class="slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>رقم واتساب API</h4><p>رقم الهاتف المرتبط بحساب واتساب Business</p></div>
+                <input type="text" id="settingWhatsappNumber" value="+201234567890" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:200px;text-align:left;direction:ltr">
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>قالب الرسالة</h4><p>رسالة التأكيد المرسلة للعملاء</p></div>
+                <textarea id="settingWhatsappTemplate" rows="3" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:300px;resize:vertical">مرحباً {name}، تم تأكيد حجزكم للرحلة {trip} بتاريخ {date}. شكراً لكم.</textarea>
+              </div>
+            </div>
+
+            <div id="settings-approval" class="settings-panel">
+              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات الموافقات</h3>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>موافقة تلقائية</h4><p>الموافقة على الحجوزات الجديدة تلقائياً</p></div>
+                <label class="toggle"><input type="checkbox" id="settingAutoApprove"><span class="slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>إشعار عند الحجز الجديد</h4><p>إرسال إشعار للمدير عند إضافة حجز جديد</p></div>
+                <label class="toggle"><input type="checkbox" id="settingNotifyNew" checked><span class="slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>حد الركاب للإخطار</h4><p>عدد الركاب الذي يتجاوزه لإرسال تنبيه</p></div>
+                <input type="number" id="settingPassengerLimit" value="40" min="1" max="100" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:100px">
+              </div>
+            </div>
+
+            <div id="settings-importSettings" class="settings-panel">
+              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات الاستيراد</h3>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>التحقق من التكرار</h4><p>منع استيراد الحجوزات المكررة</p></div>
+                <label class="toggle"><input type="checkbox" id="settingCheckDuplicate" checked><span class="slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>التحقق من صيغة الهاتف</h4><p>التحقق من صيغة أرقام الهواتف المصرية</p></div>
+                <label class="toggle"><input type="checkbox" id="settingValidatePhone" checked><span class="slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>الصيغة المسموحة</h4><p>صيغة الأعمدة في ملف Excel</p></div>
+                <input type="text" value="اسم العميل,الهاتف,الرحلة,التاريخ,عدد الأشخاص" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:400px;font-size:12px" disabled>
+              </div>
+            </div>
+
+            <div id="settings-encryption" class="settings-panel">
+              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات التشفير</h3>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>تشفير البيانات</h4><p>تشفير البيانات الحساسة في قاعدة البيانات</p></div>
+                <label class="toggle"><input type="checkbox" id="settingEncryption" checked><span class="slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>تشفير الملفات المرفوعة</h4><p>تشفير ملفات Excel بعد الاستيراد</p></div>
+                <label class="toggle"><input type="checkbox" id="settingEncryptFiles"><span class="slider"></span></label>
+              </div>
+            </div>
+
+            <div id="settings-auditSettings" class="settings-panel">
+              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات سجل التدقيق</h3>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>تفعيل سجل التدقيق</h4><p>تسجيل جميع العمليات في النظام</p></div>
+                <label class="toggle"><input type="checkbox" id="settingAuditLog" checked><span class="slider"></span></label>
+              </div>
+              <div class="settings-row">
+                <div class="settings-row-info"><h4>مدة الحفظ</h4><p>عدد الأيام لحفظ سجلات التدقيق</p></div>
+                <input type="number" id="settingAuditRetention" value="90" min="30" max="365" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:100px">
+              </div>
+              <div style="margin-top:16px">
+                <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+var AppData = {
+  users: [
+    {id:1,name:'مدير النظام',email:'admin@poseidon.com',password:'admin123',role:'admin',avatar:'م'},
+    {id:2,name:'وكالة سياحة',email:'agency@poseidon.com',password:'agency123',role:'agency',avatar:'و'},
+    {id:3,name:'شركة النقل',email:'transport@poseidon.com',password:'transport123',role:'transport',avatar:'ن'},
+    {id:4,name:'محمد السائق',email:'driver@poseidon.com',password:'driver123',role:'driver',avatar:'س'}
+  ],
+  trips: [
+    {id:1,name:'القاهرة - الإسكندرية',date:'2026-07-20',time:'08:00',busNumber:'ABC-123',capacity:50,booked:38,status:'active'},
+    {id:2,name:'الجيزة - الأهرامات',date:'2026-07-21',time:'09:00',busNumber:'DEF-456',capacity:45,booked:42,status:'active'},
+    {id:3,name:'شرم الشيخ - الغردقة',date:'2026-07-22',time:'07:30',busNumber:'GHI-789',capacity:50,booked:30,status:'active'},
+    {id:4,name:'أسوان - أبو سمبل',date:'2026-07-23',time:'06:00',busNumber:'JKL-012',capacity:40,booked:35,status:'active'},
+    {id:5,name:'القاهرة - مرسى مطروح',date:'2026-07-24',time:'08:30',busNumber:'MNO-345',capacity:50,booked:28,status:'scheduled'},
+    {id:6,name:'الإسكندرية - سيدي عبد الرحمن',date:'2026-07-25',time:'07:00',busNumber:'PQR-678',capacity:45,booked:22,status:'scheduled'},
+    {id:7,name:'القاهرة - الفيوم',date:'2026-07-26',time:'09:00',busNumber:'STU-901',capacity:40,booked:15,status:'scheduled'},
+    {id:8,name:'الغردقة - سفاجا',date:'2026-07-27',time:'10:00',busNumber:'VWX-234',capacity:35,booked:20,status:'scheduled'},
+    {id:9,name:'شرم الشيخ - القاهرة',date:'2026-07-28',time:'14:00',busNumber:'YZA-567',capacity:50,booked:44,status:'scheduled'},
+    {id:10,name:'أسوان - القاهرة',date:'2026-07-29',time:'06:30',busNumber:'BCD-890',capacity:50,booked:48,status:'scheduled'}
+  ],
+  bookings: [
+    {id:1,clientName:'أحمد محمد علي',phone:'01012345678',tripId:1,date:'2026-07-20',passengers:4,status:'approved',notes:'مقعد بجانب النافذة',createdAt:'2026-07-15T10:30:00'},
+    {id:2,clientName:'فاطمة حسن إبراهيم',phone:'01123456789',tripId:1,date:'2026-07-20',passengers:2,status:'approved',notes:'',createdAt:'2026-07-15T11:00:00'},
+    {id:3,clientName:'محمد عبدالرحمن',phone:'01234567890',tripId:2,date:'2026-07-21',passengers:6,status:'pending',notes:'رحلة عائلية',createdAt:'2026-07-16T09:15:00'},
+    {id:4,clientName:'نورا سعيد محمود',phone:'01098765432',tripId:2,date:'2026-07-21',passengers:3,status:'new',notes:'',createdAt:'2026-07-16T14:20:00'},
+    {id:5,clientName:'عمر خالد الشاذلي',phone:'01187654321',tripId:3,date:'2026-07-22',passengers:5,status:'approved',notes:'وجبة إضافية',createdAt:'2026-07-17T08:00:00'},
+    {id:6,clientName:'سارة يوسف أحمد',phone:'01056789012',tripId:3,date:'2026-07-22',passengers:2,status:'new',notes:'',createdAt:'2026-07-17T10:45:00'},
+    {id:7,clientName:'يوسف إبراهيم حسن',phone:'01167890123',tripId:4,date:'2026-07-23',passengers:8,status:'pending',notes:'مجموعة سياحية',createdAt:'2026-07-18T07:30:00'},
+    {id:8,clientName:'مريم علي عبدالله',phone:'01278901234',tripId:4,date:'2026-07-23',passengers:1,status:'approved',notes:'',createdAt:'2026-07-18T09:00:00'},
+    {id:9,clientName:'حسن محمود رشدي',phone:'01045678901',tripId:1,date:'2026-07-20',passengers:3,status:'completed',notes:'',createdAt:'2026-07-14T12:00:00'},
+    {id:10,clientName:'ياسمين عادل محمد',phone:'01134567890',tripId:5,date:'2026-07-24',passengers:4,status:'new',notes:'مقاعد متجاورة',createdAt:'2026-07-19T11:20:00'},
+    {id:11,clientName:'إبراهيم سامي جمال',phone:'01223456789',tripId:5,date:'2026-07-24',passengers:2,status:'approved',notes:'',createdAt:'2026-07-19T13:00:00'},
+    {id:12,clientName:'هدى أحمد فؤاد',phone:'01034567890',tripId:6,date:'2026-07-25',passengers:5,status:'pending',notes:'يحتاجون حافلة كبيرة',createdAt:'2026-07-20T08:30:00'},
+    {id:13,clientName:'كريم محمد صلاح',phone:'01156789012',tripId:6,date:'2026-07-25',passengers:3,status:'new',notes:'',createdAt:'2026-07-20T10:15:00'},
+    {id:14,clientName:'دينا حسين عبدالعزيز',phone:'01267890123',tripId:7,date:'2026-07-26',passengers:2,status:'approved',notes:'',createdAt:'2026-07-20T14:00:00'},
+    {id:15,clientName:'طارق علي منصور',phone:'01078901234',tripId:7,date:'2026-07-26',passengers:6,status:'new',notes:'عائلة كبيرة',createdAt:'2026-07-21T09:00:00'},
+    {id:16,clientName:'رنا مصطفى حسين',phone:'01189012345',tripId:8,date:'2026-07-27',passengers:4,status:'pending',notes:'',createdAt:'2026-07-21T11:30:00'},
+    {id:17,clientName:'أسامة جمال الدين',phone:'01290123456',tripId:8,date:'2026-07-27',passengers:2,status:'approved',notes:'',createdAt:'2026-07-21T13:45:00'},
+    {id:18,clientName:'لمياء حسين محمد',phone:'01067890123',tripId:9,date:'2026-07-28',passengers:3,status:'new',notes:'',createdAt:'2026-07-22T08:00:00'},
+    {id:19,clientName:'عمرو ناصر عبدالفتاح',phone:'01145678901',tripId:9,date:'2026-07-28',passengers:5,status:'approved',notes:'حجز مؤكد',createdAt:'2026-07-22T09:30:00'},
+    {id:20,clientName:'منى صبري عثمان',phone:'01256789012',tripId:10,date:'2026-07-29',passengers:4,status:'pending',notes:'',createdAt:'2026-07-22T10:00:00'},
+    {id:21,clientName:'وائل عبد الحميد',phone:'01023456789',tripId:10,date:'2026-07-29',passengers:2,status:'new',notes:'مقعد واحد',createdAt:'2026-07-22T11:00:00'},
+    {id:22,clientName:'سمير حسن بالعيد',phone:'01190123456',tripId:2,date:'2026-07-21',passengers:7,status:'completed',notes:'',createdAt:'2026-07-13T15:00:00'},
+    {id:23,clientName:'annelie johnson',phone:'01089012345',tripId:3,date:'2026-07-22',passengers:2,status:'approved',notes:'Foreign tourist',createdAt:'2026-07-17T16:00:00'},
+    {id:24,clientName:'abin sara mathew',phone:'01212345678',tripId:4,date:'2026-07-23',passengers:3,status:'new',notes:'',createdAt:'2026-07-18T14:00:00'},
+    {id:25,clientName:'خالد فتحي راغب',phone:'01112345678',tripId:1,date:'2026-07-20',passengers:1,status:'rejected',notes:'تم الإلغاء',createdAt:'2026-07-15T16:00:00'}
+  ],
+  transferSheets: [
+    {id:1,tripId:1,date:'2026-07-20',driverId:1,busNumber:'ABC-123',passengers:[1,2,9,25],status:'completed'},
+    {id:2,tripId:2,date:'2026-07-21',driverId:2,busNumber:'DEF-456',passengers:[3,4,22],status:'in_transit'},
+    {id:3,tripId:3,date:'2026-07-22',driverId:3,busNumber:'GHI-789',passengers:[5,6,23],status:'pending'},
+    {id:4,tripId:4,date:'2026-07-23',driverId:4,busNumber:'JKL-012',passengers:[7,8,24],status:'pending'},
+    {id:5,tripId:5,date:'2026-07-24',driverId:1,busNumber:'MNO-345',passengers:[10,11],status:'pending'},
+    {id:6,tripId:6,date:'2026-07-25',driverId:2,busNumber:'PQR-678',passengers:[12,13],status:'pending'},
+    {id:7,tripId:7,date:'2026-07-26',driverId:5,busNumber:'STU-901',passengers:[14,15],status:'pending'},
+    {id:8,tripId:8,date:'2026-07-27',driverId:3,busNumber:'VWX-234',passengers:[16,17],status:'pending'},
+    {id:9,tripId:9,date:'2026-07-28',driverId:4,busNumber:'YZA-567',passengers:[18,19],status:'pending'},
+    {id:10,tripId:10,date:'2026-07-29',driverId:5,busNumber:'BCD-890',passengers:[20,21],status:'pending'}
+  ],
+  drivers: [
+    {id:1,name:'أحمد السائق',phone:'01011112222',license:'EG-12345',vehicle:'هينييس 2024',status:'active',avatar:'أ'},
+    {id:2,name:'علي حسن',phone:'01022223333',license:'EG-23456',vehicle:'مرسيدس 2023',status:'active',avatar:'ع'},
+    {id:3,name:'سعيد محمود',phone:'01033334444',license:'EG-34567',vehicle:'مان 2024',status:'active',avatar:'س'},
+    {id:4,name:'بدر عبدالله',phone:'01044445555',license:'EG-45678',vehicle:'هينييس 2023',status:'active',avatar:'ب'},
+    {id:5,name:'مصطفى عمر',phone:'01055556666',license:'EG-56789',vehicle:'فولفو 2024',status:'busy',avatar:'م'}
+  ],
+  auditLog: [
+    {id:1,userId:1,type:'login',description:'تسجيل دخول ناجح',details:'admin@poseidon.com',timestamp:'2026-07-22T08:00:00'},
+    {id:2,userId:1,type:'booking',description:'تمت الموافقة على الحجز #1',details:'أحمد محمد علي - القاهرة الإسكندرية',timestamp:'2026-07-22T08:15:00'},
+    {id:3,userId:2,type:'booking',description:'إضافة حجز جديد #10',details:'ياسمين عادل محمد - القاهرة مرسى مطروح',timestamp:'2026-07-22T08:30:00'},
+    {id:4,userId:1,type:'transfer',description:'توليد شيت نقل #5',details:'القاهرة مرسى مطروح - 2026-07-24',timestamp:'2026-07-22T09:00:00'},
+    {id:5,userId:1,type:'settings',description:'تحديث إعدادات واتساب',details:'تفعيل الإرسال التلقائي',timestamp:'2026-07-22T09:15:00'},
+    {id:6,userId:3,type:'transfer',description:'تحديث حالة الشيت #1',details:'من في الطريق إلى مكتمل',timestamp:'2026-07-22T10:00:00'},
+    {id:7,userId:1,type:'booking',description:'رفض الحجز #25',details:'خالد فتحي راغب - القاهرة الإسكندرية',timestamp:'2026-07-22T10:30:00'},
+    {id:8,userId:2,type:'booking',description:'إضافة حجز جديد #11',details:'إبراهيم سامي جمال - القاهرة مرسى مطروح',timestamp:'2026-07-22T11:00:00'},
+    {id:9,userId:1,type:'system',description:'نسخ احتياطي تلقائي',details:'تم حفظ 25 حجز و 10 رحلات',timestamp:'2026-07-22T12:00:00'},
+    {id:10,userId:4,type:'transfer',description:'تأكيد استلام الشيت #2',details:'الجيزة الأهرامات - DEF-456',timestamp:'2026-07-22T13:00:00'},
+    {id:11,userId:1,type:'booking',description:'تمت الموافقة على الحجز #14',details:'دينا حسين عبدالعزيز - القاهرة الفيوم',timestamp:'2026-07-22T13:30:00'},
+    {id:12,userId:2,type:'booking',description:'إضافة حجز جديد #12',details:'هدى أحمد فؤاد - الإسكندرية سيدي عبد الرحمن',timestamp:'2026-07-22T14:00:00'},
+    {id:13,userId:1,type:'settings',description:'تحديث إعدادات الاستيراد',details:'تفعيل التحقق من التكرار',timestamp:'2026-07-22T14:30:00'},
+    {id:14,userId:3,type:'transfer',description:'تحديث حالة الشيت #3',details:'شرم الشيخ الغردقة - تأكيد السائق',timestamp:'2026-07-22T15:00:00'},
+    {id:15,userId:1,type:'system',description:'تنظيف سجل التدقيق',details:'حذف 45 سجل قديم',timestamp:'2026-07-22T16:00:00'}
+  ],
+  notifications: [
+    {id:1,title:'حجز جديد',message:'حجز جديد من ياسمين عادل محمد للرحلة القاهرة - مرسى مطروح',read:false,timestamp:'2026-07-22T08:30:00'},
+    {id:2,title:'تمت الموافقة',message:'تمت الموافقة على الحجز #14 - دينا حسين عبدالعزيز',read:false,timestamp:'2026-07-22T13:30:00'},
+    {id:3,title:'شيت نقل جديد',message:'تم توليد شيت نقل جديد للرحلة القاهرة - مرسى مطروح',read:false,timestamp:'2026-07-22T09:00:00'},
+    {id:4,title:'تنبيه: رحلة اليوم',message:'الرحلة القاهرة - الإسكندرية تنطلق اليوم الساعة 08:00',read:true,timestamp:'2026-07-22T07:00:00'},
+    {id:5,title:'تحديث الحالة',message:'تم تحديث حالة الشيت #1 إلى مكتمل',read:true,timestamp:'2026-07-22T10:00:00'}
+  ],
+  settings: {
+    whatsappAuto:true,
+    whatsappNumber:'+201234567890',
+    whatsappTemplate:'مرحباً {name}، تم تأكيد حجزكم للرحلة {trip} بتاريخ {date}. شكراً لكم.',
+    autoApprove:false,
+    notifyNew:true,
+    passengerLimit:40,
+    checkDuplicate:true,
+    validatePhone:true,
+    encryption:true,
+    encryptFiles:false,
+    auditLog:true,
+    auditRetention:90
+  }
+};
+
+// ============================================================
+// STATE
+// ============================================================
+var currentUser = null;
+var currentPage = 'dashboard';
+var bookingsPage = 1;
+var bookingsPerPage = 8;
+var importData = [];
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', function() {
+  setCurrentDate();
+  var saved = localStorage.getItem('poseidon_user');
+  if(saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      showApp();
+    } catch(e) {
+      showLogin();
+    }
+  } else {
+    showLogin();
+  }
+});
+
+function setCurrentDate() {
+  var d = new Date();
+  var options = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
+  var el = document.getElementById('currentDate');
+  if(el) el.textContent = d.toLocaleDateString('ar-EG',options);
+}
+
+// ============================================================
+// AUTH
+// ============================================================
+function demoLogin(role) {
+  var user = AppData.users.find(function(u){return u.role===role});
+  if(!user) return;
+  document.getElementById('loginEmail').value = user.email;
+  document.getElementById('loginPassword').value = user.password;
+  document.getElementById('loginRole').value = user.role;
+  login(null);
+}
+
+function login(e) {
+  if(e) e.preventDefault();
+  var email = document.getElementById('loginEmail').value.trim();
+  var password = document.getElementById('loginPassword').value;
+  var role = document.getElementById('loginRole').value;
+
+  if(!email || !password || !role) {
+    showToast('يرجى ملء جميع الحقول','error');
+    return false;
+  }
+
+  var user = AppData.users.find(function(u){return u.email===email && u.role===role});
+  if(!user) {
+    showToast('بيانات الدخول غير صحيحة','error');
+    return false;
+  }
+
+  currentUser = user;
+  localStorage.setItem('poseidon_user', JSON.stringify(user));
+  addAuditEntry('login','تسجيل دخول ناجح', user.email);
+  showApp();
+  return false;
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('poseidon_user');
+  showLogin();
+  showToast('تم تسجيل الخروج بنجاح','info');
+}
+
+function showLogin() {
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('appContainer').classList.remove('active');
+  document.getElementById('loginForm').reset();
+}
+
+function showApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appContainer').classList.add('active');
+  filterNavigation();
+  updateUserUI();
+  navigateTo('dashboard');
+  renderNotifications();
+}
+
+function updateUserUI() {
+  if(!currentUser) return;
+  document.getElementById('sidebarUserName').textContent = currentUser.name;
+  document.getElementById('sidebarUserRole').textContent = getRoleLabel(currentUser.role);
+  var av = document.getElementById('sidebarAvatar');
+  av.textContent = currentUser.avatar;
+  av.style.background = getAvatarColor(currentUser.role);
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigateTo(page) {
+  currentPage = page;
+  var pages = document.querySelectorAll('.page');
+  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
+  var target = document.getElementById('page-'+page);
+  if(target) target.classList.add('active');
+
+  var links = document.querySelectorAll('.nav-link');
+  for(var j=0;j<links.length;j++) {
+    links[j].classList.remove('active');
+    if(links[j].getAttribute('data-page')===page) links[j].classList.add('active');
+  }
+
+  var titles = {
+    dashboard:'لوحة التحكم',bookings:'الحجوزات',import:'استيراد Excel',
+    trips:'الرحلات',tracking:'تتبع مباشر',transfers:'شيتات النقل',
+    manifest:'المانيفست',driver:'شيت السائق',audit:'سجل التدقيق',settings:'الإعدادات'
+  };
+  document.getElementById('pageTitle').textContent = titles[page] || page;
+
+  // Close sidebar on mobile
+  document.getElementById('sidebar').classList.remove('open');
+
+  // Render page content
+  switch(page) {
+    case 'dashboard': renderDashboard(); break;
+    case 'bookings': renderBookingsTable(); break;
+    case 'trips': renderTripsGrid(); break;
+    case 'tracking': renderTrackingBoard(); break;
+    case 'transfers': renderTransfersTable(); break;
+    case 'manifest': renderManifest(); break;
+    case 'driver': renderDriverView(); break;
+    case 'audit': renderAuditLog(); break;
+    case 'settings': break;
+  }
+}
+
+function filterNavigation() {
+  if(!currentUser) return;
+  var links = document.querySelectorAll('.nav-link');
+  for(var i=0;i<links.length;i++) {
+    var roles = links[i].getAttribute('data-roles');
+    if(roles && roles.indexOf(currentUser.role)===-1) {
+      links[i].style.display = 'none';
+    } else {
+      links[i].style.display = '';
+    }
+  }
+}
+
+function toggleSidebar() {
+  var sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('open');
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard() {
+  renderDashboardStats();
+  renderActivityList();
+  renderActiveTripsWidget();
+}
+
+function renderDashboardStats() {
+  var total = AppData.bookings.length;
+  var approved = AppData.bookings.filter(function(b){return b.status==='approved'}).length;
+  var pending = AppData.bookings.filter(function(b){return b.status==='pending'||b.status==='new'}).length;
+  var activeTrips = AppData.trips.filter(function(t){return t.status==='active'}).length;
+
+  var html = '';
+  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(37,99,235,.1);color:var(--primary)">📋</div></div><div class="stat-card-value">'+total+'</div><div class="stat-card-label">إجمالي الحجوزات</div><div class="stat-card-change up">↑ 12% عن الشهر الماضي</div></div>';
+  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(22,163,74,.1);color:var(--success)">✅</div></div><div class="stat-card-value">'+approved+'</div><div class="stat-card-label">حجوزات موافق عليها</div><div class="stat-card-change up">↑ 8% عن الشهر الماضي</div></div>';
+  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(217,119,6,.1);color:var(--warning)">⏳</div></div><div class="stat-card-value">'+pending+'</div><div class="stat-card-label">قيد المراجعة</div><div class="stat-card-change down">↓ 3% عن الشهر الماضي</div></div>';
+  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(147,51,234,.1);color:#9333ea">🚌</div></div><div class="stat-card-value">'+activeTrips+'</div><div class="stat-card-label">رحلات نشطة</div><div class="stat-card-change up">↑ 5% عن الشهر الماضي</div></div>';
+  document.getElementById('statsGrid').innerHTML = html;
+}
+
+function renderActivityList() {
+  var logs = AppData.auditLog.slice().sort(function(a,b){return new Date(b.timestamp)-new Date(a.timestamp)}).slice(0,8);
+  var colors = {login:'var(--primary)',booking:'var(--success)',transfer:'var(--warning)',settings:'var(--danger)',system:'#9333ea'};
+  var html = '';
+  for(var i=0;i<logs.length;i++) {
+    var l = logs[i];
+    var user = AppData.users.find(function(u){return u.id===l.userId});
+    html += '<li class="activity-item">';
+    html += '<div class="activity-dot" style="background:'+(colors[l.type]||'var(--text-secondary)')+'"></div>';
+    html += '<div class="activity-content">';
+    html += '<div class="activity-text"><strong>'+(user?user.name:'نظام')+'</strong> '+l.description+'</div>';
+    html += '<div class="activity-time">'+getRelativeTime(l.timestamp)+'</div>';
+    html += '</div></li>';
+  }
+  document.getElementById('activityList').innerHTML = html;
+}
+
+function renderActiveTripsWidget() {
+  var trips = AppData.trips.filter(function(t){return t.status==='active'});
+  var html = '';
+  if(trips.length===0) {
+    html = '<div class="empty-state"><div class="empty-icon">🚌</div><p>لا توجد رحلات نشطة</p></div>';
+  } else {
+    for(var i=0;i<trips.length;i++) {
+      var t = trips[i];
+      var pct = Math.round((t.booked/t.capacity)*100);
+      html += '<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">';
+      html += '<div style="display:flex;justify-content:space-between;margin-bottom:4px"><strong style="font-size:13px">'+t.name+'</strong><span class="badge badge-success">نشط</span></div>';
+      html += '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">'+t.date+' - '+t.time+'</div>';
+      html += '<div style="background:#e2e8f0;border-radius:4px;height:6px;margin-bottom:4px"><div style="background:'+(pct>80?'var(--danger)':'var(--primary)')+';height:100%;width:'+pct+'%;border-radius:4px;transition:width .3s"></div></div>';
+      html += '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary)"><span>'+t.booked+'/'+t.capacity+' راكب</span><span>'+pct+'%</span></div>';
+      html += '</div>';
+    }
+  }
+  document.getElementById('activeTripsWidget').innerHTML = html;
+}
+
+// ============================================================
+// BOOKINGS
+// ============================================================
+function renderBookingsTable() {
+  var status = document.getElementById('filterBookingStatus').value;
+  var dateFrom = document.getElementById('filterDateFrom').value;
+  var dateTo = document.getElementById('filterDateTo').value;
+
+  var filtered = AppData.bookings.filter(function(b) {
+    if(status && b.status!==status) return false;
+    if(dateFrom && b.date < dateFrom) return false;
+    if(dateTo && b.date > dateTo) return false;
+    return true;
+  });
+
+  var total = filtered.length;
+  var pages = Math.ceil(total/bookingsPerPage);
+  if(bookingsPage > pages) bookingsPage = pages || 1;
+  var start = (bookingsPage-1)*bookingsPerPage;
+  var pageData = filtered.slice(start, start+bookingsPerPage);
+
+  var html = '';
+  for(var i=0;i<pageData.length;i++) {
+    var b = pageData[i];
+    var trip = AppData.trips.find(function(t){return t.id===b.tripId});
+    html += '<tr>';
+    html += '<td>'+b.id+'</td>';
+    html += '<td><strong>'+b.clientName+'</strong></td>';
+    html += '<td style="direction:ltr;text-align:left">'+b.phone+'</td>';
+    html += '<td>'+(trip?trip.name:'-')+'</td>';
+    html += '<td>'+b.date+'</td>';
+    html += '<td>'+b.passengers+'</td>';
+    html += '<td><span class="badge '+getStatusClass(b.status)+'">'+getStatusLabel(b.status)+'</span></td>';
+    html += '<td><div class="table-actions">';
+    html += '<button class="btn btn-outline btn-sm" onclick="viewBooking('+b.id+')" title="عرض">👁️</button>';
+    if(currentUser && currentUser.role==='admin') {
+      if(b.status==='new'||b.status==='pending') {
+        html += '<button class="btn btn-success btn-sm" onclick="approveBooking('+b.id+')" title="موافقة">✅</button>';
+        html += '<button class="btn btn-danger btn-sm" onclick="rejectBooking('+b.id+')" title="رفض">❌</button>';
+      }
+    }
+    html += '</div></td></tr>';
+  }
+  if(pageData.length===0) {
+    html = '<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📋</div><p>لا توجد حجوزات</p></div></td></tr>';
+  }
+  document.getElementById('bookingsTableBody').innerHTML = html;
+
+  // Pagination
+  var pagHtml = '<button class="page-btn" onclick="goBookingsPage('+(bookingsPage-1)+')" '+(bookingsPage<=1?'disabled':'')+'>السابق</button>';
+  for(var p=1;p<=pages;p++) {
+    pagHtml += '<button class="page-btn '+(p===bookingsPage?'active':'')+'" onclick="goBookingsPage('+p+')">'+p+'</button>';
+  }
+  pagHtml += '<button class="page-btn" onclick="goBookingsPage('+(bookingsPage+1)+')" '+(bookingsPage>=pages?'disabled':'')+'>التالي</button>';
+  document.getElementById('bookingsPagination').innerHTML = pagHtml;
+}
+
+function goBookingsPage(p) {
+  bookingsPage = p;
+  renderBookingsTable();
+}
+
+function approveBooking(id) {
+  var b = AppData.bookings.find(function(x){return x.id===id});
+  if(!b) return;
+  b.status = 'approved';
+  addAuditEntry('booking','تمت الموافقة على الحجز #'+id, b.clientName);
+  showToast('تمت الموافقة على الحجز بنجاح','success');
+  renderBookingsTable();
+}
+
+function rejectBooking(id) {
+  var b = AppData.bookings.find(function(x){return x.id===id});
+  if(!b) return;
+  b.status = 'rejected';
+  addAuditEntry('booking','تم رفض الحجز #'+id, b.clientName);
+  showToast('تم رفض الحجز','warning');
+  renderBookingsTable();
+}
+
+function viewBooking(id) {
+  var b = AppData.bookings.find(function(x){return x.id===id});
+  if(!b) return;
+  var trip = AppData.trips.find(function(t){return t.id===b.tripId});
+  var html = '';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">اسم العميل</label><p style="font-weight:600">'+b.clientName+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الهاتف</label><p style="font-weight:600;direction:ltr;text-align:left">'+b.phone+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الرحلة</label><p style="font-weight:600">'+(trip?trip.name:'-')+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">التاريخ</label><p style="font-weight:600">'+b.date+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">عدد الأشخاص</label><p style="font-weight:600">'+b.passengers+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الحالة</label><p><span class="badge '+getStatusClass(b.status)+'">'+getStatusLabel(b.status)+'</span></p></div>';
+  html += '</div>';
+  if(b.notes) {
+    html += '<div style="margin-top:16px"><label style="font-size:12px;color:var(--text-secondary)">ملاحظات</label><p>'+b.notes+'</p></div>';
+  }
+  html += '<div style="margin-top:16px"><label style="font-size:12px;color:var(--text-secondary)">تاريخ الإنشاء</label><p>'+formatDateTime(b.createdAt)+'</p></div>';
+
+  openModal('تفاصيل الحجز #'+id, html, '<button class="btn btn-outline" onclick="closeModal()">إغلاق</button>');
+}
+
+function showAddBookingModal() {
+  var tripOpts = '<option value="">اختر الرحلة...</option>';
+  for(var i=0;i<AppData.trips.length;i++) {
+    tripOpts += '<option value="'+AppData.trips[i].id+'">'+AppData.trips[i].name+' ('+AppData.trips[i].date+')</option>';
+  }
+  var html = '';
+  html += '<div class="form-group"><label>اسم العميل</label><input type="text" id="addBkName" placeholder="الاسم الكامل"></div>';
+  html += '<div class="form-group"><label>الهاتف</label><input type="tel" id="addBkPhone" placeholder="01xxxxxxxxx" style="direction:ltr;text-align:left"></div>';
+  html += '<div class="form-group"><label>الرحلة</label><select id="addBkTrip">'+tripOpts+'</select></div>';
+  html += '<div class="form-group"><label>التاريخ</label><input type="date" id="addBkDate"></div>';
+  html += '<div class="form-group"><label>عدد الأشخاص</label><input type="number" id="addBkPassengers" min="1" max="50" value="1"></div>';
+  html += '<div class="form-group"><label>ملاحظات</label><textarea id="addBkNotes" rows="2" placeholder="ملاحظات إضافية..."></textarea></div>';
+
+  var footer = '<button class="btn btn-primary" onclick="submitAddBooking()">إضافة</button><button class="btn btn-outline" onclick="closeModal()">إلغاء</button>';
+  openModal('إضافة حجز جديد', html, footer);
+}
+
+function submitAddBooking() {
+  var name = document.getElementById('addBkName').value.trim();
+  var phone = document.getElementById('addBkPhone').value.trim();
+  var tripId = parseInt(document.getElementById('addBkTrip').value);
+  var date = document.getElementById('addBkDate').value;
+  var passengers = parseInt(document.getElementById('addBkPassengers').value);
+  var notes = document.getElementById('addBkNotes').value.trim();
+
+  if(!name || !phone || !tripId || !date || !passengers) {
+    showToast('يرجى ملء جميع الحقول المطلوبة','error');
+    return;
+  }
+
+  var newId = Math.max.apply(null, AppData.bookings.map(function(b){return b.id})) + 1;
+  AppData.bookings.push({
+    id: newId, clientName: name, phone: phone, tripId: tripId,
+    date: date, passengers: passengers, status: 'new',
+    notes: notes, createdAt: new Date().toISOString()
+  });
+  addAuditEntry('booking','إضافة حجز جديد #'+newId, name);
+  closeModal();
+  showToast('تم إضافة الحجز بنجاح','success');
+  renderBookingsTable();
+}
+
+// ============================================================
+// TRIPS
+// ============================================================
+function renderTripsGrid() {
+  var html = '';
+  for(var i=0;i<AppData.trips.length;i++) {
+    var t = AppData.trips[i];
+    var statusBadge = t.status==='active'?'<span class="badge badge-success">نشط</span>':'<span class="badge badge-info">مجدول</span>';
+    var pct = Math.round((t.booked/t.capacity)*100);
+    html += '<div class="trip-card">';
+    html += '<div class="trip-card-header"><span class="trip-route">'+t.name+'</span>'+statusBadge+'</div>';
+    html += '<div class="trip-date">📅 '+t.date+' - ⏰ '+t.time+'</div>';
+    html += '<div class="trip-details">';
+    html += '<div class="trip-detail">🚌 <strong>'+t.busNumber+'</strong></div>';
+    html += '<div class="trip-detail">👥 <strong>'+t.booked+'/'+t.capacity+'</strong> راكب</div>';
+    html += '</div>';
+    html += '<div style="margin-top:12px;background:#e2e8f0;border-radius:4px;height:6px"><div style="background:'+(pct>80?'var(--danger)':pct>50?'var(--warning)':'var(--success)')+';height:100%;width:'+pct+'%;border-radius:4px"></div></div>';
+    html += '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-top:4px"><span>الإشغال</span><span>'+pct+'%</span></div>';
+    html += '</div>';
+  }
+  document.getElementById('tripsGrid').innerHTML = html;
+}
+
+function showAddTripModal() {
+  var html = '';
+  html += '<div class="form-group"><label>اسم الرحلة (الوجهة)</label><input type="text" id="addTripName" placeholder="مثال: القاهرة - الإسكندرية"></div>';
+  html += '<div class="form-group"><label>التاريخ</label><input type="date" id="addTripDate"></div>';
+  html += '<div class="form-group"><label>الوقت</label><input type="time" id="addTripTime"></div>';
+  html += '<div class="form-group"><label>رقم الحافلة</label><input type="text" id="addTripBus" placeholder="ABC-123"></div>';
+  html += '<div class="form-group"><label>السعة</label><input type="number" id="addTripCap" min="1" max="100" value="50"></div>';
+  var footer = '<button class="btn btn-primary" onclick="submitAddTrip()">إضافة</button><button class="btn btn-outline" onclick="closeModal()">إلغاء</button>';
+  openModal('إضافة رحلة جديدة', html, footer);
+}
+
+function submitAddTrip() {
+  var name = document.getElementById('addTripName').value.trim();
+  var date = document.getElementById('addTripDate').value;
+  var time = document.getElementById('addTripTime').value;
+  var bus = document.getElementById('addTripBus').value.trim();
+  var cap = parseInt(document.getElementById('addTripCap').value);
+  if(!name||!date||!time||!bus||!cap) { showToast('يرجى ملء جميع الحقول','error'); return; }
+  var newId = Math.max.apply(null, AppData.trips.map(function(t){return t.id})) + 1;
+  AppData.trips.push({id:newId,name:name,date:date,time:time,busNumber:bus,capacity:cap,booked:0,status:'scheduled'});
+  addAuditEntry('system','إضافة رحلة جديدة: '+name,'');
+  closeModal();
+  showToast('تمت إضافة الرحلة بنجاح','success');
+  renderTripsGrid();
+}
+
+// ============================================================
+// TRACKING (KANBAN)
+// ============================================================
+function renderTrackingBoard() {
+  var columns = [
+    {key:'new',title:'جديد',status:'new'},
+    {key:'pending',title:'قيد المراجعة',status:'pending'},
+    {key:'approved',title:'موافق عليه',status:'approved'},
+    {key:'transit',title:'في الطريق',status:'transit'},
+    {key:'completed',title:'مكتمل',status:'completed'}
+  ];
+
+  var html = '';
+  for(var c=0;c<columns.length;c++) {
+    var col = columns[c];
+    var bookings;
+    if(col.status==='transit') {
+      bookings = AppData.bookings.filter(function(b){return b.status==='approved'});
+    } else {
+      bookings = AppData.bookings.filter(function(b){return b.status===col.status});
+    }
+    document.getElementById('track'+col.key.charAt(0).toUpperCase()+col.key.slice(1)).textContent = bookings.length;
+
+    html += '<div class="kanban-column">';
+    html += '<div class="kanban-column-header"><span class="kanban-column-title">'+col.title+'</span><span class="kanban-column-count">'+bookings.length+'</span></div>';
+    html += '<div class="kanban-cards">';
+    for(var i=0;i<bookings.length;i++) {
+      var b = bookings[i];
+      var trip = AppData.trips.find(function(t){return t.id===b.tripId});
+      html += '<div class="kanban-card">';
+      html += '<div class="kanban-card-title">'+b.clientName+'</div>';
+      html += '<div class="kanban-card-meta">';
+      html += '<span>🚌 '+(trip?trip.name:'-')+'</span>';
+      html += '<span>📅 '+b.date+' | 👥 '+b.passengers+'</span>';
+      html += '</div>';
+      html += '<div class="kanban-card-actions">';
+      if(col.status==='new') {
+        html += '<button class="btn btn-success btn-sm" onclick="approveBooking('+b.id+');renderTrackingBoard()">موافقة</button>';
+        html += '<button class="btn btn-danger btn-sm" onclick="rejectBooking('+b.id+');renderTrackingBoard()">رفض</button>';
+      } else if(col.status==='approved') {
+        html += '<button class="btn btn-primary btn-sm" onclick="moveToTransit('+b.id+')">نقل</button>';
+      }
+      html += '<button class="btn btn-outline btn-sm" onclick="viewBooking('+b.id+')">عرض</button>';
+      html += '</div></div>';
+    }
+    if(bookings.length===0) {
+      html += '<div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:13px">لا توجد حجوزات</div>';
+    }
+    html += '</div></div>';
+  }
+  document.getElementById('kanbanBoard').innerHTML = html;
+}
+
+function moveToTransit(id) {
+  showToast('تم نقل الحجز #'+id+' إلى مرحلة الطريق','info');
+  renderTrackingBoard();
+}
+
+// ============================================================
+// TRANSFERS
+// ============================================================
+function renderTransfersTable() {
+  var html = '';
+  for(var i=0;i<AppData.transferSheets.length;i++) {
+    var ts = AppData.transferSheets[i];
+    var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
+    var driver = AppData.drivers.find(function(d){return d.id===ts.driverId});
+    var statusBadge = ts.status==='completed'?'<span class="badge badge-success">مكتمل</span>':ts.status==='in_transit'?'<span class="badge badge-purple">في الطريق</span>':'<span class="badge badge-warning">قيد الانتظار</span>';
+    html += '<tr>';
+    html += '<td>'+ts.id+'</td>';
+    html += '<td>'+(trip?trip.name:'-')+'</td>';
+    html += '<td>'+ts.date+'</td>';
+    html += '<td>'+ts.passengers.length+'</td>';
+    html += '<td>'+(driver?driver.name:'غير محدد')+'</td>';
+    html += '<td>'+ts.busNumber+'</td>';
+    html += '<td>'+statusBadge+'</td>';
+    html += '<td><div class="table-actions">';
+    if(currentUser && currentUser.role==='admin') {
+      if(ts.status==='pending') {
+        html += '<button class="btn btn-primary btn-sm" onclick="showAssignDriverModal('+ts.id+')">تعيين سائق</button>';
+      }
+    }
+    html += '<button class="btn btn-outline btn-sm" onclick="viewTransfer('+ts.id+')">عرض</button>';
+    html += '</div></td></tr>';
+  }
+  document.getElementById('transfersTableBody').innerHTML = html;
+}
+
+function generateTransferSheets() {
+  showToast('جاري توليد شيتات النقل...','info');
+  setTimeout(function(){ showToast('تم توليد شيتات النقل بنجاح','success'); }, 1000);
+}
+
+function showAssignDriverModal(sheetId) {
+  var ts = AppData.transferSheets.find(function(x){return x.id===sheetId});
+  if(!ts) return;
+  var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
+  var opts = '<option value="">اختر سائق...</option>';
+  for(var i=0;i<AppData.drivers.length;i++) {
+    var d = AppData.drivers[i];
+    opts += '<option value="'+d.id+'">'+d.name+' ('+d.vehicle+')</option>';
+  }
+  var html = '<div style="margin-bottom:16px"><p style="font-size:14px;font-weight:600">الرحلة: '+(trip?trip.name:'-')+'</p><p style="font-size:13px;color:var(--text-secondary)">الرقم: '+sheetId+' | التاريخ: '+ts.date+'</p></div>';
+  html += '<div class="form-group"><label>assign Driver</label><select id="assignDriverSelect">'+opts+'</select></div>';
+  var footer = '<button class="btn btn-primary" onclick="assignDriver('+sheetId+')">تعيين</button><button class="btn btn-outline" onclick="closeModal()">إلغاء</button>';
+  openModal('تعيين سائق للشيت #'+sheetId, html, footer);
+}
+
+function assignDriver(sheetId) {
+  var driverId = parseInt(document.getElementById('assignDriverSelect').value);
+  if(!driverId) { showToast('يرجى اختيار سائق','error'); return; }
+  var ts = AppData.transferSheets.find(function(x){return x.id===sheetId});
+  if(ts) { ts.driverId = driverId; ts.status = 'in_transit'; }
+  var driver = AppData.drivers.find(function(d){return d.id===driverId});
+  addAuditEntry('transfer','تعيين سائق للشيت #'+sheetId, driver?driver.name:'');
+  closeModal();
+  showToast('تم تعيين السائق بنجاح','success');
+  renderTransfersTable();
+}
+
+function viewTransfer(id) {
+  var ts = AppData.transferSheets.find(function(x){return x.id===id});
+  if(!ts) return;
+  var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
+  var driver = AppData.drivers.find(function(d){return d.id===ts.driverId});
+  var html = '';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الرحلة</label><p style="font-weight:600">'+(trip?trip.name:'-')+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">التاريخ</label><p style="font-weight:600">'+ts.date+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">السائق</label><p style="font-weight:600">'+(driver?driver.name:'غير محدد')+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الحافلة</label><p style="font-weight:600">'+ts.busNumber+'</p></div>';
+  html += '<div><label style="font-size:12px;color:var(--text-secondary)">عدد الركاب</label><p style="font-weight:600">'+ts.passengers.length+'</p></div>';
+  html += '</div>';
+  html += '<div style="margin-top:16px"><label style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;display:block">قائمة الركاب</label>';
+  html += '<div style="background:#f8fafc;border-radius:var(--radius-sm);padding:12px">';
+  for(var i=0;i<ts.passengers.length;i++) {
+    var b = AppData.bookings.find(function(x){return x.id===ts.passengers[i]});
+    if(b) html += '<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px">'+b.clientName+' - '+b.phone+' ('+b.passengers+' أشخاص)</div>';
+  }
+  html += '</div></div>';
+  openModal('تفاصيل الشيت #'+id, html, '<button class="btn btn-outline" onclick="closeModal()">إغلاق</button>');
+}
+
+// ============================================================
+// MANIFEST
+// ============================================================
+function renderManifest() {
+  var sel = document.getElementById('manifestTripSelect');
+  var opts = '<option value="">اختر رحلة...</option>';
+  for(var i=0;i<AppData.trips.length;i++) {
+    opts += '<option value="'+AppData.trips[i].id+'">'+AppData.trips[i].name+' - '+AppData.trips[i].date+'</option>';
+  }
+  sel.innerHTML = opts;
+
+  var selectedTrip = sel.value;
+  if(!selectedTrip) {
+    document.getElementById('manifestContent').innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>اختر رحلة لعرض المانيفست</p></div>';
+    return;
+  }
+
+  var trip = AppData.trips.find(function(t){return t.id===parseInt(selectedTrip)});
+  if(!trip) return;
+  var tripBookings = AppData.bookings.filter(function(b){return b.tripId===trip.id && (b.status==='approved'||b.status==='completed')});
+
+  var html = '';
+  html += '<div class="manifest-header">';
+  html += '<div><div class="manifest-title">🔱 Poseidon CRM</div><div class="manifest-subtitle">MANIFEST / MANIFEST MANIFEST</div></div>';
+  html += '<div class="manifest-info"><strong>'+trip.name+'</strong><br>Date: '+trip.date+' | Time: '+trip.time+'<br>Bus: '+trip.busNumber+' | Passengers: '+tripBookings.length+'</div>';
+  html += '</div>';
+  html += '<table class="manifest-table">';
+  html += '<thead><tr><th>#</th><th>Passenger Name</th><th>Phone</th><th>Seats</th><th>Notes</th><th>Signature</th></tr></thead>';
+  html += '<tbody>';
+  for(var j=0;j<tripBookings.length;j++) {
+    var b = tripBookings[j];
+    html += '<tr><td>'+(j+1)+'</td><td>'+b.clientName+'</td><td style="direction:ltr;text-align:left">'+b.phone+'</td><td>'+b.passengers+'</td><td>'+(b.notes||'-')+'</td><td style="min-width:120px"></td></tr>';
+  }
+  if(tripBookings.length===0) {
+    html += '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-secondary)">No passengers found for this trip</td></tr>';
+  }
+  html += '</tbody></table>';
+  html += '<div class="manifest-signatures">';
+  html += '<div class="signature-line"><div class="line"></div><div class="label">Driver Signature / توقيع السائق</div></div>';
+  html += '<div class="signature-line"><div class="line"></div><div class="label">Tour Guide / المرشد السياحي</div></div>';
+  html += '<div class="signature-line"><div class="line"></div><div class="label">Company Stamp / ختم الشركة</div></div>';
+  html += '</div>';
+  document.getElementById('manifestContent').innerHTML = html;
+}
+
+function printManifest() {
+  window.print();
+}
+
+// ============================================================
+// DRIVER VIEW
+// ============================================================
+function renderDriverView() {
+  if(!currentUser || currentUser.role!=='driver') return;
+  var driver = AppData.drivers.find(function(d){return d.phone && d.name});
+  var mySheets = AppData.transferSheets.filter(function(ts){return ts.driverId && ts.status!=='completed'});
+
+  var html = '';
+  html += '<div class="driver-info-card">';
+  html += '<div style="display:flex;align-items:center;gap:16px">';
+  html += '<div style="width:60px;height:60px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800">'+currentUser.avatar+'</div>';
+  html += '<div><h2>'+currentUser.name+'</h2><p>'+currentUser.email+'</p><p style="margin-top:4px;opacity:.7">🚗 سائق نقل</p></div>';
+  html += '</div></div>';
+
+  html += '<h3 style="font-size:16px;font-weight:700;margin-bottom:16px">الشيتات المعينة</h3>';
+  if(mySheets.length===0) {
+    html += '<div class="card"><div class="card-body"><div class="empty-state"><div class="empty-icon">📋</div><p>لا توجد شيتات معينة حالياً</p></div></div></div>';
+  } else {
+    html += '<div class="driver-sheets">';
+    for(var i=0;i<mySheets.length;i++) {
+      var ts = mySheets[i];
+      var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
+      var stBadge = ts.status==='in_transit'?'<span class="badge badge-purple">في الطريق</span>':'<span class="badge badge-warning">قيد الانتظار</span>';
+      html += '<div class="driver-sheet-card">';
+      html += '<div class="driver-sheet-header"><div><strong style="font-size:15px">'+(trip?trip.name:'رحلة')+'</strong><br><span style="font-size:12px;color:var(--text-secondary)">📅 '+ts.date+' | 🚌 '+ts.busNumber+'</span></div>'+stBadge+'</div>';
+      html += '<div class="driver-sheet-items"><strong style="font-size:13px">الركاب ('+ts.passengers.length+')</strong>';
+      for(var j=0;j<ts.passengers.length;j++) {
+        var b = AppData.bookings.find(function(x){return x.id===ts.passengers[j]});
+        if(b) {
+          html += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">';
+          html += '<span>'+b.clientName+' ('+b.passengers+' أشخاص)</span>';
+          html += '<span style="direction:ltr">'+b.phone+'</span>';
+          html += '</div>';
+        }
+      }
+      html += '</div>';
+      html += '<div style="margin-top:12px;display:flex;gap:8px">';
+      if(ts.status==='pending') {
+        html += '<button class="btn btn-success btn-sm" onclick="updateDriverSheet('+ts.id+',\'in_transit\')">🚀 بدء الرحلة</button>';
+      } else if(ts.status==='in_transit') {
+        html += '<button class="btn btn-primary btn-sm" onclick="updateDriverSheet('+ts.id+',\'completed\')">✅ إتمام الرحلة</button>';
+      }
+      html += '</div></div>';
+    }
+    html += '</div>';
+  }
+  document.getElementById('driverContent').innerHTML = html;
+}
+
+function updateDriverSheet(sheetId, newStatus) {
+  var ts = AppData.transferSheets.find(function(x){return x.id===sheetId});
+  if(ts) ts.status = newStatus;
+  var msg = newStatus==='in_transit'?'تم بدء الرحلة':'تم إتمام الرحلة';
+  showToast(msg,'success');
+  renderDriverView();
+}
+
+// ============================================================
+// AUDIT LOG
+// ============================================================
+function renderAuditLog() {
+  var typeFilter = document.getElementById('filterAuditType').value;
+  var dateFrom = document.getElementById('filterAuditFrom').value;
+
+  var logs = AppData.auditLog.filter(function(l) {
+    if(typeFilter && l.type!==typeFilter) return false;
+    if(dateFrom && l.timestamp.substring(0,10) < dateFrom) return false;
+    return true;
+  }).sort(function(a,b){return new Date(b.timestamp)-new Date(a.timestamp)});
+
+  var typeLabels = {login:'تسجيل دخول',booking:'حجز',transfer:'نقل',settings:'إعدادات',system:'نظام'};
+  var typeClasses = {login:'badge-info',booking:'badge-success',transfer:'badge-warning',settings:'badge-danger',system:'badge-purple'};
+
+  var html = '';
+  for(var i=0;i<logs.length;i++) {
+    var l = logs[i];
+    var user = AppData.users.find(function(u){return u.id===l.userId});
+    html += '<tr>';
+    html += '<td>'+l.id+'</td>';
+    html += '<td>'+formatDateTime(l.timestamp)+'</td>';
+    html += '<td>'+(user?user.name:'نظام')+'</td>';
+    html += '<td><span class="badge '+typeClasses[l.type]+'">'+typeLabels[l.type]+'</span></td>';
+    html += '<td>'+l.description+'</td>';
+    html += '<td style="font-size:12px;color:var(--text-secondary)">'+l.details+'</td>';
+    html += '</tr>';
+  }
+  if(logs.length===0) {
+    html = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📜</div><p>لا توجد سجلات</p></div></td></tr>';
+  }
+  document.getElementById('auditTableBody').innerHTML = html;
+}
+
+function exportAuditLog() {
+  var rows = [['#','التاريخ','المستخدم','النوع','الوصف','التفاصيل']];
+  var logs = AppData.auditLog.sort(function(a,b){return new Date(b.timestamp)-new Date(a.timestamp)});
+  for(var i=0;i<logs.length;i++) {
+    var l = logs[i];
+    var user = AppData.users.find(function(u){return u.id===l.userId});
+    rows.push([l.id, formatDateTime(l.timestamp), user?user.name:'نظام', l.type, l.description, l.details]);
+  }
+  exportToCSV(rows, 'audit_log.csv');
+  showToast('تم تصدير سجل التدقيق بنجاح','success');
+}
+
+function addAuditEntry(type, description, details) {
+  var newId = Math.max.apply(null, AppData.auditLog.map(function(l){return l.id})) + 1;
+  AppData.auditLog.push({
+    id: newId,
+    userId: currentUser ? currentUser.id : 1,
+    type: type,
+    description: description,
+    details: details || '',
+    timestamp: new Date().toISOString()
+  });
+}
+
+// ============================================================
+// IMPORT
+// ============================================================
+function handleFileDrop(e) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('dragover');
+  var files = e.dataTransfer.files;
+  if(files.length) processImportFile(files[0]);
+}
+
+function handleFileUpload(e) {
+  var files = e.target.files;
+  if(files.length) processImportFile(files[0]);
+}
+
+function processImportFile(file) {
+  showToast('جاري تحليل الملف: '+file.name,'info');
+
+  // Simulate import with sample data
+  setTimeout(function() {
+    importData = [
+      {clientName:'عمرو مصطفى',phone:'01098765001',tripId:1,date:'2026-07-20',passengers:3,valid:true,errors:[]},
+      {clientName:'حنان سعيد',phone:'01098765002',tripId:2,date:'2026-07-21',passengers:2,valid:true,errors:[]},
+      {clientName:'',phone:'01098765003',tripId:3,date:'2026-07-22',passengers:1,valid:false,errors:['اسم العميل مفقود']},
+      {clientName:'طارق حسين',phone:'123',tripId:4,date:'2026-07-23',passengers:5,valid:false,errors:['رقم الهاتف غير صحيح']},
+      {clientName:'سلمى أحمد',phone:'01098765005',tripId:5,date:'2026-07-24',passengers:2,valid:true,errors:[]},
+      {clientName:'ماجد فتحي',phone:'01098765006',tripId:1,date:'2026-07-20',passengers:4,valid:true,errors:[]},
+      {clientName:'رنا عادل',phone:'01098765007',tripId:3,date:'2026-07-22',passengers:1,valid:true,errors:[]},
+      {clientName:'ياسر ناصر',phone:'01098765008',tripId:2,date:'',passengers:3,valid:false,errors:['التاريخ مفقود']},
+    ];
+    renderImportPreview();
+    showToast('تم تحليل الملف: '+importData.length+' سجل','success');
+  }, 800);
+}
+
+function renderImportPreview() {
+  var preview = document.getElementById('importPreview');
+  var errors = document.getElementById('importErrors');
+  var validData = importData.filter(function(d){return d.valid});
+  var errorData = importData.filter(function(d){return !d.valid});
+
+  document.getElementById('importCount').textContent = validData.length + ' سجل صحيح';
+
+  var html = '';
+  for(var i=0;i<importData.length;i++) {
+    var d = importData[i];
+    var trip = AppData.trips.find(function(t){return t.id===d.tripId});
+    var rowStyle = d.valid ? '' : 'background:rgba(220,38,38,.05)';
+    html += '<tr style="'+rowStyle+'">';
+    html += '<td>'+(i+1)+'</td>';
+    html += '<td>'+d.clientName+'</td>';
+    html += '<td style="direction:ltr;text-align:left">'+d.phone+'</td>';
+    html += '<td>'+(trip?trip.name:'رحلة '+d.tripId)+'</td>';
+    html += '<td>'+d.date+'</td>';
+    html += '<td>'+d.passengers+'</td>';
+    html += '<td>'+(d.valid?'<span class="badge badge-success">صحيح</span>':'<span class="badge badge-danger">خطأ</span>')+'</td>';
+    html += '</tr>';
+  }
+  document.getElementById('importPreviewBody').innerHTML = html;
+  preview.style.display = 'block';
+
+  if(errorData.length > 0) {
+    var errHtml = '<ul style="list-style:none;padding:0">';
+    for(var j=0;j<errorData.length;j++) {
+      errHtml += '<li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">';
+      errHtml += '<strong>السطر '+(importData.indexOf(errorData[j])+1)+':</strong> '+errorData[j].errors.join(', ');
+      errHtml += '</li>';
+    }
+    errHtml += '</ul>';
+    document.getElementById('importErrorsList').innerHTML = errHtml;
+    errors.style.display = 'block';
+  } else {
+    errors.style.display = 'none';
+  }
+}
+
+function confirmImport() {
+  var validData = importData.filter(function(d){return d.valid});
+  var added = 0;
+  var maxId = Math.max.apply(null, AppData.bookings.map(function(b){return b.id}));
+  for(var i=0;i<validData.length;i++) {
+    var d = validData[i];
+    AppData.bookings.push({
+      id: ++maxId, clientName: d.clientName, phone: d.phone, tripId: d.tripId,
+      date: d.date, passengers: d.passengers, status: 'new',
+      notes: 'تم الاستيراد من ملف Excel', createdAt: new Date().toISOString()
+    });
+    added++;
+  }
+  addAuditEntry('booking','استيراد '+added+' حجز من ملف Excel','');
+  importData = [];
+  document.getElementById('importPreview').style.display = 'none';
+  document.getElementById('importErrors').style.display = 'none';
+  showToast('تم استيراد '+added+' حجز بنجاح','success');
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function switchSettingsTab(tab) {
+  var panels = document.querySelectorAll('.settings-panel');
+  for(var i=0;i<panels.length;i++) panels[i].classList.remove('active');
+  var tabs = document.querySelectorAll('.settings-tab');
+  for(var j=0;j<tabs.length;j++) tabs[j].classList.remove('active');
+
+  var panel = document.getElementById('settings-'+tab);
+  if(panel) panel.classList.add('active');
+  // Find matching tab button
+  var tabMap = {whatsapp:0,approval:1,importSettings:2,encryption:3,auditSettings:4};
+  if(tabMap[tab]!==undefined && tabs[tabMap[tab]]) tabs[tabMap[tab]].classList.add('active');
+}
+
+function saveSettings() {
+  AppData.settings.whatsappAuto = document.getElementById('settingWhatsappAuto').checked;
+  AppData.settings.whatsappNumber = document.getElementById('settingWhatsappNumber').value;
+  AppData.settings.whatsappTemplate = document.getElementById('settingWhatsappTemplate').value;
+  AppData.settings.autoApprove = document.getElementById('settingAutoApprove').checked;
+  AppData.settings.notifyNew = document.getElementById('settingNotifyNew').checked;
+  AppData.settings.passengerLimit = parseInt(document.getElementById('settingPassengerLimit').value);
+  AppData.settings.checkDuplicate = document.getElementById('settingCheckDuplicate').checked;
+  AppData.settings.validatePhone = document.getElementById('settingValidatePhone').checked;
+  AppData.settings.encryption = document.getElementById('settingEncryption').checked;
+  AppData.settings.encryptFiles = document.getElementById('settingEncryptFiles').checked;
+  AppData.settings.auditLog = document.getElementById('settingAuditLog').checked;
+  AppData.settings.auditRetention = parseInt(document.getElementById('settingAuditRetention').value);
+  addAuditEntry('settings','تحديث إعدادات النظام','');
+  showToast('تم حفظ الإعدادات بنجاح','success');
+}
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+function renderNotifications() {
+  var unread = AppData.notifications.filter(function(n){return !n.read}).length;
+  var badge = document.getElementById('notifBadge');
+  badge.textContent = unread;
+  badge.style.display = unread > 0 ? 'flex' : 'none';
+
+  var html = '';
+  for(var i=0;i<AppData.notifications.length;i++) {
+    var n = AppData.notifications[i];
+    html += '<div class="notif-item '+(n.read?'':'unread')+'" onclick="markNotifRead('+n.id+')">';
+    html += '<strong>'+n.title+'</strong>';
+    html += '<p style="margin-top:2px">'+n.message+'</p>';
+    html += '<div class="notif-time">'+getRelativeTime(n.timestamp)+'</div>';
+    html += '</div>';
+  }
+  document.getElementById('notifList').innerHTML = html;
+}
+
+function toggleNotifications() {
+  var dd = document.getElementById('notifDropdown');
+  dd.classList.toggle('show');
+}
+
+function markNotifRead(id) {
+  var n = AppData.notifications.find(function(x){return x.id===id});
+  if(n) n.read = true;
+  renderNotifications();
+}
+
+// Close notifications on outside click
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('notifDropdown');
+  var bell = e.target.closest('.topbar-bell');
+  if(!bell && dd) dd.classList.remove('show');
+});
+
+// ============================================================
+// SEARCH
+// ============================================================
+function handleGlobalSearch(e) {
+  var q = e.target.value.trim().toLowerCase();
+  if(!q) return;
+  // Navigate to bookings if searching
+  if(currentPage !== 'bookings') navigateTo('bookings');
+}
+
+// ============================================================
+// MODAL
+// ============================================================
+function openModal(title, body, footer) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('modalFooter').innerHTML = footer || '';
+  document.getElementById('modalOverlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if(e.key === 'Escape') closeModal();
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(message, type) {
+  var container = document.getElementById('toastContainer');
+  var toast = document.createElement('div');
+  toast.className = 'toast ' + (type || 'info');
+  var icons = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  toast.innerHTML = '<span>'+(icons[type]||'ℹ️')+'</span><span>'+message+'</span>';
+  container.appendChild(toast);
+  setTimeout(function() {
+    toast.style.animation = 'slideOutLeft .3s ease forwards';
+    setTimeout(function() { if(toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
+  }, 3000);
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function formatDate(dateStr) {
+  if(!dateStr) return '-';
+  var d = new Date(dateStr);
+  return d.toLocaleDateString('ar-EG');
+}
+
+function formatDateTime(dateStr) {
+  if(!dateStr) return '-';
+  var d = new Date(dateStr);
+  return d.toLocaleDateString('ar-EG') + ' ' + d.toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'});
+}
+
+function getRelativeTime(dateStr) {
+  var now = new Date();
+  var d = new Date(dateStr);
+  var diff = Math.floor((now - d) / 1000);
+  if(diff < 60) return 'الآن';
+  if(diff < 3600) return 'منذ ' + Math.floor(diff/60) + ' دقيقة';
+  if(diff < 86400) return 'منذ ' + Math.floor(diff/3600) + ' ساعة';
+  if(diff < 604800) return 'منذ ' + Math.floor(diff/86400) + ' يوم';
+  return formatDate(dateStr);
+}
+
+function getStatusLabel(status) {
+  var labels = {new:'جديد',pending:'قيد المراجعة',approved:'موافق عليه',rejected:'مرفوض',completed:'مكتمل',transit:'في الطريق'};
+  return labels[status] || status;
+}
+
+function getStatusClass(status) {
+  var classes = {new:'badge-info',pending:'badge-warning',approved:'badge-success',rejected:'badge-danger',completed:'badge-secondary',transit:'badge-purple'};
+  return classes[status] || 'badge-secondary';
+}
+
+function getRoleLabel(role) {
+  var labels = {admin:'مدير النظام',agency:'وكالة',transport:'نقل',driver:'سائق'};
+  return labels[role] || role;
+}
+
+function getAvatarColor(role) {
+  var colors = {admin:'var(--primary)',agency:'var(--success)',transport:'var(--warning)',driver:'var(--danger)'};
+  return colors[role] || 'var(--primary)';
+}
+
+function generateId() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function paginate(array, page, perPage) {
+  var start = (page - 1) * perPage;
+  return array.slice(start, start + perPage);
+}
+
+function exportToCSV(rows, filename) {
+  var csv = '';
+  for(var i=0;i<rows.length;i++) {
+    csv += rows[i].map(function(cell){return '"'+String(cell).replace(/"/g,'""')+'"'}).join(',') + '\n';
+  }
+  var BOM = '\uFEFF';
+  var blob = new Blob([BOM + csv], {type:'text/csv;charset=utf-8;'});
+  var link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+</script>
 </body>
 </html>
