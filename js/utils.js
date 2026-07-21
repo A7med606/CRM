@@ -36,23 +36,17 @@ function getRelativeTime(date) {
 function getStatusLabel(status) {
   const map = {
     new: 'جديد',
-    contacted: 'تم الاتصال',
-    qualified: 'مؤهل',
-    proposal: 'عرض سعر',
-    negotiation: 'تفاوض',
-    won: 'تم الإغلاق',
-    lost: 'خاسر',
-    active: 'نشط',
-    inactive: 'غير نشط',
-    pending: 'قيد الانتظار',
+    pending: 'معلق',
+    approved: 'موافق',
+    rejected: 'مرفوض',
+    in_transit: 'في النقل',
     completed: 'مكتمل',
     cancelled: 'ملغي',
+    active: 'نشط',
+    assigned: 'تم التعيين',
+    inactive: 'غير نشط',
     open: 'مفتوح',
-    in_progress: 'قيد التنفيذ',
-    closed: 'مغلق',
-    high: 'عالي',
-    medium: 'متوسط',
-    low: 'منخفض'
+    partial: 'جزئي'
   };
   return map[status] || status;
 }
@@ -60,33 +54,25 @@ function getStatusLabel(status) {
 function getStatusClass(status) {
   const map = {
     new: 'status-new',
-    contacted: 'status-contacted',
-    qualified: 'status-qualified',
-    proposal: 'status-proposal',
-    negotiation: 'status-negotiation',
-    won: 'status-won',
-    lost: 'status-lost',
-    active: 'status-active',
-    inactive: 'status-inactive',
     pending: 'status-pending',
+    approved: 'status-approved',
+    rejected: 'status-rejected',
+    in_transit: 'status-in_transit',
     completed: 'status-completed',
     cancelled: 'status-cancelled',
-    open: 'status-open',
-    in_progress: 'status-in-progress',
-    closed: 'status-closed',
-    high: 'status-high',
-    medium: 'status-medium',
-    low: 'status-low'
+    active: 'status-active',
+    assigned: 'status-assigned',
+    partial: 'status-pending'
   };
-  return map[status] || 'status-default';
+  return map[status] || 'status-new';
 }
 
 function getRoleLabel(role) {
   const map = {
     admin: 'مدير النظام',
-    manager: 'مدير المبيعات',
-    sales: 'مندوب مبيعات',
-    support: 'خدمة العملاء'
+    agency: 'وكالة السياحة',
+    transport: 'شركة النقل',
+    driver: 'سائق'
   };
   return map[role] || role;
 }
