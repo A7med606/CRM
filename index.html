@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Poseidon CRM - نظام إدارة الحجوزات والنقل">
+    <title>Poseidon CRM - نظام إدارة الحجوزات والنقل</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔱</text></svg>">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-brand">
+                <div class="brand-icon">🔱</div>
+                <h1>Poseidon CRM</h1>
+                <p>نظام إدارة الحجوزات والنقل</p>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="loginEmail">البريد الإلكتروني</label>
+                    <input type="email" id="loginEmail" placeholder="admin@poseidon.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">كلمة المرور</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginRole">الدور</label>
+                    <select id="loginRole" required>
+                        <option value="">اختر الدور...</option>
+                        <option value="admin">Administrator - التحكم الكامل</option>
+                        <option value="agency">Tourism Agency - وكالة السياحة</option>
+                        <option value="transport">Transport Company - شركة النقل</option>
+                        <option value="driver">Driver - سائق</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">تسجيل الدخول</button>
+                <div class="demo-accounts">
+                    <p>حسابات تجريبية:</p>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('admin')">Admin</button>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('agency')">Agency</button>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('transport')">Transport</button>
+                    <button type="button" class="btn btn-ghost btn-sm" onclick="demoLogin('driver')">Driver</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app hidden">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <span class="brand-icon-sm">🔱</span>
+                    <span class="brand-text">Poseidon CRM</span>
+                </div>
+                <button id="sidebarToggle" class="sidebar-toggle" aria-label="إغلاق القائمة">✕</button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">الرئيسية</span>
+                    <a href="#" class="nav-link active" data-page="dashboard" data-roles="admin,agency,transport,driver">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">لوحة التحكم</span>
+                    </a>
+                </div>
+
+                <div class="nav-section" data-roles="admin,agency">
+                    <span class="nav-section-title">الحجوزات</span>
+                    <a href="#" class="nav-link" data-page="bookings" data-roles="admin,agency">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">الحجوزات</span>
+                        <span class="nav-badge" id="bookingsBadge">12</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="import" data-roles="admin,agency">
+                        <span class="nav-icon">📥</span>
+                        <span class="nav-text">استيراد Excel</span>
+                    </a>
+                </div>
+
+                <div class="nav-section" data-roles="admin">
+                    <span class="nav-section-title">الرحلات</span>
+                    <a href="#" class="nav-link" data-page="trips" data-roles="admin">
+                        <span class="nav-icon">🚌</span>
+                        <span class="nav-text">الرحلات</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="tracking" data-roles="admin,agency">
+                        <span class="nav-icon">📡</span>
+                        <span class="nav-text">التتبع المباشر</span>
+                    </a>
+                </div>
+
+                <div class="nav-section" data-roles="admin,transport">
+                    <span class="nav-section-title">النقل</span>
+                    <a href="#" class="nav-link" data-page="transfers" data-roles="admin,transport">
+                        <span class="nav-icon">🚚</span>
+                        <span class="nav-text">شيتات النقل</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="manifest" data-roles="admin,transport">
+                        <span class="nav-icon">📄</span>
+                        <span class="nav-text">المانيفست</span>
+                    </a>
+                </div>
+
+                <div class="nav-section" data-roles="driver">
+                    <span class="nav-section-title">السائق</span>
+                    <a href="#" class="nav-link" data-page="driver" data-roles="driver">
+                        <span class="nav-icon">🚗</span>
+                        <span class="nav-text">شيتي</span>
+                    </a>
+                </div>
+
+                <div class="nav-section" data-roles="admin">
+                    <span class="nav-section-title">الإدارة</span>
+                    <a href="#" class="nav-link" data-page="audit" data-roles="admin">
+                        <span class="nav-icon">📜</span>
+                        <span class="nav-text">سجل التدقيق</span>
+                    </a>
+                    <a href="#" class="nav-link" data-page="settings" data-roles="admin">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">الإعدادات</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Admin User</span>
+                        <span class="user-role" id="userRole">Administrator</span>
+                    </div>
+                </div>
+                <button class="btn btn-ghost btn-sm btn-logout" onclick="logout()">
+                    <span>🚪</span>
+                    <span>خروج</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <button id="menuToggle" class="menu-toggle" aria-label="فتح القائمة">☰</button>
+                <div class="topbar-title">
+                    <h2 id="pageTitle">لوحة التحكم</h2>
+                </div>
+                <div class="topbar-actions">
+                    <div class="search-box">
+                        <input type="text" placeholder="بحث..." id="globalSearch">
+                        <span class="search-icon">🔍</span>
+                    </div>
+                    <div class="notification-bell" id="notificationBell">
+                        <span>🔔</span>
+                        <span class="notification-count" id="notificationCount">3</span>
+                    </div>
+                    <div class="topbar-date" id="currentDate"></div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content" id="pageContent">
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page active">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card stat-primary">
+                            <div class="stat-icon">📋</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="totalBookings">156</span>
+                                <span class="stat-label">إجمالي الحجوزات</span>
+                            </div>
+                            <div class="stat-trend up">+12%</div>
+                        </div>
+                        <div class="stat-card stat-success">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="approvedBookings">89</span>
+                                <span class="stat-label">حجوزات موافقة</span>
+                            </div>
+                            <div class="stat-trend up">+8%</div>
+                        </div>
+                        <div class="stat-card stat-warning">
+                            <div class="stat-icon">⏳</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="pendingBookings">23</span>
+                                <span class="stat-label">حجوزات معلقة</span>
+                            </div>
+                            <div class="stat-trend down">-3%</div>
+                        </div>
+                        <div class="stat-card stat-info">
+                            <div class="stat-icon">🚌</div>
+                            <div class="stat-info">
+                                <span class="stat-value" id="activeTrips">8</span>
+                                <span class="stat-label">رحلات نشطة</span>
+                            </div>
+                            <div class="stat-trend up">+2</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>الحجوزات حسب الحالة</h3>
+                                <select class="chart-filter">
+                                    <option>هذا الأسبوع</option>
+                                    <option>هذا الشهر</option>
+                                    <option>هذا العام</option>
+                                </select>
+                            </div>
+                            <div class="chart-body">
+                                <canvas id="bookingsChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3>الرحلات النشطة</h3>
+                            </div>
+                            <div class="chart-body">
+                                <div class="live-trips-list" id="liveTripsList">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="activity-card">
+                        <div class="activity-header">
+                            <h3>آخر النشاطات</h3>
+                            <a href="#" class="btn btn-ghost btn-sm" data-page="audit">عرض الكل</a>
+                        </div>
+                        <div class="activity-list" id="recentActivity">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bookings Page -->
+                <div id="page-bookings" class="page">
+                    <div class="page-header">
+                        <div class="page-header-actions">
+                            <div class="filter-group">
+                                <select id="bookingStatusFilter">
+                                    <option value="">كل الحالات</option>
+                                    <option value="new">جديد</option>
+                                    <option value="pending">معلق</option>
+                                    <option value="approved">موافق</option>
+                                    <option value="rejected">مرفوض</option>
+                                    <option value="in_transit">في النقل</option>
+                                    <option value="completed">مكتمل</option>
+                                    <option value="cancelled">ملغي</option>
+                                </select>
+                                <select id="bookingTripFilter">
+                                    <option value="">كل الرحلات</option>
+                                </select>
+                                <input type="date" id="bookingDateFilter">
+                            </div>
+                            <button class="btn btn-primary" onclick="showAddBookingModal()">
+                                <span>+</span> حجز جديد
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="bookingsTable">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAllBookings"></th>
+                                    <th>رقم الحجز</th>
+                                    <th>اسم المسافر</th>
+                                    <th>الهاتف</th>
+                                    <th>الرحلة</th>
+                                    <th>التاريخ</th>
+                                    <th>العدد</th>
+                                    <th>الحالة</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="bookingsPagination"></div>
+                </div>
+
+                <!-- Import Page -->
+                <div id="page-import" class="page">
+                    <div class="import-container">
+                        <div class="import-upload-area" id="uploadArea">
+                            <div class="upload-icon">📁</div>
+                            <h3>ارفع ملف Excel</h3>
+                            <p>اسحب الملف هنا أو اضغط للاختيار</p>
+                            <p class="upload-formats">الصيغ المدعومة: .xlsx, .csv (حد أقصى: 10MB)</p>
+                            <input type="file" id="fileInput" accept=".xlsx,.csv" hidden>
+                            <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">اختيار ملف</button>
+                        </div>
+                        
+                        <div class="import-preview hidden" id="importPreview">
+                            <div class="preview-header">
+                                <h3>معاينة البيانات</h3>
+                                <div class="preview-stats">
+                                    <span class="stat-pill success" id="validCount">0 صحيح</span>
+                                    <span class="stat-pill danger" id="errorCount">0 خطأ</span>
+                                    <span class="stat-pill info" id="totalCount">0 إجمالي</span>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table class="data-table" id="previewTable">
+                                    <thead id="previewTableHead"></thead>
+                                    <tbody id="previewTableBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="validation-errors hidden" id="validationErrors">
+                                <h4>⚠️ أخطاء التحقق</h4>
+                                <div id="errorList"></div>
+                            </div>
+                            <div class="preview-actions">
+                                <button class="btn btn-ghost" onclick="cancelImport()">إلغاء</button>
+                                <button class="btn btn-primary" id="confirmImportBtn" onclick="confirmImport()">تأكيد الاستيراد</button>
+                            </div>
+                        </div>
+
+                        <div class="import-history">
+                            <h3>سجل الاستيراد السابق</h3>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>رقم الدفعة</th>
+                                            <th>الملف</th>
+                                            <th>التاريخ</th>
+                                            <th>العدد</th>
+                                            <th>الحالة</th>
+                                            <th>إجراءات</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="importHistoryBody">
+                                        <!-- Populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trips Page -->
+                <div id="page-trips" class="page">
+                    <div class="page-header">
+                        <div class="page-header-actions">
+                            <div class="filter-group">
+                                <input type="date" id="tripDateFilter">
+                                <select id="tripStatusFilter">
+                                    <option value="">كل الحالات</option>
+                                    <option value="active">نشط</option>
+                                    <option value="completed">مكتمل</option>
+                                    <option value="cancelled">ملغي</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="showAddTripModal()">
+                                <span>+</span> رحلة جديدة
+                            </button>
+                        </div>
+                    </div>
+                    <div class="trips-grid" id="tripsGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Transfer Sheets Page -->
+                <div id="page-transfers" class="page">
+                    <div class="page-header">
+                        <div class="page-header-actions">
+                            <div class="filter-group">
+                                <select id="transferStatusFilter">
+                                    <option value="">كل الحالات</option>
+                                    <option value="pending">قيد التوزيع</option>
+                                    <option value="assigned">تم التعيين</option>
+                                    <option value="in_transit">في الطريق</option>
+                                    <option value="completed">مكتمل</option>
+                                </select>
+                                <select id="transferDriverFilter">
+                                    <option value="">كل السائقين</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="generateTransferSheets()">
+                                <span>📄</span> إنشاء شيتات
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="transfersTable">
+                            <thead>
+                                <tr>
+                                    <th>رقم الشيت</th>
+                                    <th>السائق</th>
+                                    <th>الرحلة</th>
+                                    <th>الركاب</th>
+                                    <th>الحالة</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transfersTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Manifest Page -->
+                <div id="page-manifest" class="page">
+                    <div class="page-header">
+                        <div class="page-header-actions">
+                            <div class="filter-group">
+                                <input type="date" id="manifestDateFilter">
+                                <select id="manifestTripFilter">
+                                    <option value="">كل الرحلات</option>
+                                </select>
+                                <select id="manifestCompanyFilter">
+                                    <option value="">كل شركات النقل</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="printManifest()">
+                                <span>🖨️</span> طباعة المانيفست
+                            </button>
+                        </div>
+                    </div>
+                    <div class="manifest-container" id="manifestContainer">
+                        <div class="manifest-document" id="manifestDocument">
+                            <div class="manifest-header">
+                                <div class="manifest-logo">🔱</div>
+                                <div class="manifest-title">
+                                    <h1>مانيفست النقل</h1>
+                                    <p id="manifestDate"></p>
+                                </div>
+                            </div>
+                            <div class="manifest-info">
+                                <div class="info-row">
+                                    <span><strong>الرحلة:</strong> <span id="manifestTripName"></span></span>
+                                    <span><strong>شركة النقل:</strong> <span id="manifestCompany"></span></span>
+                                    <span><strong>السائق:</strong> <span id="manifestDriver"></span></span>
+                                </div>
+                            </div>
+                            <table class="data-table manifest-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>اسم المسافر</th>
+                                        <th>الهاتف</th>
+                                        <th>الرقم</th>
+                                        <th>الوقت</th>
+                                        <th>الوقت</th>
+                                        <th>الوقت</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manifestTableBody">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                            <div class="manifest-footer">
+                                <div class="signature-box">
+                                    <p>توقيع السائق</p>
+                                    <div class="signature-line"></div>
+                                </div>
+                                <div class="signature-box">
+                                    <p>توقيع المدير</p>
+                                    <div class="signature-line"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Tracking Page -->
+                <div id="page-tracking" class="page">
+                    <div class="tracking-container">
+                        <div class="tracking-board" id="trackingBoard">
+                            <div class="tracking-column">
+                                <div class="column-header">
+                                    <h3>جديد</h3>
+                                    <span class="column-count" id="newCount">0</span>
+                                </div>
+                                <div class="column-body" id="newColumn">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <div class="tracking-column">
+                                <div class="column-header">
+                                    <h3>معلق</h3>
+                                    <span class="column-count" id="pendingCount">0</span>
+                                </div>
+                                <div class="column-body" id="pendingColumn">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <div class="tracking-column">
+                                <div class="column-header">
+                                    <h3>موافق</h3>
+                                    <span class="column-count" id="approvedCount">0</span>
+                                </div>
+                                <div class="column-body" id="approvedColumn">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <div class="tracking-column">
+                                <div class="column-header">
+                                    <h3>في النقل</h3>
+                                    <span class="column-count" id="transitCount">0</span>
+                                </div>
+                                <div class="column-body" id="transitColumn">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                            <div class="tracking-column">
+                                <div class="column-header">
+                                    <h3>مكتمل</h3>
+                                    <span class="column-count" id="completedCount">0</span>
+                                </div>
+                                <div class="column-body" id="completedColumn">
+                                    <!-- Populated by JS -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Driver Page -->
+                <div id="page-driver" class="page">
+                    <div class="driver-container">
+                        <div class="driver-header">
+                            <div class="driver-info-card">
+                                <div class="driver-avatar">🚗</div>
+                                <div class="driver-details">
+                                    <h2 id="driverName">أحمد محمد</h2>
+                                    <p id="driverPhone">+20 123 456 7890</p>
+                                    <span class="status-badge active">متاح</span>
+                                </div>
+                            </div>
+                            <div class="driver-stats">
+                                <div class="driver-stat">
+                                    <span class="stat-value" id="driverTodayTrips">3</span>
+                                    <span class="stat-label">رحلات اليوم</span>
+                                </div>
+                                <div class="driver-stat">
+                                    <span class="stat-value" id="driverTodayPassengers">45</span>
+                                    <span class="stat-label">ركاب اليوم</span>
+                                </div>
+                                <div class="driver-stat">
+                                    <span class="stat-value" id="driverCompleted">2</span>
+                                    <span class="stat-label">مكتمل</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="driver-sheets" id="driverSheets">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audit Log Page -->
+                <div id="page-audit" class="page">
+                    <div class="page-header">
+                        <div class="page-header-actions">
+                            <div class="filter-group">
+                                <select id="auditEntityFilter">
+                                    <option value="">كل الكيانات</option>
+                                    <option value="booking">حجوزات</option>
+                                    <option value="trip">رحلات</option>
+                                    <option value="transfer">شيتات نقل</option>
+                                    <option value="user">مستخدمين</option>
+                                    <option value="settings">إعدادات</option>
+                                </select>
+                                <select id="auditActionFilter">
+                                    <option value="">كل العمليات</option>
+                                    <option value="create">إنشاء</option>
+                                    <option value="update">تعديل</option>
+                                    <option value="delete">حذف</option>
+                                    <option value="approve">موافقة</option>
+                                    <option value="reject">رفض</option>
+                                </select>
+                                <input type="date" id="auditDateFilter">
+                            </div>
+                            <button class="btn btn-ghost" onclick="exportAuditLog()">
+                                <span>📥</span> تصدير CSV
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="auditTable">
+                            <thead>
+                                <tr>
+                                    <th>الوقت</th>
+                                    <th>المستخدم</th>
+                                    <th>الكيان</th>
+                                    <th>العملية</th>
+                                    <th>الوصف</th>
+                                    <th>IP</th>
+                                    <th>تفاصيل</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="pagination" id="auditPagination"></div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="page-settings" class="page">
+                    <div class="settings-container">
+                        <div class="settings-tabs">
+                            <button class="settings-tab active" data-tab="whatsapp">WhatsApp</button>
+                            <button class="settings-tab" data-tab="approval">الموافقة التلقائية</button>
+                            <button class="settings-tab" data-tab="import-settings">الاستيراد</button>
+                            <button class="settings-tab" data-tab="encryption">التشفير</button>
+                            <button class="settings-tab" data-tab="audit-settings">سجل التدقيق</button>
+                        </div>
+
+                        <!-- WhatsApp Settings -->
+                        <div class="settings-panel active" id="tab-whatsapp">
+                            <h3>إعدادات WhatsApp API</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label>WhatsApp API Token</label>
+                                    <input type="password" id="whatsappToken" placeholder="أدخل API Token">
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number ID</label>
+                                    <input type="text" id="whatsappPhoneId" placeholder="رقم الهاتف المرتبط بالـ API">
+                                </div>
+                                <div class="form-group">
+                                    <label>Business Account ID</label>
+                                    <input type="text" id="whatsappBusinessId" placeholder="معرف حساب الأعمال">
+                                </div>
+                            </div>
+                            <div class="settings-toggles">
+                                <div class="toggle-item">
+                                    <span>إشعارات الوكالة</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="notifyAgency" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-item">
+                                    <span>إشعارات شركة النقل</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="notifyTransport" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-item">
+                                    <span>إشعارات السائقين</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="notifyDrivers" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="settings-actions">
+                                <button class="btn btn-ghost">اختبار الإرسال</button>
+                                <button class="btn btn-primary" onclick="saveSettings('whatsapp')">حفظ الإعدادات</button>
+                            </div>
+                        </div>
+
+                        <!-- Approval Settings -->
+                        <div class="settings-panel" id="tab-approval">
+                            <h3>إعدادات الموافقة التلقائية</h3>
+                            <div class="settings-grid">
+                                <div class="toggle-item">
+                                    <span>تفعيل الموافقة التلقائية</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="autoApproval">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label>الحد الأدنى للعدد</label>
+                                    <input type="number" id="minPassengers" value="5" min="1">
+                                </div>
+                                <div class="form-group">
+                                    <label>نافذة الموافقة الزمنية (ساعات)</label>
+                                    <input type="number" id="approvalWindow" value="24" min="1">
+                                </div>
+                            </div>
+                            <div class="settings-actions">
+                                <button class="btn btn-primary" onclick="saveSettings('approval')">حفظ الإعدادات</button>
+                            </div>
+                        </div>
+
+                        <!-- Import Settings -->
+                        <div class="settings-panel" id="tab-import-settings">
+                            <h3>إعدادات الاستيراد</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label>الحد الأقصى لحجم الملف (MB)</label>
+                                    <input type="number" id="maxFileSize" value="10" min="1" max="50">
+                                </div>
+                                <div class="form-group">
+                                    <label>الصيغ المسموحة</label>
+                                    <input type="text" id="allowedFormats" value=".xlsx, .csv" disabled>
+                                </div>
+                                <div class="toggle-item">
+                                    <span>التحقق التلقائي</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="autoValidation" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-item">
+                                    <span>إخطار عند الأخطاء</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="errorNotification" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="settings-actions">
+                                <button class="btn btn-primary" onclick="saveSettings('import')">حفظ الإعدادات</button>
+                            </div>
+                        </div>
+
+                        <!-- Encryption Settings -->
+                        <div class="settings-panel" id="tab-encryption">
+                            <h3>إدارة مفتاح التشفير</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label>مفتاح AES-256</label>
+                                    <div class="input-with-action">
+                                        <input type="password" id="encryptionKey" placeholder="المفتاح المستخدم للتشفير">
+                                        <button class="btn btn-ghost btn-sm" onclick="toggleKeyVisibility('encryptionKey')">👁️</button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>تدوير المفتاح (أيام)</label>
+                                    <input type="number" id="keyRotation" value="90" min="30">
+                                </div>
+                                <div class="encryption-status">
+                                    <div class="status-item success">
+                                        <span>✅</span>
+                                        <span>التشفير نشط</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span>🔄</span>
+                                        <span>آخر تدوير: قبل 45 يوم</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-actions">
+                                <button class="btn btn-warning" onclick="rotateKey()">تدوير المفتاح</button>
+                                <button class="btn btn-primary" onclick="saveSettings('encryption')">حفظ الإعدادات</button>
+                            </div>
+                        </div>
+
+                        <!-- Audit Settings -->
+                        <div class="settings-panel" id="tab-audit-settings">
+                            <h3>إعدادات سجل التدقيق</h3>
+                            <div class="settings-grid">
+                                <div class="form-group">
+                                    <label>مدة الاحتفاظ (أيام)</label>
+                                    <input type="number" id="auditRetention" value="365" min="30">
+                                </div>
+                                <div class="toggle-item">
+                                    <span>تتبع الحجوزات</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="trackBookings" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-item">
+                                    <span>تتبع المصادقة</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="trackAuth" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-item">
+                                    <span>تصدير تلقائي</span>
+                                    <label class="toggle">
+                                        <input type="checkbox" id="autoExport">
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="settings-actions">
+                                <button class="btn btn-primary" onclick="saveSettings('audit')">حفظ الإعدادات</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay hidden" id="modalOverlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Modal Title</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button class="btn btn-ghost" onclick="closeModal()">إلغاء</button>
+                <button class="btn btn-primary" id="modalConfirmBtn">تأكيد</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div class="notification-panel hidden" id="notificationPanel">
+        <div class="notification-header">
+            <h3>الإشعارات</h3>
+            <button class="btn btn-ghost btn-sm" onclick="clearNotifications()">مسح الكل</button>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/bookings.js"></script>
+    <script src="js/import.js"></script>
+    <script src="js/trips.js"></script>
+    <script src="js/transfers.js"></script>
+    <script src="js/manifest.js"></script>
+    <script src="js/tracking.js"></script>
+    <script src="js/driver.js"></script>
+    <script src="js/audit.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

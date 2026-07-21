@@ -1,0 +1,11 @@
+/pages/bookings    /pages/bookings.html   200
+/pages/trips       /pages/trips.html      200
+/pages/transfers   /pages/transfers.html  200
+/pages/manifest    /pages/manifest.html   200
+/pages/tracking    /pages/tracking.html   200
+/pages/audit       /pages/audit.html      200
+/pages/settings    /pages/settings.html   200
+/pages/driver      /pages/driver.html     200
+/pages/login       /pages/login.html      200
+/pages/import      /pages/import.html     200
+/*                 /index.html            200
