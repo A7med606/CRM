@@ -3,1873 +3,1078 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Poseidon CRM - نظام إدارة الحجوزات والنقل</title>
+<title>Poseidon CRM - نظام إدارة الرحلات البحرية</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--primary:#2563eb;--primary-light:#3b82f6;--primary-dark:#1d4ed8;--success:#16a34a;--success-light:#22c55e;--warning:#d97706;--warning-light:#f59e0b;--danger:#dc2626;--danger-light:#ef4444;--sidebar-bg:#0f172a;--sidebar-hover:#1e293b;--sidebar-active:#1e3a5f;--card-bg:#ffffff;--bg:#f1f5f9;--text:#1e293b;--text-secondary:#64748b;--border:#e2e8f0;--radius:12px;--radius-sm:8px;--shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px rgba(0,0,0,.06);--shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);--shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--transition:all .2s ease}
-html{font-family:'Cairo',sans-serif;scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
-input,select,textarea,button{font-family:inherit}
-a{text-decoration:none;color:inherit}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+:root {
+--primary: #0ea5e9;
+--primary-dark: #0284c7;
+--primary-light: #e0f2fe;
+--secondary: #0f172a;
+--secondary-light: #1e293b;
+--success: #10b981;
+--success-light: #d1fae5;
+--warning: #f59e0b;
+--warning-light: #fef3c7;
+--danger: #ef4444;
+--danger-light: #fee2e2;
+--info: #06b6d4;
+--info-light: #cffafe;
+--bg: #f0f9ff;
+--card: #ffffff;
+--text: #0f172a;
+--text-secondary: #64748b;
+--text-light: #94a3b8;
+--border: #e2e8f0;
+--radius: 12px;
+--radius-sm: 8px;
+--radius-lg: 16px;
+--shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+--shadow-md: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
+--shadow-lg: 0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -2px rgba(0,0,0,.05);
+--sidebar-width: 280px;
+--topbar-height: 64px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);direction:rtl;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;font-family:inherit;border:none;outline:none;}
+input,select,textarea{font-family:inherit;outline:none;}
+table{width:100%;border-collapse:collapse;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:#f1f5f9;}
+::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:#64748b;}
 
-/* Login Screen */
-.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
-.login-card{background:#fff;border-radius:var(--radius);padding:40px;width:420px;max-width:95vw;box-shadow:var(--shadow-lg);text-align:center}
-.login-logo{font-size:48px;margin-bottom:8px}
-.login-title{font-size:24px;font-weight:800;color:var(--sidebar-bg);margin-bottom:4px}
-.login-subtitle{font-size:14px;color:var(--text-secondary);margin-bottom:28px}
-.form-group{margin-bottom:16px;text-align:right}
-.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;transition:var(--transition);background:#f8fafc;direction:rtl}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,.15);background:#fff}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;transition:var(--transition);white-space:nowrap}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:var(--shadow-md)}
-.btn-success{background:var(--success);color:#fff}
-.btn-success:hover{background:#15803d}
-.btn-warning{background:var(--warning);color:#fff}
-.btn-warning:hover{background:#b45309}
-.btn-danger{background:var(--danger);color:#fff}
-.btn-danger:hover{background:#b91c1c}
-.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text)}
-.btn-outline:hover{border-color:var(--primary);color:var(--primary);background:rgba(37,99,235,.05)}
-.btn-sm{padding:6px 12px;font-size:12px}
-.btn-lg{padding:12px 28px;font-size:16px}
-.btn-block{width:100%}
-.login-btn{width:100%;padding:12px;font-size:16px;margin-top:8px}
-.demo-divider{display:flex;align-items:center;gap:12px;margin:24px 0 16px;color:var(--text-secondary);font-size:13px}
-.demo-divider::before,.demo-divider::after{content:'';flex:1;height:1px;background:var(--border)}
-.demo-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.demo-btn{padding:10px 12px;border-radius:var(--radius-sm);border:2px solid var(--border);background:#f8fafc;cursor:pointer;transition:var(--transition);font-family:inherit;font-size:13px;font-weight:600}
-.demo-btn:hover{border-color:var(--primary);background:rgba(37,99,235,.05);transform:translateY(-1px)}
-.demo-btn .demo-role{display:block;font-size:11px;color:var(--text-secondary);font-weight:400;margin-top:2px}
+.login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);padding:20px;}
+.login-card{background:#fff;border-radius:var(--radius-lg);padding:48px 40px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);text-align:center;}
+.login-card .logo{font-size:64px;margin-bottom:8px;}
+.login-card h1{font-size:28px;font-weight:800;color:var(--secondary);margin-bottom:4px;}
+.login-card .subtitle{font-size:14px;color:var(--text-secondary);margin-bottom:32px;}
+.login-card .form-group{margin-bottom:16px;text-align:right;}
+.login-card .form-group label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;}
+.login-card .form-group input,.login-card .form-group select{width:100%;padding:12px 16px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;transition:border-color .2s;}
+.login-card .form-group input:focus,.login-card .form-group select:focus{border-color:var(--primary);}
+.login-card .btn-login{width:100%;padding:14px;background:var(--primary);color:#fff;border-radius:var(--radius-sm);font-size:16px;font-weight:700;margin-top:8px;transition:background .2s;}
+.login-card .btn-login:hover{background:var(--primary-dark);}
+.demo-buttons{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap;justify-content:center;}
+.demo-buttons button{flex:1;min-width:70px;padding:10px 8px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;border:2px solid var(--border);background:#fff;color:var(--text);transition:all .2s;}
+.demo-buttons button:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light);}
 
-/* App Layout */
-.app{display:none;min-height:100vh}
-.app.active{display:flex}
-.sidebar{position:fixed;right:0;top:0;bottom:0;width:280px;background:var(--sidebar-bg);color:#fff;z-index:1000;display:flex;flex-direction:column;transition:var(--transition);overflow:hidden}
-.sidebar.collapsed{transform:translateX(100%)}
-.sidebar-header{padding:20px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:12px}
-.sidebar-brand{font-size:20px;font-weight:800;white-space:nowrap}
-.sidebar-brand span{color:var(--primary-light)}
-.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
-.sidebar-nav::-webkit-scrollbar{width:4px}
-.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.2);border-radius:2px}
-.nav-section{margin-bottom:8px}
-.nav-section-title{font-size:11px;text-transform:uppercase;color:rgba(255,255,255,.4);padding:8px 12px 4px;letter-spacing:1px}
-.nav-link{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:var(--radius-sm);color:rgba(255,255,255,.7);cursor:pointer;transition:var(--transition);font-size:14px;font-weight:500;margin-bottom:2px;white-space:nowrap}
-.nav-link:hover{background:var(--sidebar-hover);color:#fff}
-.nav-link.active{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.4)}
-.nav-link .nav-icon{font-size:18px;width:24px;text-align:center;flex-shrink:0}
-.sidebar-footer{padding:16px;border-top:1px solid rgba(255,255,255,.1)}
-.sidebar-user{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.sidebar-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0}
-.sidebar-user-info{flex:1;min-width:0}
-.sidebar-user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sidebar-user-role{font-size:11px;color:rgba(255,255,255,.5)}
-.btn-logout{width:100%;padding:8px;border:1px solid rgba(255,255,255,.2);background:transparent;color:rgba(255,255,255,.7);border-radius:var(--radius-sm);cursor:pointer;font-family:inherit;font-size:13px;font-weight:500;transition:var(--transition);display:flex;align-items:center;justify-content:center;gap:6px}
-.btn-logout:hover{background:var(--danger);border-color:var(--danger);color:#fff}
+.app{display:none;}
+.app.active{display:flex;}
+#loginPage.hidden{display:none;}
 
-/* Main Content */
-.main{margin-right:280px;flex:1;min-height:100vh;transition:var(--transition)}
-.main.expanded{margin-right:0}
-.topbar{position:sticky;top:0;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:16px;z-index:100}
-.topbar-hamburger{display:none;background:none;border:none;font-size:24px;cursor:pointer;padding:4px;color:var(--text)}
-.topbar-title{font-size:18px;font-weight:700;flex:1}
-.topbar-search{position:relative}
-.topbar-search input{padding:8px 14px 8px 36px;border:2px solid var(--border);border-radius:20px;font-size:13px;width:240px;transition:var(--transition);background:#f8fafc}
-.topbar-search input:focus{outline:none;border-color:var(--primary);width:300px}
-.topbar-search .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-secondary);font-size:14px}
-.topbar-bell{position:relative;background:none;border:none;font-size:22px;cursor:pointer;padding:4px}
-.topbar-bell .badge{position:absolute;top:-2px;left:-2px;background:var(--danger);color:#fff;font-size:10px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700}
-.topbar-date{font-size:13px;color:var(--text-secondary);white-space:nowrap}
-.content{padding:24px}
+.sidebar{position:fixed;right:0;top:0;bottom:0;width:var(--sidebar-width);background:var(--secondary);color:#fff;z-index:100;display:flex;flex-direction:column;transition:transform .3s;overflow-y:auto;}
+.sidebar-header{padding:20px 24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid rgba(255,255,255,.1);}
+.sidebar-header .logo-icon{font-size:32px;}
+.sidebar-header h2{font-size:18px;font-weight:800;}
+.sidebar-header span{font-size:11px;color:var(--text-light);display:block;}
+.sidebar-nav{flex:1;padding:16px 0;overflow-y:auto;}
+.nav-section{margin-bottom:8px;}
+.nav-section-title{padding:8px 24px;font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:1px;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 24px;color:rgba(255,255,255,.7);font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;border-right:3px solid transparent;}
+.nav-item:hover{background:rgba(255,255,255,.05);color:#fff;}
+.nav-item.active{background:rgba(14,165,233,.15);color:var(--primary);border-right-color:var(--primary);font-weight:600;}
+.nav-item .icon{font-size:18px;width:24px;text-align:center;}
+.sidebar-footer{padding:16px 24px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:12px;}
+.sidebar-footer .avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+.sidebar-footer .user-info{flex:1;min-width:0;}
+.sidebar-footer .user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-footer .user-role{font-size:11px;color:var(--text-light);}
+.sidebar-footer .logout-btn{background:rgba(239,68,68,.2);color:var(--danger);border:none;width:36px;height:36px;border-radius:50%;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.sidebar-footer .logout-btn:hover{background:var(--danger);color:#fff;}
 
-/* Pages */
-.page{display:none}
-.page.active{display:block}
+.main-area{margin-right:var(--sidebar-width);flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border);height:var(--topbar-height);display:flex;align-items:center;padding:0 24px;gap:16px;}
+.topbar .menu-toggle{display:none;background:none;font-size:24px;color:var(--text);padding:8px;}
+.topbar .page-title{font-size:18px;font-weight:700;flex:1;}
+.topbar .search-box{display:flex;align-items:center;background:var(--bg);border-radius:var(--radius-sm);padding:8px 16px;gap:8px;width:280px;}
+.topbar .search-box input{border:none;background:none;flex:1;font-size:13px;}
+.topbar .topbar-actions{display:flex;align-items:center;gap:8px;}
+.topbar .action-btn{position:relative;background:none;font-size:20px;padding:8px;border-radius:50%;transition:background .2s;color:var(--text-secondary);}
+.topbar .action-btn:hover{background:var(--bg);}
+.topbar .badge{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;}
+.topbar .date-display{font-size:13px;color:var(--text-secondary);white-space:nowrap;}
 
-/* Stat Cards */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:24px}
-.stat-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);transition:var(--transition);border:1px solid var(--border)}
-.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
-.stat-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.stat-card-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:24px}
-.stat-card-value{font-size:28px;font-weight:800;line-height:1.2}
-.stat-card-label{font-size:13px;color:var(--text-secondary);margin-top:2px}
-.stat-card-change{font-size:12px;font-weight:600;margin-top:8px;display:flex;align-items:center;gap:4px}
-.stat-card-change.up{color:var(--success)}
-.stat-card-change.down{color:var(--danger)}
+.content{flex:1;padding:24px;}
+.page{display:none;}
+.page.active{display:block;}
 
-/* Cards */
-.card{background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);overflow:hidden}
-.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.card-title{font-size:16px;font-weight:700}
-.card-body{padding:20px}
-.card-footer{padding:12px 20px;border-top:1px solid var(--border);background:#f8fafc}
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px;}
+.stat-card .stat-icon{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.stat-card .stat-info h3{font-size:28px;font-weight:800;line-height:1;}
+.stat-card .stat-info p{font-size:13px;color:var(--text-secondary);margin-top:4px;}
 
-/* Tables */
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse}
-th,td{padding:12px 16px;text-align:right;font-size:13px;border-bottom:1px solid var(--border)}
-th{background:#f8fafc;font-weight:600;color:var(--text-secondary);font-size:12px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
-tr:hover td{background:#f8fafc}
-.table-actions{display:flex;gap:6px;flex-wrap:nowrap}
+.card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-header h3{font-size:16px;font-weight:700;}
+.card-body{padding:20px;}
 
-/* Badges */
-.badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap}
-.badge::before{content:'';width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.badge-success{background:#dcfce7;color:#166534}.badge-success::before{background:#16a34a}
-.badge-warning{background:#fef3c7;color:#92400e}.badge-warning::before{background:#d97706}
-.badge-danger{background:#fee2e2;color:#991b1b}.badge-danger::before{background:#dc2626}
-.badge-info{background:#dbeafe;color:#1e40af}.badge-info::before{background:#2563eb}
-.badge-secondary{background:#f1f5f9;color:#475569}.badge-secondary::before{background:#64748b}
-.badge-purple{background:#f3e8ff;color:#6b21a8}.badge-purple::before{background:#9333ea}
+.filter-bar{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+.filter-bar select,.filter-bar input{padding:10px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:#fff;min-width:140px;}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--primary);}
 
-/* Status dot */
-.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
-.status-dot.green{background:var(--success)}
-.status-dot.amber{background:var(--warning)}
-.status-dot.red{background:var(--danger)}
-.status-dot.blue{background:var(--primary)}
+.btn{padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all .2s;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-primary:hover{background:var(--primary-dark);}
+.btn-success{background:var(--success);color:#fff;}
+.btn-success:hover{opacity:.9;}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{opacity:.9;}
+.btn-warning{background:var(--warning);color:#fff;}
+.btn-warning:hover{opacity:.9;}
+.btn-outline{background:transparent;border:2px solid var(--border);color:var(--text-secondary);}
+.btn-outline:hover{border-color:var(--primary);color:var(--primary);}
+.btn-sm{padding:6px 12px;font-size:12px;}
+.btn-icon{width:32px;height:32px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:14px;}
 
-/* Filters Bar */
-.filters-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-.filter-group{display:flex;align-items:center;gap:6px}
-.filter-group label{font-size:12px;font-weight:600;color:var(--text-secondary);white-space:nowrap}
-.filter-group select,.filter-group input{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;background:#fff}
+.data-table{width:100%;border-collapse:collapse;}
+.data-table th{background:var(--bg);padding:12px 16px;text-align:right;font-size:12px;font-weight:700;color:var(--text-secondary);white-space:nowrap;border-bottom:2px solid var(--border);}
+.data-table td{padding:12px 16px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle;}
+.data-table tr:hover td{background:rgba(14,165,233,.02);}
+.table-container{overflow-x:auto;}
 
-/* Upload Area */
-.upload-area{border:2px dashed var(--border);border-radius:var(--radius);padding:48px 24px;text-align:center;cursor:pointer;transition:var(--transition);background:#f8fafc}
-.upload-area:hover,.upload-area.dragover{border-color:var(--primary);background:rgba(37,99,235,.05)}
-.upload-area .upload-icon{font-size:48px;margin-bottom:12px}
-.upload-area .upload-text{font-size:16px;font-weight:600;margin-bottom:4px}
-.upload-area .upload-hint{font-size:13px;color:var(--text-secondary)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap;}
+.badge-success{background:var(--success-light);color:var(--success);}
+.badge-warning{background:var(--warning-light);color:#b45309;}
+.badge-danger{background:var(--danger-light);color:var(--danger);}
+.badge-info{background:var(--info-light);color:#0891b2;}
+.badge-secondary{background:#f1f5f9;color:var(--text-secondary);}
+.badge-primary{background:var(--primary-light);color:var(--primary-dark);}
 
-/* Trips Grid */
-.trips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.trip-card{background:var(--card-bg);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);transition:var(--transition)}
-.trip-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.trip-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.trip-route{font-size:16px;font-weight:700}
-.trip-date{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
-.trip-details{display:flex;gap:16px;flex-wrap:wrap}
-.trip-detail{font-size:13px;color:var(--text-secondary)}
-.trip-detail strong{color:var(--text);font-weight:600}
+.trip-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.trip-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;transition:transform .2s,box-shadow .2s;cursor:pointer;}
+.trip-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.trip-card .trip-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.trip-card .trip-name{font-size:16px;font-weight:700;}
+.trip-card .trip-meta{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.trip-card .trip-meta-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);}
+.trip-card .trip-meta-item .icon{width:20px;text-align:center;}
+.capacity-bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:12px;}
+.capacity-bar .fill{height:100%;border-radius:4px;transition:width .3s;}
 
-/* Kanban Board */
-.kanban-board{display:flex;gap:16px;overflow-x:auto;padding-bottom:16px;min-height:500px}
-.kanban-column{min-width:280px;max-width:320px;flex:1;background:#f1f5f9;border-radius:var(--radius);padding:12px;display:flex;flex-direction:column}
-.kanban-column-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:8px 12px;background:var(--card-bg);border-radius:var(--radius-sm);box-shadow:var(--shadow)}
-.kanban-column-title{font-size:13px;font-weight:700}
-.kanban-column-count{background:var(--primary);color:#fff;font-size:11px;font-weight:700;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.kanban-cards{flex:1;display:flex;flex-direction:column;gap:8px;min-height:100px}
-.kanban-card{background:var(--card-bg);border-radius:var(--radius-sm);padding:12px;box-shadow:var(--shadow);cursor:pointer;transition:var(--transition);border:1px solid var(--border)}
-.kanban-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
-.kanban-card-title{font-size:13px;font-weight:600;margin-bottom:6px}
-.kanban-card-meta{font-size:11px;color:var(--text-secondary);display:flex;flex-direction:column;gap:2px}
-.kanban-card-actions{margin-top:8px;display:flex;gap:4px;flex-wrap:wrap}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:48px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--primary);background:var(--primary-light);}
+.upload-zone .icon{font-size:48px;margin-bottom:12px;}
+.upload-zone p{color:var(--text-secondary);font-size:14px;}
 
-/* Driver View */
-.driver-info-card{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:var(--radius);padding:24px;margin-bottom:24px}
-.driver-info-card h2{font-size:20px;margin-bottom:4px}
-.driver-info-card p{opacity:.8;font-size:14px}
-.driver-sheets{display:grid;gap:16px}
-.driver-sheet-card{background:var(--card-bg);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border:1px solid var(--border)}
-.driver-sheet-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
-.driver-sheet-items{margin-top:8px}
+.zone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:24px;}
+.zone-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;border-right:4px solid var(--primary);}
+.zone-card h4{font-size:15px;font-weight:700;margin-bottom:8px;}
+.zone-card .zone-stats{display:flex;gap:16px;margin-top:12px;}
+.zone-card .zone-stat{text-align:center;}
+.zone-card .zone-stat .num{font-size:20px;font-weight:800;color:var(--primary);}
+.zone-card .zone-stat .label{font-size:11px;color:var(--text-secondary);}
 
-/* Manifest Print */
-.manifest-print{background:#fff;padding:32px;border:1px solid var(--border);border-radius:var(--radius)}
-.manifest-header{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid var(--primary);padding-bottom:16px;margin-bottom:20px}
-.manifest-title{font-size:22px;font-weight:800;color:var(--primary)}
-.manifest-subtitle{font-size:13px;color:var(--text-secondary);margin-top:4px}
-.manifest-info{font-size:13px;text-align:left;line-height:1.8}
-.manifest-table{width:100%;border-collapse:collapse;margin-bottom:24px}
-.manifest-table th{background:var(--primary);color:#fff;padding:10px 12px;font-size:12px}
-.manifest-table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border)}
-.manifest-table tr:nth-child(even) td{background:#f8fafc}
-.manifest-signatures{display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px;margin-top:32px;padding-top:20px;border-top:2px solid var(--border)}
-.signature-line{text-align:center}
-.signature-line .line{border-bottom:1px solid #000;width:80%;margin:0 auto 8px}
-.signature-line .label{font-size:12px;color:var(--text-secondary)}
+.transfer-timeline{display:flex;align-items:center;gap:0;padding:16px 0;overflow-x:auto;}
+.timeline-step{display:flex;flex-direction:column;align-items:center;min-width:80px;position:relative;}
+.timeline-step .step-dot{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;border:3px solid var(--border);background:#fff;z-index:1;}
+.timeline-step.active .step-dot{border-color:var(--primary);background:var(--primary);color:#fff;}
+.timeline-step.done .step-dot{border-color:var(--success);background:var(--success);color:#fff;}
+.timeline-step .step-label{font-size:10px;margin-top:6px;text-align:center;color:var(--text-secondary);white-space:nowrap;}
+.timeline-line{flex:1;height:3px;background:var(--border);min-width:20px;margin-top:-16px;}
+.timeline-line.done{background:var(--success);}
+.timeline-line.active{background:var(--primary);}
 
-/* Settings */
-.settings-tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0;flex-wrap:wrap}
-.settings-tab{padding:10px 20px;border:none;background:none;font-family:inherit;font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:var(--transition)}
-.settings-tab:hover{color:var(--text)}
-.settings-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
-.settings-panel{display:none}
-.settings-panel.active{display:block}
-.settings-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
-.settings-row:last-child{border-bottom:none}
-.settings-row-info h4{font-size:14px;font-weight:600;margin-bottom:2px}
-.settings-row-info p{font-size:12px;color:var(--text-secondary)}
-.toggle{position:relative;width:44px;height:24px;cursor:pointer}
-.toggle input{opacity:0;width:0;height:0}
-.toggle .slider{position:absolute;inset:0;background:#cbd5e1;border-radius:24px;transition:var(--transition)}
-.toggle .slider::before{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:3px;right:3px;transition:var(--transition);box-shadow:var(--shadow)}
-.toggle input:checked+.slider{background:var(--primary)}
-.toggle input:checked+.slider::before{transform:translateX(-20px)}
+.tracking-board{display:flex;gap:16px;overflow-x:auto;padding-bottom:16px;min-height:500px;}
+.tracking-column{min-width:240px;max-width:240px;background:var(--bg);border-radius:var(--radius);padding:12px;flex-shrink:0;}
+.tracking-column .col-header{font-size:13px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.tracking-column .col-count{background:var(--border);border-radius:10px;padding:2px 8px;font-size:11px;font-weight:600;}
+.tracking-card{background:#fff;border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;box-shadow:var(--shadow);cursor:pointer;transition:box-shadow .2s;}
+.tracking-card:hover{box-shadow:var(--shadow-md);}
+.tracking-card .tc-id{font-size:11px;color:var(--primary);font-weight:600;}
+.tracking-card .tc-name{font-size:13px;font-weight:600;margin:4px 0;}
+.tracking-card .tc-detail{font-size:11px;color:var(--text-secondary);display:flex;align-items:center;gap:4px;}
 
-/* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
-.modal-overlay.active{display:flex}
-.modal{background:var(--card-bg);border-radius:var(--radius);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
-.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.modal-title{font-size:16px;font-weight:700}
-.modal-close{background:none;border:none;font-size:24px;cursor:pointer;padding:4px;color:var(--text-secondary);transition:var(--transition)}
-.modal-close:hover{color:var(--danger)}
-.modal-body{padding:20px}
-.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-start}
+.driver-card{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;border-radius:var(--radius);padding:24px;margin-bottom:24px;}
+.driver-card h2{font-size:20px;font-weight:800;}
+.driver-card .driver-meta{display:flex;gap:24px;margin-top:12px;font-size:14px;}
+.driver-card .driver-meta span{display:flex;align-items:center;gap:6px;}
 
-/* Toast */
-.toast-container{position:fixed;top:20px;left:20px;z-index:9000;display:flex;flex-direction:column;gap:8px}
-.toast{padding:12px 20px;border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-lg);animation:slideInLeft .3s ease;min-width:280px;max-width:400px}
-.toast.success{background:var(--success)}
-.toast.error{background:var(--danger)}
-.toast.warning{background:var(--warning)}
-.toast.info{background:var(--primary)}
-@keyframes slideInLeft{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
-@keyframes slideOutLeft{from{transform:translateX(0);opacity:1}to{transform:translateX(-100%);opacity:0}}
+.sheet-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px;margin-bottom:16px;}
+.sheet-card .sheet-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.passenger-row{display:flex;align-items:center;gap:12px;padding:12px;border:2px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;transition:border-color .2s;}
+.passenger-row .p-info{flex:1;}
+.passenger-row .p-name{font-size:14px;font-weight:600;}
+.passenger-row .p-detail{font-size:12px;color:var(--text-secondary);}
+.passenger-row .p-status-btn{padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;color:#fff;min-width:120px;text-align:center;}
 
-/* Activity List */
-.activity-list{list-style:none}
-.activity-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.activity-item:last-child{border-bottom:none}
-.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex-shrink:0}
-.activity-content{flex:1}
-.activity-text{font-size:13px;line-height:1.5}
-.activity-time{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.notification-panel{position:fixed;top:0;left:0;width:380px;max-width:100%;height:100vh;background:#fff;z-index:200;box-shadow:var(--shadow-lg);transform:translateX(-100%);transition:transform .3s;overflow-y:auto;}
+.notification-panel.open{transform:translateX(0);}
+.notification-panel .panel-header{padding:20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.notification-panel .panel-header h3{font-size:16px;font-weight:700;}
+.notification-item{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;gap:12px;}
+.notification-item .n-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.notification-item .n-content{flex:1;}
+.notification-item .n-message{font-size:13px;line-height:1.5;}
+.notification-item .n-time{font-size:11px;color:var(--text-light);margin-top:4px;}
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199;display:none;}
+.panel-overlay.show{display:block;}
 
-/* Pagination */
-.pagination{display:flex;align-items:center;justify-content:center;gap:4px;margin-top:16px}
-.page-btn{padding:6px 12px;border:1px solid var(--border);background:#fff;border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;transition:var(--transition);font-family:inherit}
-.page-btn:hover{border-color:var(--primary);color:var(--primary)}
-.page-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-.page-btn:disabled{opacity:.5;cursor:not-allowed}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;display:none;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:var(--radius-lg);width:100%;max-width:600px;max-height:85vh;display:flex;flex-direction:column;}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.modal-header h3{font-size:18px;font-weight:700;}
+.modal-close{background:none;font-size:24px;color:var(--text-secondary);padding:4px;transition:color .2s;}
+.modal-close:hover{color:var(--danger);}
+.modal-body{padding:24px;overflow-y:auto;flex:1;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-start;gap:12px;flex-shrink:0;}
 
-/* Error text */
-.error-text{color:var(--danger);font-size:12px;margin-top:4px;display:none}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:var(--radius-sm);font-size:14px;transition:border-color .2s;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--primary);}
+.form-group textarea{resize:vertical;min-height:80px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
 
-/* Empty state */
-.empty-state{text-align:center;padding:48px 24px;color:var(--text-secondary)}
-.empty-state .empty-icon{font-size:48px;margin-bottom:12px}
-.empty-state p{font-size:14px}
+.toast-container{position:fixed;top:20px;left:20px;z-index:500;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:14px 20px;border-radius:var(--radius-sm);color:#fff;font-size:13px;font-weight:600;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;animation:slideIn .3s;min-width:280px;max-width:380px;}
+.toast-success{background:var(--success);}
+.toast-error{background:var(--danger);}
+.toast-warning{background:var(--warning);}
+.toast-info{background:var(--info);}
+@keyframes slideIn{from{transform:translateX(-100%);opacity:0;}to{transform:translateX(0);opacity:1;}}
 
-/* Responsive */
+.audit-filters{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+
+.settings-tabs{display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border);padding-bottom:0;}
+.settings-tab{padding:12px 20px;font-size:14px;font-weight:600;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;}
+.settings-tab.active{color:var(--primary);border-bottom-color:var(--primary);}
+.settings-panel{display:none;}
+.settings-panel.active{display:block;}
+.settings-row{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--border);}
+.settings-row .s-label h4{font-size:14px;font-weight:600;}
+.settings-row .s-label p{font-size:12px;color:var(--text-secondary);}
+.toggle{width:48px;height:26px;border-radius:13px;background:var(--border);position:relative;cursor:pointer;transition:background .2s;}
+.toggle.on{background:var(--primary);}
+.toggle .toggle-knob{width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:2px;right:2px;transition:right .2s;box-shadow:var(--shadow);}
+.toggle.on .toggle-knob{right:24px;}
+
+.empty-state{text-align:center;padding:48px;color:var(--text-secondary);}
+.empty-state .icon{font-size:48px;margin-bottom:12px;}
+.empty-state p{font-size:14px;}
+
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:20px;}
+.pagination button{width:36px;height:36px;border-radius:var(--radius-sm);border:2px solid var(--border);background:#fff;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.pagination button.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.pagination button:hover:not(.active){border-color:var(--primary);color:var(--primary);}
+
+.active-trips-list{display:flex;flex-direction:column;gap:8px;}
+.trip-list-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:var(--radius-sm);cursor:pointer;transition:background .2s;}
+.trip-list-item:hover{background:var(--primary-light);}
+.trip-list-item .status-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.trip-list-item .trip-info{flex:1;}
+.trip-list-item .trip-info h4{font-size:13px;font-weight:600;}
+.trip-list-item .trip-info span{font-size:11px;color:var(--text-secondary);}
+
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;}
+.overview-item{text-align:center;padding:16px;background:var(--bg);border-radius:var(--radius-sm);}
+.overview-item .ov-num{font-size:32px;font-weight:800;}
+.overview-item .ov-label{font-size:12px;color:var(--text-secondary);margin-top:4px;}
+
+.import-preview{margin-top:20px;}
+.import-history{margin-top:24px;}
+
+@media(max-width:1024px){
+.stat-cards{grid-template-columns:repeat(2,1fr);}
+.tracking-board{flex-wrap:nowrap;}
+}
 @media(max-width:768px){
-.sidebar{transform:translateX(100%)}
-.sidebar.open{transform:translateX(0)}
-.main{margin-right:0}
-.topbar-hamburger{display:block}
-.topbar-search input{width:160px}
-.topbar-search input:focus{width:200px}
-.topbar-date{display:none}
-.stats-grid{grid-template-columns:1fr 1fr}
-.trips-grid{grid-template-columns:1fr}
-.kanban-board{flex-direction:column}
-.kanban-column{max-width:100%;min-width:auto}
-.manifest-header{flex-direction:column;gap:16px}
-.manifest-signatures{grid-template-columns:1fr}
-.demo-buttons{grid-template-columns:1fr}
+.sidebar{transform:translateX(100%);}
+.sidebar.open{transform:translateX(0);}
+.main-area{margin-right:0;}
+.topbar .menu-toggle{display:block;}
+.topbar .search-box{display:none;}
+.stat-cards{grid-template-columns:1fr 1fr;}
+.trip-cards{grid-template-columns:1fr;}
+.form-row{grid-template-columns:1fr;}
+.notification-panel{width:100%;}
+.driver-card .driver-meta{flex-direction:column;gap:8px;}
+.zone-grid{grid-template-columns:1fr;}
 }
 @media(max-width:480px){
-.stats-grid{grid-template-columns:1fr}
-.content{padding:16px}
+.stat-cards{grid-template-columns:1fr;}
+.content{padding:12px;}
+.topbar{padding:0 12px;}
+.login-card{padding:32px 24px;}
 }
-
-/* Print */
-@media print{
-.sidebar,.topbar,.modal-overlay,.toast-container,.btn,.filters-bar,.pagination{display:none!important}
-.main{margin-right:0!important}
-.content{padding:0}
-.card{box-shadow:none;border:1px solid #ddd}
-}
-
-/* Skeleton loading */
-.skeleton{background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%);background-size:200% 100%;animation:skeleton 1.5s infinite;border-radius:var(--radius-sm)}
-@keyframes skeleton{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-/* Validation error */
-.input-error{border-color:var(--danger)!important}
-.validation-msg{color:var(--danger);font-size:12px;margin-top:4px;display:none}
-.validation-msg.show{display:block}
-
-/* Notification dropdown */
-.notif-dropdown{position:absolute;top:100%;left:0;background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-lg);width:320px;max-height:400px;overflow-y:auto;display:none;z-index:200;border:1px solid var(--border)}
-.notif-dropdown.show{display:block}
-.notif-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:14px}
-.notif-item{padding:12px 16px;border-bottom:1px solid var(--border);font-size:13px;cursor:pointer;transition:var(--transition)}
-.notif-item:hover{background:#f8fafc}
-.notif-item .notif-time{font-size:11px;color:var(--text-secondary);margin-top:4px}
-.notif-item.unread{background:rgba(37,99,235,.03);border-right:3px solid var(--primary)}
 </style>
 </head>
 <body>
 
-<!-- Login Screen -->
-<div id="loginScreen" class="login-screen">
-  <div class="login-card">
-    <div class="login-logo">🔱</div>
-    <h1 class="login-title">Poseidon CRM</h1>
-    <p class="login-subtitle">نظام إدارة الحجوزات والنقل السياحي</p>
-    <form id="loginForm" onsubmit="return login(event)">
-      <div class="form-group">
-        <label>البريد الإلكتروني</label>
-        <input type="email" id="loginEmail" placeholder="admin@poseidon.com" required>
-      </div>
-      <div class="form-group">
-        <label>كلمة المرور</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" required>
-      </div>
-      <div class="form-group">
-        <label>الدور</label>
-        <select id="loginRole" required>
-          <option value="">اختر الدور...</option>
-          <option value="admin">مدير النظام</option>
-          <option value="agency">وكالة</option>
-          <option value="transport">نقل</option>
-          <option value="driver">سائق</option>
-        </select>
-      </div>
-      <button type="submit" class="btn btn-primary login-btn">تسجيل الدخول</button>
-    </form>
-    <div class="demo-divider">حسابات تجريبية</div>
-    <div class="demo-buttons">
-      <button class="demo-btn" onclick="demoLogin('admin')">👑 مدير النظام<span class="demo-role">admin@poseidon.com</span></button>
-      <button class="demo-btn" onclick="demoLogin('agency')">🏢 وكالة<span class="demo-role">agency@poseidon.com</span></button>
-      <button class="demo-btn" onclick="demoLogin('transport')">🚚 نقل<span class="demo-role">transport@poseidon.com</span></button>
-      <button class="demo-btn" onclick="demoLogin('driver')">🚗 سائق<span class="demo-role">driver@poseidon.com</span></button>
-    </div>
-  </div>
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="login-page">
+<div class="login-card">
+<div class="logo">🔱</div>
+<h1>Poseidon CRM</h1>
+<p class="subtitle">نظام إدارة الرحلات البحرية - الغردقة</p>
+<form id="loginForm" onsubmit="return handleLogin(event)">
+<div class="form-group">
+<label>البريد الإلكتروني</label>
+<input type="email" id="loginEmail" placeholder="admin@poseidon.com" required>
+</div>
+<div class="form-group">
+<label>كلمة المرور</label>
+<input type="password" id="loginPassword" placeholder="••••••••" required>
+</div>
+<div class="form-group">
+<label>الدور</label>
+<select id="loginRole" required>
+<option value="">اختر الدور</option>
+<option value="admin">مدير النظام</option>
+<option value="agency">وكالة سياحية</option>
+<option value="transport">شركة نقل</option>
+<option value="driver">سائق</option>
+</select>
+</div>
+<button type="submit" class="btn-login">تسجيل الدخول</button>
+</form>
+<div class="demo-buttons">
+<button onclick="demoLogin('admin')">👤 Admin</button>
+<button onclick="demoLogin('agency')">🏢 Agency</button>
+<button onclick="demoLogin('transport')">🚚 Transport</button>
+<button onclick="demoLogin('driver')">🚗 Driver</button>
+</div>
+</div>
 </div>
 
-<!-- Toast Container -->
-<div id="toastContainer" class="toast-container"></div>
+<!-- APP -->
+<div id="app" class="app">
+<!-- SIDEBAR -->
+<aside id="sidebar" class="sidebar">
+<div class="sidebar-header">
+<span class="logo-icon">🔱</span>
+<div>
+<h2>Poseidon CRM</h2>
+<span>v2.0 - Hurghada</span>
+</div>
+</div>
+<nav class="sidebar-nav" id="sidebarNav">
+<div class="nav-section">
+<div class="nav-section-title">الرئيسية</div>
+<div class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+<span class="icon">📊</span> لوحة التحكم
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-section-title">الحجوزات</div>
+<div class="nav-item" data-page="bookings" data-roles="admin,agency" onclick="navigateTo('bookings')">
+<span class="icon">📋</span> الحجوزات
+</div>
+<div class="nav-item" data-page="import" data-roles="admin,agency" onclick="navigateTo('import')">
+<span class="icon">📥</span> استيراد Excel
+</div>
+<div class="nav-item" data-page="transferSync" data-roles="admin,agency" onclick="navigateTo('transferSync')">
+<span class="icon">🚢</span> جدول الحركة
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-section-title">الرحلات</div>
+<div class="nav-item" data-page="trips" data-roles="admin" onclick="navigateTo('trips')">
+<span class="icon">🚢</span> الرحلات
+</div>
+<div class="nav-item" data-page="tracking" data-roles="admin,agency,transport" onclick="navigateTo('tracking')">
+<span class="icon">📡</span> التتبع
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-section-title">النقل</div>
+<div class="nav-item" data-page="transfers" data-roles="admin,transport" onclick="navigateTo('transfers')">
+<span class="icon">🚚</span> شيتات النقل
+</div>
+<div class="nav-item" data-page="driver" data-roles="driver" onclick="navigateTo('driver')">
+<span class="icon">🚗</span> واجهة السائق
+</div>
+</div>
+<div class="nav-section">
+<div class="nav-section-title">الإدارة</div>
+<div class="nav-item" data-page="audit" data-roles="admin" onclick="navigateTo('audit')">
+<span class="icon">📜</span> سجل التدقيق
+</div>
+<div class="nav-item" data-page="settings" data-roles="admin" onclick="navigateTo('settings')">
+<span class="icon">⚙️</span> الإعدادات
+</div>
+</div>
+</nav>
+<div class="sidebar-footer">
+<div class="avatar" id="sidebarAvatar"></div>
+<div class="user-info">
+<div class="user-name" id="sidebarUserName"></div>
+<div class="user-role" id="sidebarUserRole"></div>
+</div>
+<button class="logout-btn" onclick="logout()" title="تسجيل الخروج">⏻</button>
+</div>
+</aside>
 
-<!-- Modal -->
-<div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 id="modalTitle" class="modal-title"></h3>
-      <button class="modal-close" onclick="closeModal()">&times;</button>
-    </div>
-    <div id="modalBody" class="modal-body"></div>
-    <div id="modalFooter" class="modal-footer"></div>
-  </div>
+<!-- MAIN AREA -->
+<div class="main-area">
+<!-- TOPBAR -->
+<header class="topbar">
+<button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+<h1 class="page-title" id="topbarTitle">لوحة التحكم</h1>
+<div class="search-box">
+<span>🔍</span>
+<input type="text" placeholder="بحث..." id="globalSearch" oninput="handleGlobalSearch(this.value)">
+</div>
+<div class="topbar-actions">
+<button class="action-btn" onclick="toggleNotifications()" id="notifBtn">
+🔔
+<span class="badge" id="notifBadge">0</span>
+</button>
+<span class="date-display" id="topbarDate"></span>
+</div>
+</header>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+<div class="stat-cards" id="dashboardStats"></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+<div class="card">
+<div class="card-header"><h3>🚢 الرحلات النشطة</h3></div>
+<div class="card-body">
+<div class="active-trips-list" id="activeTripsList"></div>
+</div>
+</div>
+<div class="card">
+<div class="card-header"><h3>🚚 حالة النقل</h3></div>
+<div class="card-body">
+<div class="overview-grid" id="transferOverview"></div>
+</div>
+</div>
+</div>
+<div class="card" style="margin-top:16px;">
+<div class="card-header"><h3>🔔 آخر الإشعارات</h3></div>
+<div class="card-body">
+<div id="recentNotifications"></div>
+</div>
+</div>
 </div>
 
-<!-- App Container -->
-<div id="appContainer" class="app">
-  <!-- Sidebar -->
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-header">
-      <span style="font-size:28px">🔱</span>
-      <span class="sidebar-brand">Poseidon <span>CRM</span></span>
-    </div>
-    <nav class="sidebar-nav" id="sidebarNav">
-      <div class="nav-section">
-        <div class="nav-section-title">القائمة الرئيسية</div>
-        <div class="nav-link active" data-page="dashboard" data-roles="admin,agency,transport,driver" onclick="navigateTo('dashboard')">
-          <span class="nav-icon">📊</span>لوحة التحكم
-        </div>
-        <div class="nav-link" data-page="bookings" data-roles="admin,agency" onclick="navigateTo('bookings')">
-          <span class="nav-icon">📋</span>الحجوزات
-        </div>
-        <div class="nav-link" data-page="import" data-roles="admin,agency" onclick="navigateTo('import')">
-          <span class="nav-icon">📥</span>استيراد Excel
-        </div>
-        <div class="nav-link" data-page="trips" data-roles="admin" onclick="navigateTo('trips')">
-          <span class="nav-icon">🚌</span>الرحلات
-        </div>
-        <div class="nav-link" data-page="tracking" data-roles="admin,agency" onclick="navigateTo('tracking')">
-          <span class="nav-icon">📡</span>تتبع مباشر
-        </div>
-        <div class="nav-link" data-page="transfers" data-roles="admin,transport" onclick="navigateTo('transfers')">
-          <span class="nav-icon">🚚</span>شيتات النقل
-        </div>
-        <div class="nav-link" data-page="manifest" data-roles="admin,transport" onclick="navigateTo('manifest')">
-          <span class="nav-icon">📄</span>المانيفست
-        </div>
-        <div class="nav-link" data-page="driver" data-roles="driver" onclick="navigateTo('driver')">
-          <span class="nav-icon">🚗</span>شيت السائق
-        </div>
-        <div class="nav-link" data-page="audit" data-roles="admin" onclick="navigateTo('audit')">
-          <span class="nav-icon">📜</span>سجل التدقيق
-        </div>
-        <div class="nav-link" data-page="settings" data-roles="admin" onclick="navigateTo('settings')">
-          <span class="nav-icon">⚙️</span>الإعدادات
-        </div>
-      </div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div id="sidebarAvatar" class="sidebar-avatar" style="background:var(--primary);color:#fff">م</div>
-        <div class="sidebar-user-info">
-          <div id="sidebarUserName" class="sidebar-user-name">المستخدم</div>
-          <div id="sidebarUserRole" class="sidebar-user-role">مدير</div>
-        </div>
-      </div>
-      <button class="btn-logout" onclick="logout()">🚪 تسجيل الخروج</button>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
-  <main class="main" id="mainContent">
-    <!-- Topbar -->
-    <header class="topbar">
-      <button class="topbar-hamburger" onclick="toggleSidebar()">☰</button>
-      <h2 id="pageTitle" class="topbar-title">لوحة التحكم</h2>
-      <div class="topbar-search">
-        <span class="search-icon">🔍</span>
-        <input type="text" placeholder="بحث..." id="globalSearch" onkeyup="handleGlobalSearch(event)">
-      </div>
-      <div style="position:relative">
-        <button class="topbar-bell" onclick="toggleNotifications()">🔔<span id="notifBadge" class="badge">3</span></button>
-        <div id="notifDropdown" class="notif-dropdown">
-          <div class="notif-header">الإشعارات</div>
-          <div id="notifList"></div>
-        </div>
-      </div>
-      <span class="topbar-date" id="currentDate"></span>
-    </header>
-
-    <div class="content">
-      <!-- Dashboard Page -->
-      <div id="page-dashboard" class="page active">
-        <div class="stats-grid" id="statsGrid"></div>
-        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">النشاط الأخير</span>
-            </div>
-            <div class="card-body">
-              <ul class="activity-list" id="activityList"></ul>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-header">
-              <span class="card-title">الرحلات النشطة</span>
-            </div>
-            <div class="card-body" id="activeTripsWidget"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Bookings Page -->
-      <div id="page-bookings" class="page">
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">إدارة الحجوزات</span>
-            <button class="btn btn-primary btn-sm" onclick="showAddBookingModal()">➕ إضافة حجز</button>
-          </div>
-          <div class="card-body">
-            <div class="filters-bar">
-              <div class="filter-group">
-                <label>الحالة:</label>
-                <select id="filterBookingStatus" onchange="renderBookingsTable()">
-                  <option value="">الكل</option>
-                  <option value="new">جديد</option>
-                  <option value="pending">قيد المراجعة</option>
-                  <option value="approved">موافق عليه</option>
-                  <option value="rejected">مرفوض</option>
-                  <option value="completed">مكتمل</option>
-                </select>
-              </div>
-              <div class="filter-group">
-                <label>من تاريخ:</label>
-                <input type="date" id="filterDateFrom" onchange="renderBookingsTable()">
-              </div>
-              <div class="filter-group">
-                <label>إلى تاريخ:</label>
-                <input type="date" id="filterDateTo" onchange="renderBookingsTable()">
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>اسم العميل</th>
-                    <th>الهاتف</th>
-                    <th>الرحلة</th>
-                    <th>التاريخ</th>
-                    <th>عدد الأشخاص</th>
-                    <th>الحالة</th>
-                    <th>الإجراءات</th>
-                  </tr>
-                </thead>
-                <tbody id="bookingsTableBody"></tbody>
-              </table>
-            </div>
-            <div id="bookingsPagination" class="pagination"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Import Page -->
-      <div id="page-import" class="page">
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">استيراد حجوزات من Excel</span>
-          </div>
-          <div class="card-body">
-            <div id="uploadArea" class="upload-area" onclick="document.getElementById('fileInput').click()" ondragover="event.preventDefault();this.classList.add('dragover')" ondragleave="this.classList.remove('dragover')" ondrop="handleFileDrop(event)">
-              <div class="upload-icon">📁</div>
-              <div class="upload-text">اسحب الملف هنا أو انقر للاختيار</div>
-              <div class="upload-hint">يدعم ملفات .xlsx و .csv</div>
-            </div>
-            <input type="file" id="fileInput" accept=".xlsx,.csv" style="display:none" onchange="handleFileUpload(event)">
-            <div id="importPreview" style="display:none;margin-top:20px">
-              <div class="card-header" style="margin:-20px -20px 16px;padding:16px 20px">
-                <span class="card-title">معاينة البيانات</span>
-                <div style="display:flex;gap:8px">
-                  <span id="importCount" class="badge badge-info">0 سجل</span>
-                  <button class="btn btn-success btn-sm" onclick="confirmImport()">تأكيد الاستيراد</button>
-                </div>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>#</th><th>اسم العميل</th><th>الهاتف</th><th>الرحلة</th><th>التاريخ</th><th>العدد</th><th>الحالة</th></tr></thead>
-                  <tbody id="importPreviewBody"></tbody>
-                </table>
-              </div>
-            </div>
-            <div id="importErrors" style="display:none;margin-top:16px">
-              <div class="card-header" style="margin:-20px -20px 16px;padding:16px 20px;border-color:var(--danger)">
-                <span class="card-title" style="color:var(--danger)">⚠️ أخطاء في البيانات</span>
-              </div>
-              <div id="importErrorsList" style="padding:16px"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Trips Page -->
-      <div id="page-trips" class="page">
-        <div class="card" style="margin-bottom:16px">
-          <div class="card-header">
-            <span class="card-title">الرحلات</span>
-            <button class="btn btn-primary btn-sm" onclick="showAddTripModal()">➕ إضافة رحلة</button>
-          </div>
-        </div>
-        <div class="trips-grid" id="tripsGrid"></div>
-      </div>
-
-      <!-- Tracking Page -->
-      <div id="page-tracking" class="page">
-        <div class="card" style="margin-bottom:16px;padding:12px 16px">
-          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-            <span style="font-weight:700;font-size:14px">تتبع الحجوزات</span>
-            <div style="display:flex;gap:8px;margin-right:auto">
-              <span class="badge badge-info">جديد: <strong id="trackNew">0</strong></span>
-              <span class="badge badge-warning">قيد المراجعة: <strong id="trackPending">0</strong></span>
-              <span class="badge badge-success">موافق: <strong id="trackApproved">0</strong></span>
-              <span class="badge badge-purple">في الطريق: <strong id="trackTransit">0</strong></span>
-              <span class="badge badge-secondary">مكتمل: <strong id="trackCompleted">0</strong></span>
-            </div>
-          </div>
-        </div>
-        <div class="kanban-board" id="kanbanBoard"></div>
-      </div>
-
-      <!-- Transfers Page -->
-      <div id="page-transfers" class="page">
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">شيتات النقل</span>
-            <button class="btn btn-primary btn-sm" onclick="generateTransferSheets()">🔄 توليد شيتات جديدة</button>
-          </div>
-          <div class="card-body">
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>الرحلة</th>
-                    <th>التاريخ</th>
-                    <th>عدد الركاب</th>
-                    <th>السائق</th>
-                    <th>الحافلة</th>
-                    <th>الحالة</th>
-                    <th>الإجراءات</th>
-                  </tr>
-                </thead>
-                <tbody id="transfersTableBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Manifest Page -->
-      <div id="page-manifest" class="page">
-        <div style="margin-bottom:16px;display:flex;gap:8px;justify-content:flex-end">
-          <select id="manifestTripSelect" class="form-group" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm)" onchange="renderManifest()"></select>
-          <button class="btn btn-primary btn-sm" onclick="printManifest()">🖨️ طباعة</button>
-        </div>
-        <div id="manifestContent" class="manifest-print"></div>
-      </div>
-
-      <!-- Driver Page -->
-      <div id="page-driver" class="page">
-        <div id="driverContent"></div>
-      </div>
-
-      <!-- Audit Page -->
-      <div id="page-audit" class="page">
-        <div class="card">
-          <div class="card-header">
-            <span class="card-title">سجل التدقيق</span>
-            <button class="btn btn-outline btn-sm" onclick="exportAuditLog()">📥 تصدير السجل</button>
-          </div>
-          <div class="card-body">
-            <div class="filters-bar">
-              <div class="filter-group">
-                <label>النوع:</label>
-                <select id="filterAuditType" onchange="renderAuditLog()">
-                  <option value="">الكل</option>
-                  <option value="login">تسجيل دخول</option>
-                  <option value="booking">حجز</option>
-                  <option value="transfer">نقل</option>
-                  <option value="settings">إعدادات</option>
-                  <option value="system">نظام</option>
-                </select>
-              </div>
-              <div class="filter-group">
-                <label>من تاريخ:</label>
-                <input type="date" id="filterAuditFrom" onchange="renderAuditLog()">
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>التاريخ والوقت</th>
-                    <th>المستخدم</th>
-                    <th>النوع</th>
-                    <th>الوصف</th>
-                    <th>التفاصيل</th>
-                  </tr>
-                </thead>
-                <tbody id="auditTableBody"></tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Settings Page -->
-      <div id="page-settings" class="page">
-        <div class="card">
-          <div class="card-body">
-            <div class="settings-tabs" id="settingsTabs">
-              <button class="settings-tab active" onclick="switchSettingsTab('whatsapp')">📱 واتساب</button>
-              <button class="settings-tab" onclick="switchSettingsTab('approval')">✅ الموافقات</button>
-              <button class="settings-tab" onclick="switchSettingsTab('importSettings')">📥 الاستيراد</button>
-              <button class="settings-tab" onclick="switchSettingsTab('encryption')">🔐 التشفير</button>
-              <button class="settings-tab" onclick="switchSettingsTab('auditSettings')">📜 التدقيق</button>
-            </div>
-
-            <div id="settings-whatsapp" class="settings-panel active">
-              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات واتساب</h3>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>إرسال تلقائي</h4><p>إرسال رسالة تأكيد عبر واتساب عند الموافقة على الحجز</p></div>
-                <label class="toggle"><input type="checkbox" id="settingWhatsappAuto" checked><span class="slider"></span></label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>رقم واتساب API</h4><p>رقم الهاتف المرتبط بحساب واتساب Business</p></div>
-                <input type="text" id="settingWhatsappNumber" value="+201234567890" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:200px;text-align:left;direction:ltr">
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>قالب الرسالة</h4><p>رسالة التأكيد المرسلة للعملاء</p></div>
-                <textarea id="settingWhatsappTemplate" rows="3" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:300px;resize:vertical">مرحباً {name}، تم تأكيد حجزكم للرحلة {trip} بتاريخ {date}. شكراً لكم.</textarea>
-              </div>
-            </div>
-
-            <div id="settings-approval" class="settings-panel">
-              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات الموافقات</h3>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>موافقة تلقائية</h4><p>الموافقة على الحجوزات الجديدة تلقائياً</p></div>
-                <label class="toggle"><input type="checkbox" id="settingAutoApprove"><span class="slider"></span></label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>إشعار عند الحجز الجديد</h4><p>إرسال إشعار للمدير عند إضافة حجز جديد</p></div>
-                <label class="toggle"><input type="checkbox" id="settingNotifyNew" checked><span class="slider"></span></label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>حد الركاب للإخطار</h4><p>عدد الركاب الذي يتجاوزه لإرسال تنبيه</p></div>
-                <input type="number" id="settingPassengerLimit" value="40" min="1" max="100" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:100px">
-              </div>
-            </div>
-
-            <div id="settings-importSettings" class="settings-panel">
-              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات الاستيراد</h3>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>التحقق من التكرار</h4><p>منع استيراد الحجوزات المكررة</p></div>
-                <label class="toggle"><input type="checkbox" id="settingCheckDuplicate" checked><span class="slider"></span></label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>التحقق من صيغة الهاتف</h4><p>التحقق من صيغة أرقام الهواتف المصرية</p></div>
-                <label class="toggle"><input type="checkbox" id="settingValidatePhone" checked><span class="slider"></span></label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>الصيغة المسموحة</h4><p>صيغة الأعمدة في ملف Excel</p></div>
-                <input type="text" value="اسم العميل,الهاتف,الرحلة,التاريخ,عدد الأشخاص" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:400px;font-size:12px" disabled>
-              </div>
-            </div>
-
-            <div id="settings-encryption" class="settings-panel">
-              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات التشفير</h3>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>تشفير البيانات</h4><p>تشفير البيانات الحساسة في قاعدة البيانات</p></div>
-                <label class="toggle"><input type="checkbox" id="settingEncryption" checked><span class="slider"></span></label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>تشفير الملفات المرفوعة</h4><p>تشفير ملفات Excel بعد الاستيراد</p></div>
-                <label class="toggle"><input type="checkbox" id="settingEncryptFiles"><span class="slider"></span></label>
-              </div>
-            </div>
-
-            <div id="settings-auditSettings" class="settings-panel">
-              <h3 style="font-size:16px;font-weight:700;margin-bottom:16px">إعدادات سجل التدقيق</h3>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>تفعيل سجل التدقيق</h4><p>تسجيل جميع العمليات في النظام</p></div>
-                <label class="toggle"><input type="checkbox" id="settingAuditLog" checked><span class="slider"></span></label>
-              </div>
-              <div class="settings-row">
-                <div class="settings-row-info"><h4>مدة الحفظ</h4><p>عدد الأيام لحفظ سجلات التدقيق</p></div>
-                <input type="number" id="settingAuditRetention" value="90" min="30" max="365" style="padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);width:100px">
-              </div>
-              <div style="margin-top:16px">
-                <button class="btn btn-primary" onclick="saveSettings()">💾 حفظ الإعدادات</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+<!-- BOOKINGS -->
+<div class="page" id="page-bookings">
+<div class="filter-bar">
+<select id="filterStatus" onchange="renderBookingsTable()">
+<option value="">كل الحالات</option>
+<option value="pending">معلق</option>
+<option value="confirmed">مؤكد</option>
+<option value="cancelled">ملغي</option>
+</select>
+<select id="filterTrip" onchange="renderBookingsTable()"></select>
+<input type="date" id="filterDate" onchange="renderBookingsTable()">
+<select id="filterZone" onchange="renderBookingsTable()">
+<option value="">كل المناطق</option>
+<option value="الصيف">الصيف</option>
+<option value="الشتاء">الشتاء</option>
+<option value="مرسى علم">مرسى علم</option>
+<option value="الجونة">الجونة</option>
+<option value="سهل حشيش">سهل حشيش</option>
+</select>
+<button class="btn btn-primary" onclick="showAddBookingModal()">+ حجز جديد</button>
 </div>
+<div class="table-container"><table class="data-table"><thead><tr>
+<th>رقم</th><th>المسافر</th><th>العمر</th><th>الجنسية</th><th>الفندق</th><th>المنطقة</th><th>الرحلة</th><th>التاريخ</th><th>العدد</th><th>حالة الحجز</th><th>حالة النقل</th><th>إجراءات</th>
+</tr></thead><tbody id="bookingsBody"></tbody></table></div>
+<div class="pagination" id="bookingsPag"></div>
+</div>
+
+<!-- IMPORT -->
+<div class="page" id="page-import">
+<div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+<div class="icon">📁</div>
+<h3>ارفع ملف Excel</h3>
+<p>اسحب الملف هنا أو اضغط للاختيار (.xlsx, .csv - حد أقصى 10MB)</p>
+<input type="file" id="fileInput" accept=".xlsx,.csv" style="display:none" onchange="handleFileUpload(this)">
+</div>
+<div id="importPreview" style="display:none" class="import-preview">
+<div class="card" style="margin-top:20px"><div class="card-header"><h3>معاينة البيانات</h3><div style="display:flex;gap:8px" id="importStats"></div></div>
+<div class="card-body"><div class="table-container"><table class="data-table"><thead id="previewHead"></thead><tbody id="previewBody"></tbody></table></div></div></div>
+<div style="display:flex;gap:12px;margin-top:16px;justify-content:flex-start">
+<button class="btn btn-outline" onclick="cancelImport()">إلغاء</button>
+<button class="btn btn-primary" onclick="confirmImport()">تأكيد الاستيراد</button>
+</div>
+</div>
+<div class="import-history"><h3 style="font-size:16px;margin-bottom:12px">سجل الاستيراد</h3>
+<div class="table-container"><table class="data-table"><thead><tr><th>الدفعة</th><th>الملف</th><th>التاريخ</th><th>العدد</th><th>الحالة</th></tr></thead><tbody id="importHistoryBody"></tbody></table></div></div>
+</div>
+
+<!-- TRANSFER SYNC -->
+<div class="page" id="page-transferSync">
+<div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+<button class="btn btn-primary" onclick="autoDistribute()">🔄 توزيع تلقائي على المناطق</button>
+<button class="btn btn-outline" onclick="refreshTransferSync()">تحديث</button>
+</div>
+<h3 style="font-size:16px;margin-bottom:12px">خريطة المناطق</h3>
+<div class="zone-grid" id="zoneGrid"></div>
+<h3 style="font-size:16px;margin-bottom:12px">التنقلات النشطة</h3>
+<div id="activeTransfers"></div>
+</div>
+
+<!-- TRIPS -->
+<div class="page" id="page-trips">
+<div style="margin-bottom:16px"><button class="btn btn-primary" onclick="showAddTripModal()">+ رحلة جديدة</button></div>
+<div class="trip-cards" id="tripsGrid"></div>
+</div>
+
+<!-- TRACKING -->
+<div class="page" id="page-tracking">
+<div class="tracking-board" id="trackingBoard"></div>
+</div>
+
+<!-- TRANSFERS -->
+<div class="page" id="page-transfers">
+<div class="filter-bar">
+<select id="tsFilterStatus" onchange="renderTransfersTable()">
+<option value="">كل الحالات</option><option value="pending">قيد التوزيع</option><option value="assigned">تم التعيين</option><option value="in_transit">في الطريق</option><option value="completed">مكتمل</option>
+</select>
+</div>
+<div class="table-container"><table class="data-table"><thead><tr>
+<th>الشيت</th><th>السائق</th><th>المنطقة</th><th>الرحلة</th><th>الركاب</th><th>الحالة</th><th>إجراءات</th>
+</tr></thead><tbody id="transfersBody"></tbody></table></div>
+</div>
+
+<!-- DRIVER -->
+<div class="page" id="page-driver">
+<div id="driverInfo"></div>
+<div id="driverSheets"></div>
+</div>
+
+<!-- AUDIT -->
+<div class="page" id="page-audit">
+<div class="audit-filters">
+<select id="auditEntityFilter" onchange="renderAuditLog()"><option value="">كل الكيانات</option><option value="booking">حجوزات</option><option value="transfer">نقل</option><option value="trip">رحلات</option><option value="settings">إعدادات</option></select>
+<input type="date" id="auditDateFilter" onchange="renderAuditLog()">
+<button class="btn btn-outline" onclick="exportAuditCSV()" style="margin-right:auto">📥 تصدير CSV</button>
+</div>
+<div class="table-container"><table class="data-table"><thead><tr><th>الوقت</th><th>المستخدم</th><th>الكيان</th><th>العملية</th><th>الوصف</th></tr></thead><tbody id="auditBody"></tbody></table></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+<div class="settings-tabs">
+<div class="settings-tab active" onclick="switchSettingsTab('whatsapp')">WhatsApp</div>
+<div class="settings-tab" onclick="switchSettingsTab('approval')">الموافقة</div>
+<div class="settings-tab" onclick="switchSettingsTab('encryption')">التشفير</div>
+<div class="settings-tab" onclick="switchSettingsTab('auditSet')">سجل التدقيق</div>
+</div>
+<div class="settings-panel active" id="sp-whatsapp">
+<div class="settings-row"><div class="s-label"><h4>WhatsApp API Token</h4><p>مفتاح الوصول لـ Meta API</p></div><input type="password" style="width:300px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)" id="settWaToken"></div>
+<div class="settings-row"><div class="s-label"><h4>Phone Number ID</h4><p>رقم الهاتف المرتبط</p></div><input type="text" style="width:300px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)" id="settWaPhone"></div>
+<div class="settings-row"><div class="s-label"><h4>إشعارات الوكالة</h4><p>إرسال إشعار للوكالة عند تحديث</p></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+<div class="settings-row"><div class="s-label"><h4>إشعارات شركة النقل</h4><p>إرسال إشعار لشركة النقل عند التعيين</p></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+<div class="settings-row"><div class="s-label"><h4>إشعارات السائقين</h4><p>إرسال إشعار للسائق عند التعيين</p></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+<button class="btn btn-primary" onclick="saveSettings('whatsapp')" style="margin-top:16px">حفظ الإعدادات</button>
+</div>
+<div class="settings-panel" id="sp-approval">
+<div class="settings-row"><div class="s-label"><h4>الموافقة التلقائية</h4><p>قبول الحجوزات تلقائياً</p></div><div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+<div class="settings-row"><div class="s-label"><h4>الحد الأدنى للركاب</h4><p>الحد الأدنى قبل الموافقة</p></div><input type="number" value="5" style="width:100px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)"></div>
+<button class="btn btn-primary" onclick="saveSettings('approval')" style="margin-top:16px">حفظ</button>
+</div>
+<div class="settings-panel" id="sp-encryption">
+<div class="settings-row"><div class="s-label"><h4>مفتاح AES-256</h4><p>تشفير الباسبور وأرقام الغرف</p></div><div style="display:flex;gap:8px"><input type="password" value="POSEIDON-2026-AES256-KEY" style="width:300px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)"><button class="btn btn-outline">👁️</button></div></div>
+<div class="settings-row"><div class="s-label"><h4>التدوير</h4><p>مدة صلاحية المفتاح بالأيام</p></div><input type="number" value="90" style="width:100px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)"></div>
+<button class="btn btn-primary" onclick="saveSettings('encryption')" style="margin-top:16px">حفظ</button>
+</div>
+<div class="settings-panel" id="sp-auditSet">
+<div class="settings-row"><div class="s-label"><h4>مدة الاحتفاظ</h4><p>المدة بالأيام</p></div><input type="number" value="365" style="width:100px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)"></div>
+<div class="settings-row"><div class="s-label"><h4>تتبع الحجوزات</h4><p>تسجيل كل تغيير</p></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+<div class="settings-row"><div class="s-label"><h4>تتبع المصادقة</h4><p>تسجيل محاولات الدخول</p></div><div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div></div>
+<button class="btn btn-primary" onclick="saveSettings('audit')" style="margin-top:16px">حفظ</button>
+</div>
+</div>
+
+</div><!-- end content -->
+</div><!-- end main-area -->
+</div><!-- end app -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+<div class="modal"><div class="modal-header"><h3 id="modalTitle"></h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+<div class="modal-body" id="modalBody"></div>
+<div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">إلغاء</button><button class="btn btn-primary" id="modalConfirm">تأكيد</button></div></div>
+</div>
+
+<!-- NOTIFICATIONS PANEL -->
+<div class="panel-overlay" id="panelOverlay" onclick="toggleNotifications()"></div>
+<div class="notification-panel" id="notifPanel">
+<div class="panel-header"><h3>🔔 الإشعارات</h3><button class="btn btn-sm btn-outline" onclick="clearNotifs()">مسح الكل</button></div>
+<div id="notifList"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
 
 <script>
-// ============================================================
-// DATA
-// ============================================================
-var AppData = {
-  users: [
-    {id:1,name:'مدير النظام',email:'admin@poseidon.com',password:'admin123',role:'admin',avatar:'م'},
-    {id:2,name:'وكالة سياحة',email:'agency@poseidon.com',password:'agency123',role:'agency',avatar:'و'},
-    {id:3,name:'شركة النقل',email:'transport@poseidon.com',password:'transport123',role:'transport',avatar:'ن'},
-    {id:4,name:'محمد السائق',email:'driver@poseidon.com',password:'driver123',role:'driver',avatar:'س'}
-  ],
-  trips: [
-    {id:1,name:'القاهرة - الإسكندرية',date:'2026-07-20',time:'08:00',busNumber:'ABC-123',capacity:50,booked:38,status:'active'},
-    {id:2,name:'الجيزة - الأهرامات',date:'2026-07-21',time:'09:00',busNumber:'DEF-456',capacity:45,booked:42,status:'active'},
-    {id:3,name:'شرم الشيخ - الغردقة',date:'2026-07-22',time:'07:30',busNumber:'GHI-789',capacity:50,booked:30,status:'active'},
-    {id:4,name:'أسوان - أبو سمبل',date:'2026-07-23',time:'06:00',busNumber:'JKL-012',capacity:40,booked:35,status:'active'},
-    {id:5,name:'القاهرة - مرسى مطروح',date:'2026-07-24',time:'08:30',busNumber:'MNO-345',capacity:50,booked:28,status:'scheduled'},
-    {id:6,name:'الإسكندرية - سيدي عبد الرحمن',date:'2026-07-25',time:'07:00',busNumber:'PQR-678',capacity:45,booked:22,status:'scheduled'},
-    {id:7,name:'القاهرة - الفيوم',date:'2026-07-26',time:'09:00',busNumber:'STU-901',capacity:40,booked:15,status:'scheduled'},
-    {id:8,name:'الغردقة - سفاجا',date:'2026-07-27',time:'10:00',busNumber:'VWX-234',capacity:35,booked:20,status:'scheduled'},
-    {id:9,name:'شرم الشيخ - القاهرة',date:'2026-07-28',time:'14:00',busNumber:'YZA-567',capacity:50,booked:44,status:'scheduled'},
-    {id:10,name:'أسوان - القاهرة',date:'2026-07-29',time:'06:30',busNumber:'BCD-890',capacity:50,booked:48,status:'scheduled'}
-  ],
-  bookings: [
-    {id:1,clientName:'أحمد محمد علي',phone:'01012345678',tripId:1,date:'2026-07-20',passengers:4,status:'approved',notes:'مقعد بجانب النافذة',createdAt:'2026-07-15T10:30:00'},
-    {id:2,clientName:'فاطمة حسن إبراهيم',phone:'01123456789',tripId:1,date:'2026-07-20',passengers:2,status:'approved',notes:'',createdAt:'2026-07-15T11:00:00'},
-    {id:3,clientName:'محمد عبدالرحمن',phone:'01234567890',tripId:2,date:'2026-07-21',passengers:6,status:'pending',notes:'رحلة عائلية',createdAt:'2026-07-16T09:15:00'},
-    {id:4,clientName:'نورا سعيد محمود',phone:'01098765432',tripId:2,date:'2026-07-21',passengers:3,status:'new',notes:'',createdAt:'2026-07-16T14:20:00'},
-    {id:5,clientName:'عمر خالد الشاذلي',phone:'01187654321',tripId:3,date:'2026-07-22',passengers:5,status:'approved',notes:'وجبة إضافية',createdAt:'2026-07-17T08:00:00'},
-    {id:6,clientName:'سارة يوسف أحمد',phone:'01056789012',tripId:3,date:'2026-07-22',passengers:2,status:'new',notes:'',createdAt:'2026-07-17T10:45:00'},
-    {id:7,clientName:'يوسف إبراهيم حسن',phone:'01167890123',tripId:4,date:'2026-07-23',passengers:8,status:'pending',notes:'مجموعة سياحية',createdAt:'2026-07-18T07:30:00'},
-    {id:8,clientName:'مريم علي عبدالله',phone:'01278901234',tripId:4,date:'2026-07-23',passengers:1,status:'approved',notes:'',createdAt:'2026-07-18T09:00:00'},
-    {id:9,clientName:'حسن محمود رشدي',phone:'01045678901',tripId:1,date:'2026-07-20',passengers:3,status:'completed',notes:'',createdAt:'2026-07-14T12:00:00'},
-    {id:10,clientName:'ياسمين عادل محمد',phone:'01134567890',tripId:5,date:'2026-07-24',passengers:4,status:'new',notes:'مقاعد متجاورة',createdAt:'2026-07-19T11:20:00'},
-    {id:11,clientName:'إبراهيم سامي جمال',phone:'01223456789',tripId:5,date:'2026-07-24',passengers:2,status:'approved',notes:'',createdAt:'2026-07-19T13:00:00'},
-    {id:12,clientName:'هدى أحمد فؤاد',phone:'01034567890',tripId:6,date:'2026-07-25',passengers:5,status:'pending',notes:'يحتاجون حافلة كبيرة',createdAt:'2026-07-20T08:30:00'},
-    {id:13,clientName:'كريم محمد صلاح',phone:'01156789012',tripId:6,date:'2026-07-25',passengers:3,status:'new',notes:'',createdAt:'2026-07-20T10:15:00'},
-    {id:14,clientName:'دينا حسين عبدالعزيز',phone:'01267890123',tripId:7,date:'2026-07-26',passengers:2,status:'approved',notes:'',createdAt:'2026-07-20T14:00:00'},
-    {id:15,clientName:'طارق علي منصور',phone:'01078901234',tripId:7,date:'2026-07-26',passengers:6,status:'new',notes:'عائلة كبيرة',createdAt:'2026-07-21T09:00:00'},
-    {id:16,clientName:'رنا مصطفى حسين',phone:'01189012345',tripId:8,date:'2026-07-27',passengers:4,status:'pending',notes:'',createdAt:'2026-07-21T11:30:00'},
-    {id:17,clientName:'أسامة جمال الدين',phone:'01290123456',tripId:8,date:'2026-07-27',passengers:2,status:'approved',notes:'',createdAt:'2026-07-21T13:45:00'},
-    {id:18,clientName:'لمياء حسين محمد',phone:'01067890123',tripId:9,date:'2026-07-28',passengers:3,status:'new',notes:'',createdAt:'2026-07-22T08:00:00'},
-    {id:19,clientName:'عمرو ناصر عبدالفتاح',phone:'01145678901',tripId:9,date:'2026-07-28',passengers:5,status:'approved',notes:'حجز مؤكد',createdAt:'2026-07-22T09:30:00'},
-    {id:20,clientName:'منى صبري عثمان',phone:'01256789012',tripId:10,date:'2026-07-29',passengers:4,status:'pending',notes:'',createdAt:'2026-07-22T10:00:00'},
-    {id:21,clientName:'وائل عبد الحميد',phone:'01023456789',tripId:10,date:'2026-07-29',passengers:2,status:'new',notes:'مقعد واحد',createdAt:'2026-07-22T11:00:00'},
-    {id:22,clientName:'سمير حسن بالعيد',phone:'01190123456',tripId:2,date:'2026-07-21',passengers:7,status:'completed',notes:'',createdAt:'2026-07-13T15:00:00'},
-    {id:23,clientName:'annelie johnson',phone:'01089012345',tripId:3,date:'2026-07-22',passengers:2,status:'approved',notes:'Foreign tourist',createdAt:'2026-07-17T16:00:00'},
-    {id:24,clientName:'abin sara mathew',phone:'01212345678',tripId:4,date:'2026-07-23',passengers:3,status:'new',notes:'',createdAt:'2026-07-18T14:00:00'},
-    {id:25,clientName:'خالد فتحي راغب',phone:'01112345678',tripId:1,date:'2026-07-20',passengers:1,status:'rejected',notes:'تم الإلغاء',createdAt:'2026-07-15T16:00:00'}
-  ],
-  transferSheets: [
-    {id:1,tripId:1,date:'2026-07-20',driverId:1,busNumber:'ABC-123',passengers:[1,2,9,25],status:'completed'},
-    {id:2,tripId:2,date:'2026-07-21',driverId:2,busNumber:'DEF-456',passengers:[3,4,22],status:'in_transit'},
-    {id:3,tripId:3,date:'2026-07-22',driverId:3,busNumber:'GHI-789',passengers:[5,6,23],status:'pending'},
-    {id:4,tripId:4,date:'2026-07-23',driverId:4,busNumber:'JKL-012',passengers:[7,8,24],status:'pending'},
-    {id:5,tripId:5,date:'2026-07-24',driverId:1,busNumber:'MNO-345',passengers:[10,11],status:'pending'},
-    {id:6,tripId:6,date:'2026-07-25',driverId:2,busNumber:'PQR-678',passengers:[12,13],status:'pending'},
-    {id:7,tripId:7,date:'2026-07-26',driverId:5,busNumber:'STU-901',passengers:[14,15],status:'pending'},
-    {id:8,tripId:8,date:'2026-07-27',driverId:3,busNumber:'VWX-234',passengers:[16,17],status:'pending'},
-    {id:9,tripId:9,date:'2026-07-28',driverId:4,busNumber:'YZA-567',passengers:[18,19],status:'pending'},
-    {id:10,tripId:10,date:'2026-07-29',driverId:5,busNumber:'BCD-890',passengers:[20,21],status:'pending'}
-  ],
-  drivers: [
-    {id:1,name:'أحمد السائق',phone:'01011112222',license:'EG-12345',vehicle:'هينييس 2024',status:'active',avatar:'أ'},
-    {id:2,name:'علي حسن',phone:'01022223333',license:'EG-23456',vehicle:'مرسيدس 2023',status:'active',avatar:'ع'},
-    {id:3,name:'سعيد محمود',phone:'01033334444',license:'EG-34567',vehicle:'مان 2024',status:'active',avatar:'س'},
-    {id:4,name:'بدر عبدالله',phone:'01044445555',license:'EG-45678',vehicle:'هينييس 2023',status:'active',avatar:'ب'},
-    {id:5,name:'مصطفى عمر',phone:'01055556666',license:'EG-56789',vehicle:'فولفو 2024',status:'busy',avatar:'م'}
-  ],
-  auditLog: [
-    {id:1,userId:1,type:'login',description:'تسجيل دخول ناجح',details:'admin@poseidon.com',timestamp:'2026-07-22T08:00:00'},
-    {id:2,userId:1,type:'booking',description:'تمت الموافقة على الحجز #1',details:'أحمد محمد علي - القاهرة الإسكندرية',timestamp:'2026-07-22T08:15:00'},
-    {id:3,userId:2,type:'booking',description:'إضافة حجز جديد #10',details:'ياسمين عادل محمد - القاهرة مرسى مطروح',timestamp:'2026-07-22T08:30:00'},
-    {id:4,userId:1,type:'transfer',description:'توليد شيت نقل #5',details:'القاهرة مرسى مطروح - 2026-07-24',timestamp:'2026-07-22T09:00:00'},
-    {id:5,userId:1,type:'settings',description:'تحديث إعدادات واتساب',details:'تفعيل الإرسال التلقائي',timestamp:'2026-07-22T09:15:00'},
-    {id:6,userId:3,type:'transfer',description:'تحديث حالة الشيت #1',details:'من في الطريق إلى مكتمل',timestamp:'2026-07-22T10:00:00'},
-    {id:7,userId:1,type:'booking',description:'رفض الحجز #25',details:'خالد فتحي راغب - القاهرة الإسكندرية',timestamp:'2026-07-22T10:30:00'},
-    {id:8,userId:2,type:'booking',description:'إضافة حجز جديد #11',details:'إبراهيم سامي جمال - القاهرة مرسى مطروح',timestamp:'2026-07-22T11:00:00'},
-    {id:9,userId:1,type:'system',description:'نسخ احتياطي تلقائي',details:'تم حفظ 25 حجز و 10 رحلات',timestamp:'2026-07-22T12:00:00'},
-    {id:10,userId:4,type:'transfer',description:'تأكيد استلام الشيت #2',details:'الجيزة الأهرامات - DEF-456',timestamp:'2026-07-22T13:00:00'},
-    {id:11,userId:1,type:'booking',description:'تمت الموافقة على الحجز #14',details:'دينا حسين عبدالعزيز - القاهرة الفيوم',timestamp:'2026-07-22T13:30:00'},
-    {id:12,userId:2,type:'booking',description:'إضافة حجز جديد #12',details:'هدى أحمد فؤاد - الإسكندرية سيدي عبد الرحمن',timestamp:'2026-07-22T14:00:00'},
-    {id:13,userId:1,type:'settings',description:'تحديث إعدادات الاستيراد',details:'تفعيل التحقق من التكرار',timestamp:'2026-07-22T14:30:00'},
-    {id:14,userId:3,type:'transfer',description:'تحديث حالة الشيت #3',details:'شرم الشيخ الغردقة - تأكيد السائق',timestamp:'2026-07-22T15:00:00'},
-    {id:15,userId:1,type:'system',description:'تنظيف سجل التدقيق',details:'حذف 45 سجل قديم',timestamp:'2026-07-22T16:00:00'}
-  ],
-  notifications: [
-    {id:1,title:'حجز جديد',message:'حجز جديد من ياسمين عادل محمد للرحلة القاهرة - مرسى مطروح',read:false,timestamp:'2026-07-22T08:30:00'},
-    {id:2,title:'تمت الموافقة',message:'تمت الموافقة على الحجز #14 - دينا حسين عبدالعزيز',read:false,timestamp:'2026-07-22T13:30:00'},
-    {id:3,title:'شيت نقل جديد',message:'تم توليد شيت نقل جديد للرحلة القاهرة - مرسى مطروح',read:false,timestamp:'2026-07-22T09:00:00'},
-    {id:4,title:'تنبيه: رحلة اليوم',message:'الرحلة القاهرة - الإسكندرية تنطلق اليوم الساعة 08:00',read:true,timestamp:'2026-07-22T07:00:00'},
-    {id:5,title:'تحديث الحالة',message:'تم تحديث حالة الشيت #1 إلى مكتمل',read:true,timestamp:'2026-07-22T10:00:00'}
-  ],
-  settings: {
-    whatsappAuto:true,
-    whatsappNumber:'+201234567890',
-    whatsappTemplate:'مرحباً {name}، تم تأكيد حجزكم للرحلة {trip} بتاريخ {date}. شكراً لكم.',
-    autoApprove:false,
-    notifyNew:true,
-    passengerLimit:40,
-    checkDuplicate:true,
-    validatePhone:true,
-    encryption:true,
-    encryptFiles:false,
-    auditLog:true,
-    auditRetention:90
-  }
+// ===== DATA =====
+const AppData={currentUser:null,
+users:[
+{id:1,name:'مدير النظام',email:'admin@poseidon.com',role:'admin',phone:'+20 100 000 0001'},
+{id:2,name:'وكالة الأهرام',email:'agency@poseidon.com',role:'agency',phone:'+20 100 000 0002',companyName:'وكالة الأهرام السياحية',zone:'الصيف'},
+{id:3,name:'شركة النقل البحري',email:'transport@poseidon.com',role:'transport',phone:'+20 100 000 0003',companyName:'شركة النقل البحري'},
+{id:4,name:'محمود علي',email:'driver@poseidon.com',role:'driver',phone:'+20 111 222 3333',driverId:'DRV-001'}
+],
+trips:[
+{id:'TRP-001',name:'رحلة جزيرة الجفتون',type:'snorkeling',typeName:'سنوركلينج',date:'2026-07-25',time:'09:00',returnTime:'16:00',marina:'مارينا هورجادة',capacity:45,booked:32,status:'active',boatName:'موتور ميراج',captain:'كابتن حسن',price:650},
+{id:'TRP-002',name:'حطام المركب الغارق',type:'diving',typeName:'غوص',date:'2026-07-25',time:'08:00',returnTime:'14:00',marina:'مارينا هورجادة',capacity:20,booked:18,status:'active',boatName:'ديب سيا',captain:'كابتن سعيد',price:1200},
+{id:'TRP-003',name:'رحلة الصيد البحري',type:'fishing',typeName:'صيد',date:'2026-07-26',time:'05:30',returnTime:'12:00',marina:'مارينا هورجادة',capacity:12,booked:8,status:'active',boatName:'فيشينج بوت',captain:'كابتن عادل',price:800},
+{id:'TRP-004',name:'الزورق الزجاجي',type:'glass',typeName:'زورق زجاجي',date:'2026-07-25',time:'10:00',returnTime:'13:00',marina:'مارينا هورجادة',capacity:30,booked:25,status:'boarding',boatName:'كrysстал',captain:'كابتن يوسف',price:400},
+{id:'TRP-005',name:'الغواصة',type:'submarine',typeName:'غواصة',date:'2026-07-26',time:'11:00',returnTime:'14:00',marina:'مارينا هورجادة',capacity:40,booked:38,status:'active',boatName:'سين كووال',captain:'كابتن كريم',price:550},
+{id:'TRP-006',name:'غروب الشمس البحرية',type:'sunset',typeName:'غروب',date:'2026-07-25',time:'15:00',returnTime:'19:00',marina:'مارينا هورجادة',capacity:60,booked:42,status:'active',boatName:'سunset cruiser',captain:'كابتن فتحي',price:500},
+{id:'TRP-007',name:'جزيرة ماهيمي',type:'snorkeling',typeName:'سنوركلينج',date:'2026-07-27',time:'08:30',returnTime:'15:30',marina:'مارينا هورجادة',capacity:35,booked:20,status:'active',boatName:'أكوا ميراج',captain:'كابتن أحمد',price:700},
+{id:'TRP-008',name:'رحلة خاصة بحرية',type:'private',typeName:'خاصة',date:'2026-07-25',time:'09:00',returnTime:'18:00',marina:'مارينا هورجادة',capacity:10,booked:6,status:'active',boatName:'يخت فاخِر',captain:'كابتن محمد',price:5000}
+],
+bookings:[],
+transferSheets:[],
+drivers:[
+{id:'DRV-001',name:'محمود علي',phone:'+20 111 222 3333',vehicle:'باص مكيف 21 مقعد',status:'active',currentSheet:'TS-001'},
+{id:'DRV-002',name:'عمر حسن',phone:'+20 112 333 4444',vehicle:'فان 7 مقاعد',status:'active',currentSheet:null},
+{id:'DRV-003',name:'سالم أحمد',phone:'+20 113 444 5555',vehicle:'باص مكيف 33 مقعد',status:'active',currentSheet:'TS-002'},
+{id:'DRV-004',name:'يوسف إبراهيم',phone:'+20 114 555 6666',vehicle:'فان 7 مقاعد',status:'active',currentSheet:null},
+{id:'DRV-005',name:'خالد مصطفى',phone:'+20 115 666 7777',vehicle:'باص مكيف 21 مقعد',status:'busy',currentSheet:'TS-003'}
+],
+auditLog:[],notifications:[]
 };
 
-// ============================================================
-// STATE
-// ============================================================
-var currentUser = null;
-var currentPage = 'dashboard';
-var bookingsPage = 1;
-var bookingsPerPage = 8;
-var importData = [];
-
-// ============================================================
-// INIT
-// ============================================================
-document.addEventListener('DOMContentLoaded', function() {
-  setCurrentDate();
-  var saved = localStorage.getItem('poseidon_user');
-  if(saved) {
-    try {
-      currentUser = JSON.parse(saved);
-      showApp();
-    } catch(e) {
-      showLogin();
-    }
-  } else {
-    showLogin();
-  }
-});
-
-function setCurrentDate() {
-  var d = new Date();
-  var options = {weekday:'long',year:'numeric',month:'long',day:'numeric'};
-  var el = document.getElementById('currentDate');
-  if(el) el.textContent = d.toLocaleDateString('ar-EG',options);
-}
-
-// ============================================================
-// AUTH
-// ============================================================
-function demoLogin(role) {
-  var user = AppData.users.find(function(u){return u.role===role});
-  if(!user) return;
-  document.getElementById('loginEmail').value = user.email;
-  document.getElementById('loginPassword').value = user.password;
-  document.getElementById('loginRole').value = user.role;
-  login(null);
-}
-
-function login(e) {
-  if(e) e.preventDefault();
-  var email = document.getElementById('loginEmail').value.trim();
-  var password = document.getElementById('loginPassword').value;
-  var role = document.getElementById('loginRole').value;
-
-  if(!email || !password || !role) {
-    showToast('يرجى ملء جميع الحقول','error');
-    return false;
-  }
-
-  var user = AppData.users.find(function(u){return u.email===email && u.role===role});
-  if(!user) {
-    showToast('بيانات الدخول غير صحيحة','error');
-    return false;
-  }
-
-  currentUser = user;
-  localStorage.setItem('poseidon_user', JSON.stringify(user));
-  addAuditEntry('login','تسجيل دخول ناجح', user.email);
-  showApp();
-  return false;
-}
-
-function logout() {
-  currentUser = null;
-  localStorage.removeItem('poseidon_user');
-  showLogin();
-  showToast('تم تسجيل الخروج بنجاح','info');
-}
-
-function showLogin() {
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('appContainer').classList.remove('active');
-  document.getElementById('loginForm').reset();
-}
-
-function showApp() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appContainer').classList.add('active');
-  filterNavigation();
-  updateUserUI();
-  navigateTo('dashboard');
-  renderNotifications();
-}
-
-function updateUserUI() {
-  if(!currentUser) return;
-  document.getElementById('sidebarUserName').textContent = currentUser.name;
-  document.getElementById('sidebarUserRole').textContent = getRoleLabel(currentUser.role);
-  var av = document.getElementById('sidebarAvatar');
-  av.textContent = currentUser.avatar;
-  av.style.background = getAvatarColor(currentUser.role);
-}
-
-// ============================================================
-// NAVIGATION
-// ============================================================
-function navigateTo(page) {
-  currentPage = page;
-  var pages = document.querySelectorAll('.page');
-  for(var i=0;i<pages.length;i++) pages[i].classList.remove('active');
-  var target = document.getElementById('page-'+page);
-  if(target) target.classList.add('active');
-
-  var links = document.querySelectorAll('.nav-link');
-  for(var j=0;j<links.length;j++) {
-    links[j].classList.remove('active');
-    if(links[j].getAttribute('data-page')===page) links[j].classList.add('active');
-  }
-
-  var titles = {
-    dashboard:'لوحة التحكم',bookings:'الحجوزات',import:'استيراد Excel',
-    trips:'الرحلات',tracking:'تتبع مباشر',transfers:'شيتات النقل',
-    manifest:'المانيفست',driver:'شيت السائق',audit:'سجل التدقيق',settings:'الإعدادات'
-  };
-  document.getElementById('pageTitle').textContent = titles[page] || page;
-
-  // Close sidebar on mobile
-  document.getElementById('sidebar').classList.remove('open');
-
-  // Render page content
-  switch(page) {
-    case 'dashboard': renderDashboard(); break;
-    case 'bookings': renderBookingsTable(); break;
-    case 'trips': renderTripsGrid(); break;
-    case 'tracking': renderTrackingBoard(); break;
-    case 'transfers': renderTransfersTable(); break;
-    case 'manifest': renderManifest(); break;
-    case 'driver': renderDriverView(); break;
-    case 'audit': renderAuditLog(); break;
-    case 'settings': break;
-  }
-}
-
-function filterNavigation() {
-  if(!currentUser) return;
-  var links = document.querySelectorAll('.nav-link');
-  for(var i=0;i<links.length;i++) {
-    var roles = links[i].getAttribute('data-roles');
-    if(roles && roles.indexOf(currentUser.role)===-1) {
-      links[i].style.display = 'none';
-    } else {
-      links[i].style.display = '';
-    }
-  }
-}
-
-function toggleSidebar() {
-  var sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('open');
-}
-
-// ============================================================
-// DASHBOARD
-// ============================================================
-function renderDashboard() {
-  renderDashboardStats();
-  renderActivityList();
-  renderActiveTripsWidget();
-}
-
-function renderDashboardStats() {
-  var total = AppData.bookings.length;
-  var approved = AppData.bookings.filter(function(b){return b.status==='approved'}).length;
-  var pending = AppData.bookings.filter(function(b){return b.status==='pending'||b.status==='new'}).length;
-  var activeTrips = AppData.trips.filter(function(t){return t.status==='active'}).length;
-
-  var html = '';
-  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(37,99,235,.1);color:var(--primary)">📋</div></div><div class="stat-card-value">'+total+'</div><div class="stat-card-label">إجمالي الحجوزات</div><div class="stat-card-change up">↑ 12% عن الشهر الماضي</div></div>';
-  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(22,163,74,.1);color:var(--success)">✅</div></div><div class="stat-card-value">'+approved+'</div><div class="stat-card-label">حجوزات موافق عليها</div><div class="stat-card-change up">↑ 8% عن الشهر الماضي</div></div>';
-  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(217,119,6,.1);color:var(--warning)">⏳</div></div><div class="stat-card-value">'+pending+'</div><div class="stat-card-label">قيد المراجعة</div><div class="stat-card-change down">↓ 3% عن الشهر الماضي</div></div>';
-  html += '<div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon" style="background:rgba(147,51,234,.1);color:#9333ea">🚌</div></div><div class="stat-card-value">'+activeTrips+'</div><div class="stat-card-label">رحلات نشطة</div><div class="stat-card-change up">↑ 5% عن الشهر الماضي</div></div>';
-  document.getElementById('statsGrid').innerHTML = html;
-}
-
-function renderActivityList() {
-  var logs = AppData.auditLog.slice().sort(function(a,b){return new Date(b.timestamp)-new Date(a.timestamp)}).slice(0,8);
-  var colors = {login:'var(--primary)',booking:'var(--success)',transfer:'var(--warning)',settings:'var(--danger)',system:'#9333ea'};
-  var html = '';
-  for(var i=0;i<logs.length;i++) {
-    var l = logs[i];
-    var user = AppData.users.find(function(u){return u.id===l.userId});
-    html += '<li class="activity-item">';
-    html += '<div class="activity-dot" style="background:'+(colors[l.type]||'var(--text-secondary)')+'"></div>';
-    html += '<div class="activity-content">';
-    html += '<div class="activity-text"><strong>'+(user?user.name:'نظام')+'</strong> '+l.description+'</div>';
-    html += '<div class="activity-time">'+getRelativeTime(l.timestamp)+'</div>';
-    html += '</div></li>';
-  }
-  document.getElementById('activityList').innerHTML = html;
-}
-
-function renderActiveTripsWidget() {
-  var trips = AppData.trips.filter(function(t){return t.status==='active'});
-  var html = '';
-  if(trips.length===0) {
-    html = '<div class="empty-state"><div class="empty-icon">🚌</div><p>لا توجد رحلات نشطة</p></div>';
-  } else {
-    for(var i=0;i<trips.length;i++) {
-      var t = trips[i];
-      var pct = Math.round((t.booked/t.capacity)*100);
-      html += '<div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border)">';
-      html += '<div style="display:flex;justify-content:space-between;margin-bottom:4px"><strong style="font-size:13px">'+t.name+'</strong><span class="badge badge-success">نشط</span></div>';
-      html += '<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px">'+t.date+' - '+t.time+'</div>';
-      html += '<div style="background:#e2e8f0;border-radius:4px;height:6px;margin-bottom:4px"><div style="background:'+(pct>80?'var(--danger)':'var(--primary)')+';height:100%;width:'+pct+'%;border-radius:4px;transition:width .3s"></div></div>';
-      html += '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary)"><span>'+t.booked+'/'+t.capacity+' راكب</span><span>'+pct+'%</span></div>';
-      html += '</div>';
-    }
-  }
-  document.getElementById('activeTripsWidget').innerHTML = html;
-}
-
-// ============================================================
-// BOOKINGS
-// ============================================================
-function renderBookingsTable() {
-  var status = document.getElementById('filterBookingStatus').value;
-  var dateFrom = document.getElementById('filterDateFrom').value;
-  var dateTo = document.getElementById('filterDateTo').value;
-
-  var filtered = AppData.bookings.filter(function(b) {
-    if(status && b.status!==status) return false;
-    if(dateFrom && b.date < dateFrom) return false;
-    if(dateTo && b.date > dateTo) return false;
-    return true;
-  });
-
-  var total = filtered.length;
-  var pages = Math.ceil(total/bookingsPerPage);
-  if(bookingsPage > pages) bookingsPage = pages || 1;
-  var start = (bookingsPage-1)*bookingsPerPage;
-  var pageData = filtered.slice(start, start+bookingsPerPage);
-
-  var html = '';
-  for(var i=0;i<pageData.length;i++) {
-    var b = pageData[i];
-    var trip = AppData.trips.find(function(t){return t.id===b.tripId});
-    html += '<tr>';
-    html += '<td>'+b.id+'</td>';
-    html += '<td><strong>'+b.clientName+'</strong></td>';
-    html += '<td style="direction:ltr;text-align:left">'+b.phone+'</td>';
-    html += '<td>'+(trip?trip.name:'-')+'</td>';
-    html += '<td>'+b.date+'</td>';
-    html += '<td>'+b.passengers+'</td>';
-    html += '<td><span class="badge '+getStatusClass(b.status)+'">'+getStatusLabel(b.status)+'</span></td>';
-    html += '<td><div class="table-actions">';
-    html += '<button class="btn btn-outline btn-sm" onclick="viewBooking('+b.id+')" title="عرض">👁️</button>';
-    if(currentUser && currentUser.role==='admin') {
-      if(b.status==='new'||b.status==='pending') {
-        html += '<button class="btn btn-success btn-sm" onclick="approveBooking('+b.id+')" title="موافقة">✅</button>';
-        html += '<button class="btn btn-danger btn-sm" onclick="rejectBooking('+b.id+')" title="رفض">❌</button>';
-      }
-    }
-    html += '</div></td></tr>';
-  }
-  if(pageData.length===0) {
-    html = '<tr><td colspan="8"><div class="empty-state"><div class="empty-icon">📋</div><p>لا توجد حجوزات</p></div></td></tr>';
-  }
-  document.getElementById('bookingsTableBody').innerHTML = html;
-
-  // Pagination
-  var pagHtml = '<button class="page-btn" onclick="goBookingsPage('+(bookingsPage-1)+')" '+(bookingsPage<=1?'disabled':'')+'>السابق</button>';
-  for(var p=1;p<=pages;p++) {
-    pagHtml += '<button class="page-btn '+(p===bookingsPage?'active':'')+'" onclick="goBookingsPage('+p+')">'+p+'</button>';
-  }
-  pagHtml += '<button class="page-btn" onclick="goBookingsPage('+(bookingsPage+1)+')" '+(bookingsPage>=pages?'disabled':'')+'>التالي</button>';
-  document.getElementById('bookingsPagination').innerHTML = pagHtml;
-}
-
-function goBookingsPage(p) {
-  bookingsPage = p;
-  renderBookingsTable();
-}
-
-function approveBooking(id) {
-  var b = AppData.bookings.find(function(x){return x.id===id});
-  if(!b) return;
-  b.status = 'approved';
-  addAuditEntry('booking','تمت الموافقة على الحجز #'+id, b.clientName);
-  showToast('تمت الموافقة على الحجز بنجاح','success');
-  renderBookingsTable();
-}
-
-function rejectBooking(id) {
-  var b = AppData.bookings.find(function(x){return x.id===id});
-  if(!b) return;
-  b.status = 'rejected';
-  addAuditEntry('booking','تم رفض الحجز #'+id, b.clientName);
-  showToast('تم رفض الحجز','warning');
-  renderBookingsTable();
-}
-
-function viewBooking(id) {
-  var b = AppData.bookings.find(function(x){return x.id===id});
-  if(!b) return;
-  var trip = AppData.trips.find(function(t){return t.id===b.tripId});
-  var html = '';
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">اسم العميل</label><p style="font-weight:600">'+b.clientName+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الهاتف</label><p style="font-weight:600;direction:ltr;text-align:left">'+b.phone+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الرحلة</label><p style="font-weight:600">'+(trip?trip.name:'-')+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">التاريخ</label><p style="font-weight:600">'+b.date+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">عدد الأشخاص</label><p style="font-weight:600">'+b.passengers+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الحالة</label><p><span class="badge '+getStatusClass(b.status)+'">'+getStatusLabel(b.status)+'</span></p></div>';
-  html += '</div>';
-  if(b.notes) {
-    html += '<div style="margin-top:16px"><label style="font-size:12px;color:var(--text-secondary)">ملاحظات</label><p>'+b.notes+'</p></div>';
-  }
-  html += '<div style="margin-top:16px"><label style="font-size:12px;color:var(--text-secondary)">تاريخ الإنشاء</label><p>'+formatDateTime(b.createdAt)+'</p></div>';
-
-  openModal('تفاصيل الحجز #'+id, html, '<button class="btn btn-outline" onclick="closeModal()">إغلاق</button>');
-}
-
-function showAddBookingModal() {
-  var tripOpts = '<option value="">اختر الرحلة...</option>';
-  for(var i=0;i<AppData.trips.length;i++) {
-    tripOpts += '<option value="'+AppData.trips[i].id+'">'+AppData.trips[i].name+' ('+AppData.trips[i].date+')</option>';
-  }
-  var html = '';
-  html += '<div class="form-group"><label>اسم العميل</label><input type="text" id="addBkName" placeholder="الاسم الكامل"></div>';
-  html += '<div class="form-group"><label>الهاتف</label><input type="tel" id="addBkPhone" placeholder="01xxxxxxxxx" style="direction:ltr;text-align:left"></div>';
-  html += '<div class="form-group"><label>الرحلة</label><select id="addBkTrip">'+tripOpts+'</select></div>';
-  html += '<div class="form-group"><label>التاريخ</label><input type="date" id="addBkDate"></div>';
-  html += '<div class="form-group"><label>عدد الأشخاص</label><input type="number" id="addBkPassengers" min="1" max="50" value="1"></div>';
-  html += '<div class="form-group"><label>ملاحظات</label><textarea id="addBkNotes" rows="2" placeholder="ملاحظات إضافية..."></textarea></div>';
-
-  var footer = '<button class="btn btn-primary" onclick="submitAddBooking()">إضافة</button><button class="btn btn-outline" onclick="closeModal()">إلغاء</button>';
-  openModal('إضافة حجز جديد', html, footer);
-}
-
-function submitAddBooking() {
-  var name = document.getElementById('addBkName').value.trim();
-  var phone = document.getElementById('addBkPhone').value.trim();
-  var tripId = parseInt(document.getElementById('addBkTrip').value);
-  var date = document.getElementById('addBkDate').value;
-  var passengers = parseInt(document.getElementById('addBkPassengers').value);
-  var notes = document.getElementById('addBkNotes').value.trim();
-
-  if(!name || !phone || !tripId || !date || !passengers) {
-    showToast('يرجى ملء جميع الحقول المطلوبة','error');
-    return;
-  }
-
-  var newId = Math.max.apply(null, AppData.bookings.map(function(b){return b.id})) + 1;
-  AppData.bookings.push({
-    id: newId, clientName: name, phone: phone, tripId: tripId,
-    date: date, passengers: passengers, status: 'new',
-    notes: notes, createdAt: new Date().toISOString()
-  });
-  addAuditEntry('booking','إضافة حجز جديد #'+newId, name);
-  closeModal();
-  showToast('تم إضافة الحجز بنجاح','success');
-  renderBookingsTable();
-}
-
-// ============================================================
-// TRIPS
-// ============================================================
-function renderTripsGrid() {
-  var html = '';
-  for(var i=0;i<AppData.trips.length;i++) {
-    var t = AppData.trips[i];
-    var statusBadge = t.status==='active'?'<span class="badge badge-success">نشط</span>':'<span class="badge badge-info">مجدول</span>';
-    var pct = Math.round((t.booked/t.capacity)*100);
-    html += '<div class="trip-card">';
-    html += '<div class="trip-card-header"><span class="trip-route">'+t.name+'</span>'+statusBadge+'</div>';
-    html += '<div class="trip-date">📅 '+t.date+' - ⏰ '+t.time+'</div>';
-    html += '<div class="trip-details">';
-    html += '<div class="trip-detail">🚌 <strong>'+t.busNumber+'</strong></div>';
-    html += '<div class="trip-detail">👥 <strong>'+t.booked+'/'+t.capacity+'</strong> راكب</div>';
-    html += '</div>';
-    html += '<div style="margin-top:12px;background:#e2e8f0;border-radius:4px;height:6px"><div style="background:'+(pct>80?'var(--danger)':pct>50?'var(--warning)':'var(--success)')+';height:100%;width:'+pct+'%;border-radius:4px"></div></div>';
-    html += '<div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-top:4px"><span>الإشغال</span><span>'+pct+'%</span></div>';
-    html += '</div>';
-  }
-  document.getElementById('tripsGrid').innerHTML = html;
-}
-
-function showAddTripModal() {
-  var html = '';
-  html += '<div class="form-group"><label>اسم الرحلة (الوجهة)</label><input type="text" id="addTripName" placeholder="مثال: القاهرة - الإسكندرية"></div>';
-  html += '<div class="form-group"><label>التاريخ</label><input type="date" id="addTripDate"></div>';
-  html += '<div class="form-group"><label>الوقت</label><input type="time" id="addTripTime"></div>';
-  html += '<div class="form-group"><label>رقم الحافلة</label><input type="text" id="addTripBus" placeholder="ABC-123"></div>';
-  html += '<div class="form-group"><label>السعة</label><input type="number" id="addTripCap" min="1" max="100" value="50"></div>';
-  var footer = '<button class="btn btn-primary" onclick="submitAddTrip()">إضافة</button><button class="btn btn-outline" onclick="closeModal()">إلغاء</button>';
-  openModal('إضافة رحلة جديدة', html, footer);
-}
-
-function submitAddTrip() {
-  var name = document.getElementById('addTripName').value.trim();
-  var date = document.getElementById('addTripDate').value;
-  var time = document.getElementById('addTripTime').value;
-  var bus = document.getElementById('addTripBus').value.trim();
-  var cap = parseInt(document.getElementById('addTripCap').value);
-  if(!name||!date||!time||!bus||!cap) { showToast('يرجى ملء جميع الحقول','error'); return; }
-  var newId = Math.max.apply(null, AppData.trips.map(function(t){return t.id})) + 1;
-  AppData.trips.push({id:newId,name:name,date:date,time:time,busNumber:bus,capacity:cap,booked:0,status:'scheduled'});
-  addAuditEntry('system','إضافة رحلة جديدة: '+name,'');
-  closeModal();
-  showToast('تمت إضافة الرحلة بنجاح','success');
-  renderTripsGrid();
-}
-
-// ============================================================
-// TRACKING (KANBAN)
-// ============================================================
-function renderTrackingBoard() {
-  var columns = [
-    {key:'new',title:'جديد',status:'new'},
-    {key:'pending',title:'قيد المراجعة',status:'pending'},
-    {key:'approved',title:'موافق عليه',status:'approved'},
-    {key:'transit',title:'في الطريق',status:'transit'},
-    {key:'completed',title:'مكتمل',status:'completed'}
-  ];
-
-  var html = '';
-  for(var c=0;c<columns.length;c++) {
-    var col = columns[c];
-    var bookings;
-    if(col.status==='transit') {
-      bookings = AppData.bookings.filter(function(b){return b.status==='approved'});
-    } else {
-      bookings = AppData.bookings.filter(function(b){return b.status===col.status});
-    }
-    document.getElementById('track'+col.key.charAt(0).toUpperCase()+col.key.slice(1)).textContent = bookings.length;
-
-    html += '<div class="kanban-column">';
-    html += '<div class="kanban-column-header"><span class="kanban-column-title">'+col.title+'</span><span class="kanban-column-count">'+bookings.length+'</span></div>';
-    html += '<div class="kanban-cards">';
-    for(var i=0;i<bookings.length;i++) {
-      var b = bookings[i];
-      var trip = AppData.trips.find(function(t){return t.id===b.tripId});
-      html += '<div class="kanban-card">';
-      html += '<div class="kanban-card-title">'+b.clientName+'</div>';
-      html += '<div class="kanban-card-meta">';
-      html += '<span>🚌 '+(trip?trip.name:'-')+'</span>';
-      html += '<span>📅 '+b.date+' | 👥 '+b.passengers+'</span>';
-      html += '</div>';
-      html += '<div class="kanban-card-actions">';
-      if(col.status==='new') {
-        html += '<button class="btn btn-success btn-sm" onclick="approveBooking('+b.id+');renderTrackingBoard()">موافقة</button>';
-        html += '<button class="btn btn-danger btn-sm" onclick="rejectBooking('+b.id+');renderTrackingBoard()">رفض</button>';
-      } else if(col.status==='approved') {
-        html += '<button class="btn btn-primary btn-sm" onclick="moveToTransit('+b.id+')">نقل</button>';
-      }
-      html += '<button class="btn btn-outline btn-sm" onclick="viewBooking('+b.id+')">عرض</button>';
-      html += '</div></div>';
-    }
-    if(bookings.length===0) {
-      html += '<div style="text-align:center;padding:20px;color:var(--text-secondary);font-size:13px">لا توجد حجوزات</div>';
-    }
-    html += '</div></div>';
-  }
-  document.getElementById('kanbanBoard').innerHTML = html;
-}
-
-function moveToTransit(id) {
-  showToast('تم نقل الحجز #'+id+' إلى مرحلة الطريق','info');
-  renderTrackingBoard();
-}
-
-// ============================================================
-// TRANSFERS
-// ============================================================
-function renderTransfersTable() {
-  var html = '';
-  for(var i=0;i<AppData.transferSheets.length;i++) {
-    var ts = AppData.transferSheets[i];
-    var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
-    var driver = AppData.drivers.find(function(d){return d.id===ts.driverId});
-    var statusBadge = ts.status==='completed'?'<span class="badge badge-success">مكتمل</span>':ts.status==='in_transit'?'<span class="badge badge-purple">في الطريق</span>':'<span class="badge badge-warning">قيد الانتظار</span>';
-    html += '<tr>';
-    html += '<td>'+ts.id+'</td>';
-    html += '<td>'+(trip?trip.name:'-')+'</td>';
-    html += '<td>'+ts.date+'</td>';
-    html += '<td>'+ts.passengers.length+'</td>';
-    html += '<td>'+(driver?driver.name:'غير محدد')+'</td>';
-    html += '<td>'+ts.busNumber+'</td>';
-    html += '<td>'+statusBadge+'</td>';
-    html += '<td><div class="table-actions">';
-    if(currentUser && currentUser.role==='admin') {
-      if(ts.status==='pending') {
-        html += '<button class="btn btn-primary btn-sm" onclick="showAssignDriverModal('+ts.id+')">تعيين سائق</button>';
-      }
-    }
-    html += '<button class="btn btn-outline btn-sm" onclick="viewTransfer('+ts.id+')">عرض</button>';
-    html += '</div></td></tr>';
-  }
-  document.getElementById('transfersTableBody').innerHTML = html;
-}
-
-function generateTransferSheets() {
-  showToast('جاري توليد شيتات النقل...','info');
-  setTimeout(function(){ showToast('تم توليد شيتات النقل بنجاح','success'); }, 1000);
-}
-
-function showAssignDriverModal(sheetId) {
-  var ts = AppData.transferSheets.find(function(x){return x.id===sheetId});
-  if(!ts) return;
-  var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
-  var opts = '<option value="">اختر سائق...</option>';
-  for(var i=0;i<AppData.drivers.length;i++) {
-    var d = AppData.drivers[i];
-    opts += '<option value="'+d.id+'">'+d.name+' ('+d.vehicle+')</option>';
-  }
-  var html = '<div style="margin-bottom:16px"><p style="font-size:14px;font-weight:600">الرحلة: '+(trip?trip.name:'-')+'</p><p style="font-size:13px;color:var(--text-secondary)">الرقم: '+sheetId+' | التاريخ: '+ts.date+'</p></div>';
-  html += '<div class="form-group"><label>assign Driver</label><select id="assignDriverSelect">'+opts+'</select></div>';
-  var footer = '<button class="btn btn-primary" onclick="assignDriver('+sheetId+')">تعيين</button><button class="btn btn-outline" onclick="closeModal()">إلغاء</button>';
-  openModal('تعيين سائق للشيت #'+sheetId, html, footer);
-}
-
-function assignDriver(sheetId) {
-  var driverId = parseInt(document.getElementById('assignDriverSelect').value);
-  if(!driverId) { showToast('يرجى اختيار سائق','error'); return; }
-  var ts = AppData.transferSheets.find(function(x){return x.id===sheetId});
-  if(ts) { ts.driverId = driverId; ts.status = 'in_transit'; }
-  var driver = AppData.drivers.find(function(d){return d.id===driverId});
-  addAuditEntry('transfer','تعيين سائق للشيت #'+sheetId, driver?driver.name:'');
-  closeModal();
-  showToast('تم تعيين السائق بنجاح','success');
-  renderTransfersTable();
-}
-
-function viewTransfer(id) {
-  var ts = AppData.transferSheets.find(function(x){return x.id===id});
-  if(!ts) return;
-  var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
-  var driver = AppData.drivers.find(function(d){return d.id===ts.driverId});
-  var html = '';
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الرحلة</label><p style="font-weight:600">'+(trip?trip.name:'-')+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">التاريخ</label><p style="font-weight:600">'+ts.date+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">السائق</label><p style="font-weight:600">'+(driver?driver.name:'غير محدد')+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">الحافلة</label><p style="font-weight:600">'+ts.busNumber+'</p></div>';
-  html += '<div><label style="font-size:12px;color:var(--text-secondary)">عدد الركاب</label><p style="font-weight:600">'+ts.passengers.length+'</p></div>';
-  html += '</div>';
-  html += '<div style="margin-top:16px"><label style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;display:block">قائمة الركاب</label>';
-  html += '<div style="background:#f8fafc;border-radius:var(--radius-sm);padding:12px">';
-  for(var i=0;i<ts.passengers.length;i++) {
-    var b = AppData.bookings.find(function(x){return x.id===ts.passengers[i]});
-    if(b) html += '<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:13px">'+b.clientName+' - '+b.phone+' ('+b.passengers+' أشخاص)</div>';
-  }
-  html += '</div></div>';
-  openModal('تفاصيل الشيت #'+id, html, '<button class="btn btn-outline" onclick="closeModal()">إغلاق</button>');
-}
-
-// ============================================================
-// MANIFEST
-// ============================================================
-function renderManifest() {
-  var sel = document.getElementById('manifestTripSelect');
-  var opts = '<option value="">اختر رحلة...</option>';
-  for(var i=0;i<AppData.trips.length;i++) {
-    opts += '<option value="'+AppData.trips[i].id+'">'+AppData.trips[i].name+' - '+AppData.trips[i].date+'</option>';
-  }
-  sel.innerHTML = opts;
-
-  var selectedTrip = sel.value;
-  if(!selectedTrip) {
-    document.getElementById('manifestContent').innerHTML = '<div class="empty-state"><div class="empty-icon">📄</div><p>اختر رحلة لعرض المانيفست</p></div>';
-    return;
-  }
-
-  var trip = AppData.trips.find(function(t){return t.id===parseInt(selectedTrip)});
-  if(!trip) return;
-  var tripBookings = AppData.bookings.filter(function(b){return b.tripId===trip.id && (b.status==='approved'||b.status==='completed')});
-
-  var html = '';
-  html += '<div class="manifest-header">';
-  html += '<div><div class="manifest-title">🔱 Poseidon CRM</div><div class="manifest-subtitle">MANIFEST / MANIFEST MANIFEST</div></div>';
-  html += '<div class="manifest-info"><strong>'+trip.name+'</strong><br>Date: '+trip.date+' | Time: '+trip.time+'<br>Bus: '+trip.busNumber+' | Passengers: '+tripBookings.length+'</div>';
-  html += '</div>';
-  html += '<table class="manifest-table">';
-  html += '<thead><tr><th>#</th><th>Passenger Name</th><th>Phone</th><th>Seats</th><th>Notes</th><th>Signature</th></tr></thead>';
-  html += '<tbody>';
-  for(var j=0;j<tripBookings.length;j++) {
-    var b = tripBookings[j];
-    html += '<tr><td>'+(j+1)+'</td><td>'+b.clientName+'</td><td style="direction:ltr;text-align:left">'+b.phone+'</td><td>'+b.passengers+'</td><td>'+(b.notes||'-')+'</td><td style="min-width:120px"></td></tr>';
-  }
-  if(tripBookings.length===0) {
-    html += '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--text-secondary)">No passengers found for this trip</td></tr>';
-  }
-  html += '</tbody></table>';
-  html += '<div class="manifest-signatures">';
-  html += '<div class="signature-line"><div class="line"></div><div class="label">Driver Signature / توقيع السائق</div></div>';
-  html += '<div class="signature-line"><div class="line"></div><div class="label">Tour Guide / المرشد السياحي</div></div>';
-  html += '<div class="signature-line"><div class="line"></div><div class="label">Company Stamp / ختم الشركة</div></div>';
-  html += '</div>';
-  document.getElementById('manifestContent').innerHTML = html;
-}
-
-function printManifest() {
-  window.print();
-}
-
-// ============================================================
-// DRIVER VIEW
-// ============================================================
-function renderDriverView() {
-  if(!currentUser || currentUser.role!=='driver') return;
-  var driver = AppData.drivers.find(function(d){return d.phone && d.name});
-  var mySheets = AppData.transferSheets.filter(function(ts){return ts.driverId && ts.status!=='completed'});
-
-  var html = '';
-  html += '<div class="driver-info-card">';
-  html += '<div style="display:flex;align-items:center;gap:16px">';
-  html += '<div style="width:60px;height:60px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800">'+currentUser.avatar+'</div>';
-  html += '<div><h2>'+currentUser.name+'</h2><p>'+currentUser.email+'</p><p style="margin-top:4px;opacity:.7">🚗 سائق نقل</p></div>';
-  html += '</div></div>';
-
-  html += '<h3 style="font-size:16px;font-weight:700;margin-bottom:16px">الشيتات المعينة</h3>';
-  if(mySheets.length===0) {
-    html += '<div class="card"><div class="card-body"><div class="empty-state"><div class="empty-icon">📋</div><p>لا توجد شيتات معينة حالياً</p></div></div></div>';
-  } else {
-    html += '<div class="driver-sheets">';
-    for(var i=0;i<mySheets.length;i++) {
-      var ts = mySheets[i];
-      var trip = AppData.trips.find(function(t){return t.id===ts.tripId});
-      var stBadge = ts.status==='in_transit'?'<span class="badge badge-purple">في الطريق</span>':'<span class="badge badge-warning">قيد الانتظار</span>';
-      html += '<div class="driver-sheet-card">';
-      html += '<div class="driver-sheet-header"><div><strong style="font-size:15px">'+(trip?trip.name:'رحلة')+'</strong><br><span style="font-size:12px;color:var(--text-secondary)">📅 '+ts.date+' | 🚌 '+ts.busNumber+'</span></div>'+stBadge+'</div>';
-      html += '<div class="driver-sheet-items"><strong style="font-size:13px">الركاب ('+ts.passengers.length+')</strong>';
-      for(var j=0;j<ts.passengers.length;j++) {
-        var b = AppData.bookings.find(function(x){return x.id===ts.passengers[j]});
-        if(b) {
-          html += '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">';
-          html += '<span>'+b.clientName+' ('+b.passengers+' أشخاص)</span>';
-          html += '<span style="direction:ltr">'+b.phone+'</span>';
-          html += '</div>';
-        }
-      }
-      html += '</div>';
-      html += '<div style="margin-top:12px;display:flex;gap:8px">';
-      if(ts.status==='pending') {
-        html += '<button class="btn btn-success btn-sm" onclick="updateDriverSheet('+ts.id+',\'in_transit\')">🚀 بدء الرحلة</button>';
-      } else if(ts.status==='in_transit') {
-        html += '<button class="btn btn-primary btn-sm" onclick="updateDriverSheet('+ts.id+',\'completed\')">✅ إتمام الرحلة</button>';
-      }
-      html += '</div></div>';
-    }
-    html += '</div>';
-  }
-  document.getElementById('driverContent').innerHTML = html;
-}
-
-function updateDriverSheet(sheetId, newStatus) {
-  var ts = AppData.transferSheets.find(function(x){return x.id===sheetId});
-  if(ts) ts.status = newStatus;
-  var msg = newStatus==='in_transit'?'تم بدء الرحلة':'تم إتمام الرحلة';
-  showToast(msg,'success');
-  renderDriverView();
-}
-
-// ============================================================
-// AUDIT LOG
-// ============================================================
-function renderAuditLog() {
-  var typeFilter = document.getElementById('filterAuditType').value;
-  var dateFrom = document.getElementById('filterAuditFrom').value;
-
-  var logs = AppData.auditLog.filter(function(l) {
-    if(typeFilter && l.type!==typeFilter) return false;
-    if(dateFrom && l.timestamp.substring(0,10) < dateFrom) return false;
-    return true;
-  }).sort(function(a,b){return new Date(b.timestamp)-new Date(a.timestamp)});
-
-  var typeLabels = {login:'تسجيل دخول',booking:'حجز',transfer:'نقل',settings:'إعدادات',system:'نظام'};
-  var typeClasses = {login:'badge-info',booking:'badge-success',transfer:'badge-warning',settings:'badge-danger',system:'badge-purple'};
-
-  var html = '';
-  for(var i=0;i<logs.length;i++) {
-    var l = logs[i];
-    var user = AppData.users.find(function(u){return u.id===l.userId});
-    html += '<tr>';
-    html += '<td>'+l.id+'</td>';
-    html += '<td>'+formatDateTime(l.timestamp)+'</td>';
-    html += '<td>'+(user?user.name:'نظام')+'</td>';
-    html += '<td><span class="badge '+typeClasses[l.type]+'">'+typeLabels[l.type]+'</span></td>';
-    html += '<td>'+l.description+'</td>';
-    html += '<td style="font-size:12px;color:var(--text-secondary)">'+l.details+'</td>';
-    html += '</tr>';
-  }
-  if(logs.length===0) {
-    html = '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📜</div><p>لا توجد سجلات</p></div></td></tr>';
-  }
-  document.getElementById('auditTableBody').innerHTML = html;
-}
-
-function exportAuditLog() {
-  var rows = [['#','التاريخ','المستخدم','النوع','الوصف','التفاصيل']];
-  var logs = AppData.auditLog.sort(function(a,b){return new Date(b.timestamp)-new Date(a.timestamp)});
-  for(var i=0;i<logs.length;i++) {
-    var l = logs[i];
-    var user = AppData.users.find(function(u){return u.id===l.userId});
-    rows.push([l.id, formatDateTime(l.timestamp), user?user.name:'نظام', l.type, l.description, l.details]);
-  }
-  exportToCSV(rows, 'audit_log.csv');
-  showToast('تم تصدير سجل التدقيق بنجاح','success');
-}
-
-function addAuditEntry(type, description, details) {
-  var newId = Math.max.apply(null, AppData.auditLog.map(function(l){return l.id})) + 1;
-  AppData.auditLog.push({
-    id: newId,
-    userId: currentUser ? currentUser.id : 1,
-    type: type,
-    description: description,
-    details: details || '',
-    timestamp: new Date().toISOString()
-  });
-}
-
-// ============================================================
-// IMPORT
-// ============================================================
-function handleFileDrop(e) {
-  e.preventDefault();
-  e.currentTarget.classList.remove('dragover');
-  var files = e.dataTransfer.files;
-  if(files.length) processImportFile(files[0]);
-}
-
-function handleFileUpload(e) {
-  var files = e.target.files;
-  if(files.length) processImportFile(files[0]);
-}
-
-function processImportFile(file) {
-  showToast('جاري تحليل الملف: '+file.name,'info');
-
-  // Simulate import with sample data
-  setTimeout(function() {
-    importData = [
-      {clientName:'عمرو مصطفى',phone:'01098765001',tripId:1,date:'2026-07-20',passengers:3,valid:true,errors:[]},
-      {clientName:'حنان سعيد',phone:'01098765002',tripId:2,date:'2026-07-21',passengers:2,valid:true,errors:[]},
-      {clientName:'',phone:'01098765003',tripId:3,date:'2026-07-22',passengers:1,valid:false,errors:['اسم العميل مفقود']},
-      {clientName:'طارق حسين',phone:'123',tripId:4,date:'2026-07-23',passengers:5,valid:false,errors:['رقم الهاتف غير صحيح']},
-      {clientName:'سلمى أحمد',phone:'01098765005',tripId:5,date:'2026-07-24',passengers:2,valid:true,errors:[]},
-      {clientName:'ماجد فتحي',phone:'01098765006',tripId:1,date:'2026-07-20',passengers:4,valid:true,errors:[]},
-      {clientName:'رنا عادل',phone:'01098765007',tripId:3,date:'2026-07-22',passengers:1,valid:true,errors:[]},
-      {clientName:'ياسر ناصر',phone:'01098765008',tripId:2,date:'',passengers:3,valid:false,errors:['التاريخ مفقود']},
-    ];
-    renderImportPreview();
-    showToast('تم تحليل الملف: '+importData.length+' سجل','success');
-  }, 800);
-}
-
-function renderImportPreview() {
-  var preview = document.getElementById('importPreview');
-  var errors = document.getElementById('importErrors');
-  var validData = importData.filter(function(d){return d.valid});
-  var errorData = importData.filter(function(d){return !d.valid});
-
-  document.getElementById('importCount').textContent = validData.length + ' سجل صحيح';
-
-  var html = '';
-  for(var i=0;i<importData.length;i++) {
-    var d = importData[i];
-    var trip = AppData.trips.find(function(t){return t.id===d.tripId});
-    var rowStyle = d.valid ? '' : 'background:rgba(220,38,38,.05)';
-    html += '<tr style="'+rowStyle+'">';
-    html += '<td>'+(i+1)+'</td>';
-    html += '<td>'+d.clientName+'</td>';
-    html += '<td style="direction:ltr;text-align:left">'+d.phone+'</td>';
-    html += '<td>'+(trip?trip.name:'رحلة '+d.tripId)+'</td>';
-    html += '<td>'+d.date+'</td>';
-    html += '<td>'+d.passengers+'</td>';
-    html += '<td>'+(d.valid?'<span class="badge badge-success">صحيح</span>':'<span class="badge badge-danger">خطأ</span>')+'</td>';
-    html += '</tr>';
-  }
-  document.getElementById('importPreviewBody').innerHTML = html;
-  preview.style.display = 'block';
-
-  if(errorData.length > 0) {
-    var errHtml = '<ul style="list-style:none;padding:0">';
-    for(var j=0;j<errorData.length;j++) {
-      errHtml += '<li style="padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">';
-      errHtml += '<strong>السطر '+(importData.indexOf(errorData[j])+1)+':</strong> '+errorData[j].errors.join(', ');
-      errHtml += '</li>';
-    }
-    errHtml += '</ul>';
-    document.getElementById('importErrorsList').innerHTML = errHtml;
-    errors.style.display = 'block';
-  } else {
-    errors.style.display = 'none';
-  }
-}
-
-function confirmImport() {
-  var validData = importData.filter(function(d){return d.valid});
-  var added = 0;
-  var maxId = Math.max.apply(null, AppData.bookings.map(function(b){return b.id}));
-  for(var i=0;i<validData.length;i++) {
-    var d = validData[i];
-    AppData.bookings.push({
-      id: ++maxId, clientName: d.clientName, phone: d.phone, tripId: d.tripId,
-      date: d.date, passengers: d.passengers, status: 'new',
-      notes: 'تم الاستيراد من ملف Excel', createdAt: new Date().toISOString()
-    });
-    added++;
-  }
-  addAuditEntry('booking','استيراد '+added+' حجز من ملف Excel','');
-  importData = [];
-  document.getElementById('importPreview').style.display = 'none';
-  document.getElementById('importErrors').style.display = 'none';
-  showToast('تم استيراد '+added+' حجز بنجاح','success');
-}
-
-// ============================================================
-// SETTINGS
-// ============================================================
-function switchSettingsTab(tab) {
-  var panels = document.querySelectorAll('.settings-panel');
-  for(var i=0;i<panels.length;i++) panels[i].classList.remove('active');
-  var tabs = document.querySelectorAll('.settings-tab');
-  for(var j=0;j<tabs.length;j++) tabs[j].classList.remove('active');
-
-  var panel = document.getElementById('settings-'+tab);
-  if(panel) panel.classList.add('active');
-  // Find matching tab button
-  var tabMap = {whatsapp:0,approval:1,importSettings:2,encryption:3,auditSettings:4};
-  if(tabMap[tab]!==undefined && tabs[tabMap[tab]]) tabs[tabMap[tab]].classList.add('active');
-}
-
-function saveSettings() {
-  AppData.settings.whatsappAuto = document.getElementById('settingWhatsappAuto').checked;
-  AppData.settings.whatsappNumber = document.getElementById('settingWhatsappNumber').value;
-  AppData.settings.whatsappTemplate = document.getElementById('settingWhatsappTemplate').value;
-  AppData.settings.autoApprove = document.getElementById('settingAutoApprove').checked;
-  AppData.settings.notifyNew = document.getElementById('settingNotifyNew').checked;
-  AppData.settings.passengerLimit = parseInt(document.getElementById('settingPassengerLimit').value);
-  AppData.settings.checkDuplicate = document.getElementById('settingCheckDuplicate').checked;
-  AppData.settings.validatePhone = document.getElementById('settingValidatePhone').checked;
-  AppData.settings.encryption = document.getElementById('settingEncryption').checked;
-  AppData.settings.encryptFiles = document.getElementById('settingEncryptFiles').checked;
-  AppData.settings.auditLog = document.getElementById('settingAuditLog').checked;
-  AppData.settings.auditRetention = parseInt(document.getElementById('settingAuditRetention').value);
-  addAuditEntry('settings','تحديث إعدادات النظام','');
-  showToast('تم حفظ الإعدادات بنجاح','success');
-}
-
-// ============================================================
-// NOTIFICATIONS
-// ============================================================
-function renderNotifications() {
-  var unread = AppData.notifications.filter(function(n){return !n.read}).length;
-  var badge = document.getElementById('notifBadge');
-  badge.textContent = unread;
-  badge.style.display = unread > 0 ? 'flex' : 'none';
-
-  var html = '';
-  for(var i=0;i<AppData.notifications.length;i++) {
-    var n = AppData.notifications[i];
-    html += '<div class="notif-item '+(n.read?'':'unread')+'" onclick="markNotifRead('+n.id+')">';
-    html += '<strong>'+n.title+'</strong>';
-    html += '<p style="margin-top:2px">'+n.message+'</p>';
-    html += '<div class="notif-time">'+getRelativeTime(n.timestamp)+'</div>';
-    html += '</div>';
-  }
-  document.getElementById('notifList').innerHTML = html;
-}
-
-function toggleNotifications() {
-  var dd = document.getElementById('notifDropdown');
-  dd.classList.toggle('show');
-}
-
-function markNotifRead(id) {
-  var n = AppData.notifications.find(function(x){return x.id===id});
-  if(n) n.read = true;
-  renderNotifications();
-}
-
-// Close notifications on outside click
-document.addEventListener('click', function(e) {
-  var dd = document.getElementById('notifDropdown');
-  var bell = e.target.closest('.topbar-bell');
-  if(!bell && dd) dd.classList.remove('show');
-});
-
-// ============================================================
-// SEARCH
-// ============================================================
-function handleGlobalSearch(e) {
-  var q = e.target.value.trim().toLowerCase();
-  if(!q) return;
-  // Navigate to bookings if searching
-  if(currentPage !== 'bookings') navigateTo('bookings');
-}
-
-// ============================================================
-// MODAL
-// ============================================================
-function openModal(title, body, footer) {
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalBody').innerHTML = body;
-  document.getElementById('modalFooter').innerHTML = footer || '';
-  document.getElementById('modalOverlay').classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('active');
-  document.body.style.overflow = '';
-}
-
-// Close modal on Escape
-document.addEventListener('keydown', function(e) {
-  if(e.key === 'Escape') closeModal();
-});
-
-// ============================================================
-// TOAST
-// ============================================================
-function showToast(message, type) {
-  var container = document.getElementById('toastContainer');
-  var toast = document.createElement('div');
-  toast.className = 'toast ' + (type || 'info');
-  var icons = {success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
-  toast.innerHTML = '<span>'+(icons[type]||'ℹ️')+'</span><span>'+message+'</span>';
-  container.appendChild(toast);
-  setTimeout(function() {
-    toast.style.animation = 'slideOutLeft .3s ease forwards';
-    setTimeout(function() { if(toast.parentNode) toast.parentNode.removeChild(toast); }, 300);
-  }, 3000);
-}
-
-// ============================================================
-// HELPERS
-// ============================================================
-function formatDate(dateStr) {
-  if(!dateStr) return '-';
-  var d = new Date(dateStr);
-  return d.toLocaleDateString('ar-EG');
-}
-
-function formatDateTime(dateStr) {
-  if(!dateStr) return '-';
-  var d = new Date(dateStr);
-  return d.toLocaleDateString('ar-EG') + ' ' + d.toLocaleTimeString('ar-EG', {hour:'2-digit',minute:'2-digit'});
-}
-
-function getRelativeTime(dateStr) {
-  var now = new Date();
-  var d = new Date(dateStr);
-  var diff = Math.floor((now - d) / 1000);
-  if(diff < 60) return 'الآن';
-  if(diff < 3600) return 'منذ ' + Math.floor(diff/60) + ' دقيقة';
-  if(diff < 86400) return 'منذ ' + Math.floor(diff/3600) + ' ساعة';
-  if(diff < 604800) return 'منذ ' + Math.floor(diff/86400) + ' يوم';
-  return formatDate(dateStr);
-}
-
-function getStatusLabel(status) {
-  var labels = {new:'جديد',pending:'قيد المراجعة',approved:'موافق عليه',rejected:'مرفوض',completed:'مكتمل',transit:'في الطريق'};
-  return labels[status] || status;
-}
-
-function getStatusClass(status) {
-  var classes = {new:'badge-info',pending:'badge-warning',approved:'badge-success',rejected:'badge-danger',completed:'badge-secondary',transit:'badge-purple'};
-  return classes[status] || 'badge-secondary';
-}
-
-function getRoleLabel(role) {
-  var labels = {admin:'مدير النظام',agency:'وكالة',transport:'نقل',driver:'سائق'};
-  return labels[role] || role;
-}
-
-function getAvatarColor(role) {
-  var colors = {admin:'var(--primary)',agency:'var(--success)',transport:'var(--warning)',driver:'var(--danger)'};
-  return colors[role] || 'var(--primary)';
-}
-
-function generateId() {
-  return '_' + Math.random().toString(36).substr(2, 9);
-}
-
-function paginate(array, page, perPage) {
-  var start = (page - 1) * perPage;
-  return array.slice(start, start + perPage);
-}
-
-function exportToCSV(rows, filename) {
-  var csv = '';
-  for(var i=0;i<rows.length;i++) {
-    csv += rows[i].map(function(cell){return '"'+String(cell).replace(/"/g,'""')+'"'}).join(',') + '\n';
-  }
-  var BOM = '\uFEFF';
-  var blob = new Blob([BOM + csv], {type:'text/csv;charset=utf-8;'});
-  var link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = filename;
-  link.click();
-  URL.revokeObjectURL(link.href);
-}
+const HOTEL_ZONES=['الصيف','الشتاء','مرسى علم','الجونة','سهل حشيش'];
+const HOTELS=['Jaz Aquamarine','Hilton Hurghada','Marriott Beach','Steigenberger','Sunrise Resort','Citadins','AMC Royal','Continental'];
+const NATIONALITIES=['مصري','ألماني','إنجليزي','إيطالي','روسي','أوكراني','فرنسي','هولندي'];
+const NAMES=['محمد أحمد حسن','فاطمة علي إبراهيم','خالد سعيد محمود','سارة عبد الرحمن','عمر يوسف حسن','نورا إبراهيم خالد','أحمد مصطفى عيد','مريم خالد سعيد','حسن محمود سالم','ليلى عبد الله محمد','كريم فتحي حسن','ياسمين أحمد علي','إبراهيم سعيد عبد','هدى محمد إبراهيم','عمرو حسن يوسف','هبة الله سعيد','طارق محمود عيد','دينا أحمد خالد','مصطفى عبد الرحمن','أمل سعيد حسن','ياسر إبراهيم علي','رنا محمود سعيد','سمير حسن عيد','فاتن أحمد يوسف','صالح عبد الله'];
+
+function generateBookings(){
+const bks=[];
+for(let i=0;i<25;i++){
+const statuses=['pending','confirmed','confirmed','confirmed','cancelled'];
+const s=statuses[Math.floor(Math.random()*5)];
+const ts=['pickup_scheduled','picked_up','in_transit','arrived_marina','boarded_boat','trip_active','returning','drop_off','completed','pending'];
+const tr=s==='cancelled'?'completed':ts[Math.floor(Math.random()*ts.length)];
+const trip=AppData.trips[Math.floor(Math.random()*AppData.trips.length)];
+const zone=HOTEL_ZONES[Math.floor(Math.random()*HOTEL_ZONES.length)];
+const hotel=HOTELS[Math.floor(Math.random()*HOTELS.length)];
+bks.push({
+id:'BK-'+String(i+1).padStart(3,'0'),passengerName:NAMES[i],age:5+Math.floor(Math.random()*65),
+nationality:NATIONALITIES[Math.floor(Math.random()*NATIONALITIES.length)],
+passportNumber:'P'+(10000000+Math.floor(Math.random()*90000000)),
+hotelName:hotel,hotelZone:zone,roomNumber:String(100+Math.floor(Math.random()*900)),
+phone:'+20 10'+Math.floor(10000000+Math.floor(Math.random()*90000000)),
+tripId:trip.id,tripName:trip.name,tripType:trip.type,date:trip.date,timeSlot:trip.time+' - '+trip.returnTime,
+passengers:1+Math.floor(Math.random()*4),status:s,statusAr:s==='confirmed'?'مؤكد':s==='pending'?'معلق':'ملغي',
+transferStatus:tr,transferStatusAr:getTransferLabel(tr),agencyId:2,agencyName:'وكالة الأهرام السياحية',
+notes:'',createdAt:new Date(2026,6,20+i%5).toISOString()});
+}AppData.bookings=bks;}
+
+function generateTransferSheets(){
+const sheets=[];
+const zones=HOTEL_ZONES;
+zones.forEach((z,i)=>{
+const bks=AppData.bookings.filter(b=>b.hotelZone===z&&b.status==='confirmed'&&b.transferStatus!=='completed').slice(0,8);
+if(bks.length===0)return;
+const driver=AppData.drivers[i%AppData.drivers.length];
+const statuses=['pending','assigned','pickup_scheduled','in_transit','arrived','completed'];
+sheets.push({id:'TS-'+String(i+1).padStart(3,'0'),tripId:bks[0].tripId,tripName:bks[0].tripName,
+date:bks[0].date,driverId:driver.id,driverName:driver.name,zone:z,
+passengers:bks,passengerCount:bks.length,status:statuses[i%statuses.length],
+vehicleType:i%2===0?'باص مكيف':'فان',vehiclePlate:'س ع د '+Math.floor(1000+Math.random()*9000),
+departureTime:'08:00',returnTime:'16:30',notes:''});});
+AppData.transferSheets=sheets;}
+
+function generateAudit(){
+const ops=[{e:'booking',a:'create',d:'إنشاء حجز BK-001'},{e:'booking',a:'approve',d:'الموافقة على حجز BK-003'},{e:'transfer',a:'create',d:'إنشاء شيت TS-001 للصيف'},{e:'trip',a:'update',d:'تحديث حالة الرحلة TRP-001'},{e:'booking',a:'reject',d:'رفض حجز BK-007'},{e:'transfer',a:'update',d:'تعيين سائق محمود علي TS-001'},{e:'settings',a:'update',d:'تحديث إعدادات WhatsApp'},{e:'booking',a:'create',d:'استيراد 12 حجز من Excel'},{e:'transfer',a:'update',d:'تحديث حالة النقل TS-002'},{e:'booking',a:'update',d:'تعديل بيانات حجز BK-012'},{e:'trip',a:'create',d:'إنشاء رحلة TRP-008'},{e:'transfer',a:'update',d:'تأكيد وصول المرسى TS-003'},{e:'booking',a:'update',d:'تحديث حالة النقل BK-015'},{e:'transfer',a:'create',d:'إنشاء شيت TS-004 للشتاء'},{e:'booking',a:'cancel',d:'إلغاء حجز BK-020'},{e:'settings',a:'update',d:'تدوير مفتاح التشفير'},{e:'transfer',a:'update',d:'تأكيد التوصيل TS-001'},{e:'booking',a:'approve',d:'الموافقة على حجز BK-022'},{e:'trip',a:'update',d:'تحديث طاقم الرحلة TRP-002'},{e:'transfer',a:'update',d:'بدء رحلة العودة TS-005'}];
+const users=['مدير النظام','وكالة الأهرام','شركة النقل البحري','محمود علي'];
+AppData.auditLog=ops.map((o,i)=>({id:i+1,entity:o.e,action:o.a,description:o.d,user:users[i%users.length],
+timestamp:new Date(2026,6,20+i%5,8+i,Math.floor(Math.random()*60)).toISOString()}));}
+
+function generateNotifs(){
+AppData.notifications=[
+{id:1,icon:'📋',message:'حجز جديد BK-025 من وكالة الأهرام - رحلة جزيرة الجفتون',time:new Date(2026,6,24,9,30).toISOString(),read:false},
+{id:2,icon:'✅',message:'تمت الموافقة على حجز BK-012',time:new Date(2026,6,24,10,15).toISOString(),read:false},
+{id:3,icon:'🚚',message:'تم تعيين شيت TS-001 للسائق محمود علي - منطقة الصيف',time:new Date(2026,6,24,11,0).toISOString(),read:false},
+{id:4,icon:'🚢',message:'وصل الزبون إلى المرسى - BK-005',time:new Date(2026,6,24,12,30).toISOString(),read:true},
+{id:5,icon:'⚠️',message:'تأخير في الاستلام - منطقة الشتاء (15 دقيقة)',time:new Date(2026,6,24,13,0).toISOString(),read:true},
+{id:6,icon:'🔄',message:'تم تحديث حالة العودة لـ 8 زبائن - TS-002',time:new Date(2026,6,24,14,0).toISOString(),read:true},
+{id:7,icon:'✅',message:'اكتملت رحلة جزيرة الجفتون - 32 راكب',time:new Date(2026,6,24,16,30).toISOString(),read:true},
+{id:8,icon:'📋',message:'حجز جديد BK-026 من وكالة الأهرام - غواصة',time:new Date(2026,6,24,17,0).toISOString(),read:false},
+{id:9,icon:'🚚',message:'تم توزيع 5 شيتات على مناطق مختلفة',time:new Date(2026,6,24,7,0).toISOString(),read:true},
+{id:10,icon:'⚠️',message:'تنبيه: الرحلة TRP-005 اكتملت الحجوزات',time:new Date(2026,6,24,8,0).toISOString(),read:false}
+];}
+
+// ===== TRANSFER STATUS HELPERS =====
+function getTransferLabel(s){const m={pending:'في الانتظار',pickup_scheduled:'جدول الاستلام',picked_up:'تم الاستلام',in_transit:'في الطريق',arrived_marina:'وصل المرسى',boarded_boat:'على المركب',trip_active:'رحلة نشطة',returning:'عودة',drop_off:'تم التوصيل',completed:'مكتمل',assigned:'تم التعيين',arrived:'وصل'};return m[s]||s;}
+function getTransferColor(s){const m={pending:'#94a3b8',pickup_scheduled:'#3b82f6',picked_up:'#eab308',in_transit:'#f97316',arrived_marina:'#06b6d4',boarded_boat:'#8b5cf6',trip_active:'#10b981',returning:'#f59e0b',drop_off:'#059669',completed:'#047857',assigned:'#6366f1',arrived:'#0891b2'};return m[s]||'#6b7280';}
+const TRANSFER_STEPS=['pending','pickup_scheduled','picked_up','in_transit','arrived_marina','boarded_boat','trip_active','returning','drop_off','completed'];
+const TRANSFER_STEP_LABELS=['انتظار','جدول','استلام','طريق','مرسى','ركوب','رحلة','عودة','وصول','اكتمال'];
+const TRANSFER_STEP_ICONS=['⏳','📋','🟡','🚗','⚓','🚢','🌊','🔄','🏁','✅'];
+
+// ===== AUTH & NAVIGATION =====
+function demoLogin(role){const u=AppData.users.find(x=>x.role===role);if(u){document.getElementById('loginEmail').value=u.email;document.getElementById('loginPassword').value='demo';document.getElementById('loginRole').value=role;handleLogin({preventDefault:function(){}});}}
+function handleLogin(e){e.preventDefault();const email=document.getElementById('loginEmail').value;const role=document.getElementById('loginRole').value;const user=AppData.users.find(u=>u.email===email&&u.role===role);if(!user){showToast('بيانات غير صحيحة','error');return false;}AppData.currentUser=user;localStorage.setItem('poseidon_user',JSON.stringify(user));showApp();return false;}
+function logout(){AppData.currentUser=null;localStorage.removeItem('poseidon_user');document.getElementById('loginPage').classList.remove('hidden');document.getElementById('app').classList.remove('active');document.getElementById('loginForm').reset();}
+function showApp(){document.getElementById('loginPage').classList.add('hidden');document.getElementById('app').classList.add('active');const u=AppData.currentUser;
+const colors=['#0ea5e9','#10b981','#f59e0b','#ef4444','#8b5cf6'];
+document.getElementById('sidebarAvatar').style.background=colors[u.role.charCodeAt(0)%5];
+document.getElementById('sidebarAvatar').textContent=u.name.charAt(0);
+document.getElementById('sidebarUserName').textContent=u.name;
+document.getElementById('sidebarUserRole').textContent=getRoleLabel(u.role);
+filterNav();navigateTo('dashboard');renderNotifBadge();}
+
+let currentPage='dashboard';
+const PAGE_TITLES={dashboard:'لوحة التحكم',bookings:'الحجوزات',import:'استيراد Excel',transferSync:'جدول الحركة',trips:'الرحلات',tracking:'التتبع',transfers:'شيتات النقل',driver:'واجهة السائق',audit:'سجل التدقيق',settings:'الإعدادات'};
+
+function navigateTo(page){
+currentPage=page;document.getElementById('topbarTitle').textContent=PAGE_TITLES[page]||page;
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+const el=document.getElementById('page-'+page);if(el)el.classList.add('active');
+document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.dataset.page===page);});
+document.getElementById('sidebar').classList.remove('open');
+const inits={dashboard:initDashboard,bookings:initBookings,import:initImport,transferSync:initTransferSync,trips:initTrips,tracking:initTracking,transfers:initTransfers,driver:initDriver,audit:initAudit,settings:initSettings};
+if(inits[page])inits[page]();}
+
+function filterNav(){const role=AppData.currentUser.role;
+document.querySelectorAll('.nav-item[data-roles]').forEach(n=>{const r=n.dataset.roles.split(',');n.style.display=r.includes(role)?'':'none';});}
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
+
+// ===== DASHBOARD =====
+function initDashboard(){
+const bks=AppData.bookings;const trips=AppData.trips.filter(t=>t.status==='active');
+const confirmed=bks.filter(b=>b.status==='confirmed').length;
+const pending=bks.filter(b=>b.status==='pending').length;
+document.getElementById('dashboardStats').innerHTML=[
+{icon:'📋',bg:'var(--primary-light)',color:'var(--primary)',val:bks.length,label:'إجمالي الحجوزات'},
+{icon:'✅',bg:'var(--success-light)',color:'var(--success)',val:confirmed,label:'مؤكدة'},
+{icon:'⏳',bg:'var(--warning-light)',color:'var(--warning)',val:pending,label:'معلقة'},
+{icon:'🚢',bg:'var(--info-light)',color:'var(--info)',val:trips.length,label:'رحلات نشطة'}
+].map(s=>`<div class="stat-card"><div class="stat-icon" style="background:${s.bg};color:${s.color}">${s.icon}</div><div class="stat-info"><h3>${s.val}</h3><p>${s.label}</p></div></div>`).join('');
+
+document.getElementById('activeTripsList').innerHTML=trips.length?trips.map(t=>`<div class="trip-list-item"><div class="status-dot" style="background:var(--success)"></div><div class="trip-info"><h4>${t.name}</h4><span>${t.time} - ${t.returnTime} | ${t.boatName} | ${t.booked}/${t.capacity} راكب</span></div><span class="badge badge-success">${t.statusAr||'نشط'}</span></div>`).join(''):'<div class="empty-state"><p>لا توجد رحلات نشطة</p></div>';
+
+const ts=AppData.transferSheets;
+const overview=[{label:'قيد التوزيع',count:ts.filter(t=>t.status==='pending').length,color:'var(--warning)'},{label:'في الطريق',count:ts.filter(t=>t.status==='in_transit').length,color:'var(--primary)'},{label:'وصل المرسى',count:ts.filter(t=>['arrived','completed'].includes(t.status)).length,color:'var(--success)'}];
+document.getElementById('transferOverview').innerHTML=overview.map(o=>`<div class="overview-item"><div class="ov-num" style="color:${o.color}">${o.count}</div><div class="ov-label">${o.label}</div></div>`).join('');
+
+document.getElementById('recentNotifications').innerHTML=AppData.notifications.slice(0,5).map(n=>`<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:20px">${n.icon}</span><div style="flex:1"><p style="font-size:13px">${n.message}</p><span style="font-size:11px;color:var(--text-light)">${getRelativeTime(n.time)}</span></div></div>`).join('');}
+
+// ===== BOOKINGS =====
+let bkPage=1;
+function initBookings(){
+const sel=document.getElementById('filterTrip');
+sel.innerHTML='<option value="">كل الرحلات</option>'+AppData.trips.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+renderBookingsTable();}
+
+function renderBookingsTable(){
+let bks=getFilteredBookings();const pg=paginate(bks,bkPage,10);
+document.getElementById('bookingsBody').innerHTML=pg.data.length?pg.data.map(b=>`<tr>
+<td>${b.id}</td><td><strong>${b.passengerName}</strong><br><small style="color:var(--text-secondary)">${b.nationality}</small></td>
+<td>${b.age}</td><td>${b.nationality}</td><td>${b.hotelName}</td><td><span class="badge badge-info">${b.hotelZone}</span></td>
+<td>${b.tripName}</td><td>${b.date}<br><small>${b.timeSlot}</small></td><td>${b.passengers}</td>
+<td><span class="badge ${b.status==='confirmed'?'badge-success':b.status==='pending'?'badge-warning':'badge-danger'}">${b.statusAr}</span></td>
+<td><span class="badge" style="background:${getTransferColor(b.transferStatus)}20;color:${getTransferColor(b.transferStatus)}">${b.transferStatusAr}</span></td>
+<td><div style="display:flex;gap:4px">
+<button class="btn btn-sm btn-outline" onclick="viewBooking('${b.id}')">👁️</button>
+${b.status==='pending'?`<button class="btn btn-sm btn-success" onclick="approveBooking('${b.id}')">✓</button><button class="btn btn-sm btn-danger" onclick="rejectBooking('${b.id}')">✕</button>`:''}
+</div></td></tr>`).join(''):'<tr><td colspan="12" class="empty-state"><p>لا توجد حجوزات</p></td></tr>';
+renderPagination('bookingsPag',pg,(p)=>{bkPage=p;renderBookingsTable();});}
+
+function getFilteredBookings(){let b=[...AppData.bookings];const s=document.getElementById('filterStatus').value;const t=document.getElementById('filterTrip').value;const d=document.getElementById('filterDate').value;const z=document.getElementById('filterZone').value;
+if(s)b=b.filter(x=>x.status===s);if(t)b=b.filter(x=>x.tripId===t);if(d)b=b.filter(x=>x.date===d);if(z)b=b.filter(x=>x.hotelZone===z);return b;}
+
+function approveBooking(id){const b=AppData.bookings.find(x=>x.id===id);if(b){b.status='confirmed';b.statusAr='مؤكد';addAudit('booking','approve','الموافقة على حجز '+id);showToast('تمت الموافقة على حجز '+id,'success');renderBookingsTable();}}
+function rejectBooking(id){const b=AppData.bookings.find(x=>x.id===id);if(b){b.status='cancelled';b.statusAr='ملغي';addAudit('booking','reject','رفض حجز '+id);showToast('تم رفض حجز '+id,'warning');renderBookingsTable();}}
+function viewBooking(id){const b=AppData.bookings.find(x=>x.id===id);if(!b)return;
+openModal('تفاصيل الحجز '+b.id,`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div><strong>المسافر:</strong> ${b.passengerName}</div><div><strong>العمر:</strong> ${b.age} سنة</div>
+<div><strong>الجنسية:</strong> ${b.nationality}</div><div><strong>الباسبور:</strong> ***${b.passportNumber.slice(-4)}</div>
+<div><strong>الفندق:</strong> ${b.hotelName}</div><div><strong>الغرفة:</strong> ***${b.roomNumber.slice(-2)}</div>
+<div><strong>المنطقة:</strong> ${b.hotelZone}</div><div><strong>الهاتف:</strong> ${b.phone}</div>
+<div><strong>الرحلة:</strong> ${b.tripName}</div><div><strong>التاريخ:</strong> ${b.date}</div>
+<div><strong>Time Slot:</strong> ${b.timeSlot}</div><div><strong>العدد:</strong> ${b.passengers}</div>
+<div><strong>حالة الحجز:</strong> <span class="badge ${b.status==='confirmed'?'badge-success':b.status==='pending'?'badge-warning':'badge-danger'}">${b.statusAr}</span></div>
+<div><strong>حالة النقل:</strong> <span class="badge" style="background:${getTransferColor(b.transferStatus)}20;color:${getTransferColor(b.transferStatus)}">${b.transferStatusAr}</span></div>
+<div style="grid-column:1/3"><strong>ملاحظات:</strong> ${b.notes||'-'}</div>
+</div>`);}
+
+function showAddBookingModal(){
+const trips=AppData.trips;
+openModal('إضافة حجز جديد',`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="form-group"><label>اسم المسافر</label><input type="text" id="newBkName"></div>
+<div class="form-group"><label>العمر</label><input type="number" id="newBkAge" min="1"></div>
+<div class="form-group"><label>الجنسية</label><select id="newBkNat">${NATIONALITIES.map(n=>`<option>${n}</option>`).join('')}</select></div>
+<div class="form-group"><label>رقم الباسبور</label><input type="text" id="newBkPassport"></div>
+<div class="form-group"><label>الفندق</label><select id="newBkHotel">${HOTELS.map(h=>`<option>${h}</option>`).join('')}</select></div>
+<div class="form-group"><label>المنطقة</label><select id="newBkZone">${HOTEL_ZONES.map(z=>`<option>${z}</option>`).join('')}</select></div>
+<div class="form-group"><label>رقم الغرفة</label><input type="text" id="newBkRoom"></div>
+<div class="form-group"><label>الهاتف</label><input type="tel" id="newBkPhone"></div>
+<div class="form-group"><label>الرحلة</label><select id="newBkTrip">${trips.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select></div>
+<div class="form-group"><label>التاريخ</label><input type="date" id="newBkDate" value="${new Date().toISOString().split('T')[0]}"></div>
+<div class="form-group"><label>عدد الركاب</label><input type="number" id="newBkCount" value="1" min="1"></div>
+<div class="form-group"><label>ملاحظات</label><input type="text" id="newBkNotes"></div>
+</div>`,function(){
+const nm=document.getElementById('newBkName').value;if(!nm){showToast('أدخل اسم المسافر','error');return;}
+const trip=AppData.trips.find(t=>t.id===document.getElementById('newBkTrip').value);
+const nb={id:'BK-'+String(AppData.bookings.length+1).padStart(3,'0'),passengerName:nm,
+age:parseInt(document.getElementById('newBkAge').value)||30,
+nationality:document.getElementById('newBkNat').value,
+passportNumber:document.getElementById('newBkPassport').value||'P00000000',
+hotelName:document.getElementById('newBkHotel').value,
+hotelZone:document.getElementById('newBkZone').value,
+roomNumber:document.getElementById('newBkRoom').value||'000',
+phone:document.getElementById('newBkPhone').value||'+20 100 000 0000',
+tripId:trip.id,tripName:trip.name,tripType:trip.type,
+date:document.getElementById('newBkDate').value,
+timeSlot:trip.time+' - '+trip.returnTime,
+passengers:parseInt(document.getElementById('newBkCount').value)||1,
+status:'pending',statusAr:'معلق',transferStatus:'pending',transferStatusAr:'في الانتظار',
+agencyId:2,agencyName:'وكالة الأهرام السياحية',
+notes:document.getElementById('newBkNotes').value,createdAt:new Date().toISOString()};
+AppData.bookings.push(nb);addAudit('booking','create','إنشاء حجز '+nb.id);showToast('تم إنشاء الحجز '+nb.id,'success');closeModal();renderBookingsTable();});}
+
+// ===== IMPORT =====
+let importData=[];
+function initImport(){renderImportHistory();const z=document.getElementById('uploadZone');z.ondragover=e=>{e.preventDefault();z.classList.add('dragover');};z.ondragleave=()=>z.classList.remove('dragover');z.ondrop=e=>{e.preventDefault();z.classList.remove('dragover');simulateImport();};}
+function handleFileUpload(el){if(el.files.length)simulateImport();}
+function simulateImport(){
+importData=[];const names=['محمد سعيد','فاطمة حسن','عمر علي','سارة أحمد','كريم محمود'];
+for(let i=0;i<8;i++){const valid=i!==3&&i!==6;importData.push({name:names[i%5]+' '+String.fromCharCode(65+i),phone:'+20 10'+Math.floor(10000000+Math.random()*90000000),
+nationality:NATIONALITIES[i%NATIONALITIES.length],hotel:HOTELS[i%HOTELS.length],zone:HOTEL_ZONES[i%HOTEL_ZONES.length],
+trip:AppData.trips[i%AppData.trips.length].name,date:'2026-07-25',passengers:1+Math.floor(Math.random()*4),valid,errors:valid?[]:['بيانات ناقصة']});}
+const valid=importData.filter(d=>d.valid).length;const err=importData.length-valid;
+document.getElementById('importStats').innerHTML=`<span class="badge badge-success">${valid} صحيح</span><span class="badge badge-danger">${err} خطأ</span><span class="badge badge-secondary">${importData.length} إجمالي</span>`;
+document.getElementById('previewHead').innerHTML='<tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>الجنسية</th><th>الفندق</th><th>المنطقة</th><th>الرحلة</th><th>التاريخ</th><th>العدد</th><th>الحالة</th></tr>';
+document.getElementById('previewBody').innerHTML=importData.map((d,i)=>`<tr style="background:${d.valid?'#f0fdf4':'#fef2f2'}"><td>${i+1}</td><td>${d.name}</td><td>${d.phone}</td><td>${d.nationality}</td><td>${d.hotel}</td><td>${d.zone}</td><td>${d.trip}</td><td>${d.date}</td><td>${d.passengers}</td><td>${d.valid?'<span class="badge badge-success">صحيح</span>':'<span class="badge badge-danger">'+d.errors.join(',')+'</span>'}</td></tr>`).join('');
+document.getElementById('importPreview').style.display='block';}
+function cancelImport(){importData=[];document.getElementById('importPreview').style.display='none';document.getElementById('fileInput').value='';}
+function confirmImport(){
+const valid=importData.filter(d=>d.valid);if(!valid.length){showToast('لا توجد بيانات صحيحة','error');return;}
+valid.forEach(d=>{const trip=AppData.trips.find(t=>t.name===d.trip)||AppData.trips[0];
+AppData.bookings.push({id:'BK-'+String(AppData.bookings.length+1).padStart(3,'0'),passengerName:d.name,age:30,nationality:d.nationality,
+passportNumber:'P'+Math.floor(10000000+Math.random()*90000000),hotelName:d.hotel,hotelZone:d.zone,roomNumber:String(Math.floor(100+Math.random()*900)),
+phone:d.phone,tripId:trip.id,tripName:trip.name,tripType:trip.type,date:d.date,timeSlot:trip.time+' - '+trip.returnTime,
+passengers:d.passengers,status:'pending',statusAr:'معلق',transferStatus:'pending',transferStatusAr:'في الانتظار',
+agencyId:2,agencyName:'وكالة الأهرام السياحية',notes:'مستورد من Excel',createdAt:new Date().toISOString()});});
+addAudit('booking','create','استيراد '+valid.length+' حجز من Excel');showToast('تم استيراد '+valid.length+' حجز','success');cancelImport();renderImportHistory();}
+function renderImportHistory(){document.getElementById('importHistoryBody').innerHTML='<tr><td>IMP-001</td><td>bookings_july.xlsx</td><td>2026-07-20</td><td>15/18</td><td><span class="badge badge-warning">جزئي</span></td></tr><tr><td>IMP-002</td><td>groups_aug.csv</td><td>2026-07-22</td><td>12/12</td><td><span class="badge badge-success">مكتمل</span></td></tr>';}
+
+// ===== TRANSFER SYNC =====
+function initTransferSync(){renderZoneGrid();renderActiveTransfers();}
+function renderZoneGrid(){
+const zones=HOTEL_ZONES;
+document.getElementById('zoneGrid').innerHTML=zones.map(z=>{
+const bks=AppData.bookings.filter(b=>b.hotelZone===z&&b.status==='confirmed');
+const picked=bks.filter(b=>['picked_up','in_transit','arrived_marina','boarded_boat','trip_active','returning','drop_off','completed'].includes(b.transferStatus)).length;
+const sheet=AppData.transferSheets.find(s=>s.zone===z);
+return`<div class="zone-card"><h4>📍 ${z}</h4><p style="font-size:12px;color:var(--text-secondary)">${bks.length} زبون | ${picked} في الطريق</p>
+<div class="zone-stats"><div class="zone-stat"><div class="num">${bks.length}</div><div class="label">إجمالي</div></div>
+<div class="zone-stat"><div class="num" style="color:var(--success)">${picked}</div><div class="label">تم الاستلام</div></div>
+<div class="zone-stat"><div class="num" style="color:var(--warning)">${bks.length-picked}</div><div class="label">في الانتظار</div></div></div>
+${sheet?`<p style="font-size:11px;margin-top:8px;color:var(--info)">🚗 ${sheet.driverName} | ${sheet.vehicleType}</p>`:''}
+</div>`;}).join('');}
+
+function renderActiveTransfers(){
+const sheets=AppData.transferSheets.filter(s=>s.status!=='completed'&&s.status!=='pending');
+document.getElementById('activeTransfers').innerHTML=sheets.length?sheets.map(s=>{
+const currentIdx=TRANSFER_STEPS.indexOf(s.status);
+return`<div class="sheet-card"><div class="sheet-header"><div><h4 style="font-size:15px">${s.id} - ${s.zone}</h4><p style="font-size:12px;color:var(--text-secondary)">🚗 ${s.driverName} | ${s.vehicleType} ${s.vehiclePlate} | ${s.passengerCount} راكب</p></div>
+<span class="badge badge-primary">${getTransferLabel(s.status)}</span></div>
+<div class="transfer-timeline">${TRANSFER_STEPS.map((step,i)=>{
+const cls=i<currentIdx?'done':i===currentIdx?'active':'';
+return`<div class="timeline-step ${cls}"><div class="step-dot">${TRANSFER_STEP_ICONS[i]}</div><div class="step-label">${TRANSFER_STEP_LABELS[i]}</div></div>${i<TRANSFER_STEPS.length-1?'<div class="timeline-line '+(i<currentIdx?'done':i===currentIdx?'active':'')+'"></div>':''}`;
+}).join('')}</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+${currentIdx<TRANSFER_STEPS.length-1?`<button class="btn btn-sm btn-primary" onclick="advanceTransfer('${s.id}')">التالي: ${getTransferLabel(TRANSFER_STEPS[currentIdx+1])}</button>`:''}
+<button class="btn btn-sm btn-outline" onclick="viewTransferDetail('${s.id}')">تفاصيل</button>
+</div></div>`;}).join(''):'<div class="empty-state"><p>لا توجد تنقلات نشطة</p></div>';}
+
+function advanceTransfer(id){const s=AppData.transferSheets.find(x=>x.id===id);if(!s)return;
+const idx=TRANSFER_STEPS.indexOf(s.status);if(idx<TRANSFER_STEPS.length-1){
+s.status=TRANSFER_STEPS[idx+1];
+s.passengers.forEach(p=>{const bk=AppData.bookings.find(b=>b.id===p.id);if(bk)bk.transferStatus=s.status;bk.transferStatusAr=getTransferLabel(s.status);});
+addAudit('transfer','update','تحديث '+s.id+' إلى '+getTransferLabel(s.status));showToast('تم تحديث الحالة إلى '+getTransferLabel(s.status),'success');initTransferSync();}}
+
+function autoDistribute(){
+const pending=AppData.bookings.filter(b=>b.status==='confirmed'&&b.transferStatus==='pending');
+if(!pending.length){showToast('لا توجد حجوزات للتوزيع','warning');return;}
+const grouped={};pending.forEach(b=>{if(!grouped[b.hotelZone])grouped[b.hotelZone]=[];grouped[b.hotelZone].push(b);});
+let count=0;Object.keys(grouped).forEach(zone=>{
+const driver=AppData.drivers.find(d=>!AppData.transferSheets.some(s=>s.driverId===d.id))||AppData.drivers[0];
+const sh={id:'TS-'+String(AppData.transferSheets.length+1).padStart(3,'0'),tripId:grouped[zone][0].tripId,tripName:grouped[zone][0].tripName,
+date:new Date().toISOString().split('T')[0],driverId:driver.id,driverName:driver.name,zone,
+passengers:grouped[zone],passengerCount:grouped[zone].length,status:'assigned',
+vehicleType:'باص مكيف',vehiclePlate:'س ع د '+Math.floor(1000+Math.random()*9000),
+departureTime:'08:00',returnTime:'16:30',notes:''};
+AppData.transferSheets.push(sh);
+grouped[zone].forEach(b=>{b.transferStatus='pickup_scheduled';b.transferStatusAr='جدول الاستلام';});
+count+=grouped[zone].length;});
+addAudit('transfer','create','توزيع '+count+' زبون على '+Object.keys(grouped).length+' مناطق');
+showToast('تم توزيع '+count+' زبون بنجاح','success');initTransferSync();}
+
+function viewTransferDetail(id){const s=AppData.transferSheets.find(x=>x.id===id);if(!s)return;
+openModal('تفاصيل الشيت '+s.id,`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+<div><strong>المنطقة:</strong> ${s.zone}</div><div><strong>السائق:</strong> ${s.driverName}</div>
+<div><strong>المركبة:</strong> ${s.vehicleType} (${s.vehiclePlate})</div><div><strong>الركاب:</strong> ${s.passengerCount}</div>
+<div><strong>الانطلاق:</strong> ${s.departureTime}</div><div><strong>العودة:</strong> ${s.returnTime}</div>
+</div><h4 style="margin-bottom:8px">قائمة الركاب</h4>
+<div style="max-height:300px;overflow-y:auto">${s.passengers.map((p,i)=>`<div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid var(--border)"><div><strong>${p.passengerName}</strong><br><small>${p.hotelName} غرفة ${p.roomNumber}</small></div><span class="badge" style="background:${getTransferColor(p.transferStatus)}20;color:${getTransferColor(p.transferStatus)}">${p.transferStatusAr}</span></div>`).join('')}</div>`);}
+
+function refreshTransferSync(){showToast('تم التحديث','info');initTransferSync();}
+
+// ===== TRIPS =====
+function initTrips(){
+document.getElementById('tripsGrid').innerHTML=AppData.trips.map(t=>{
+const pct=Math.round(t.booked/t.capacity*100);const color=pct>80?'var(--danger)':pct>50?'var(--warning)':'var(--success)';
+const typeIcons={snorkeling:'🤿',diving:'🏊',fishing:'🎣',glass:'玻璃',submarine:'🔱',sunset:'🌅',private:'⛵'};
+return`<div class="trip-card" onclick="viewTripDetail('${t.id}')">
+<div class="trip-header"><span class="badge badge-info">${t.typeName}</span><span class="badge ${t.status==='active'?'badge-success':'badge-secondary'}">${t.status==='active'?'نشط':t.status}</span></div>
+<h3 class="trip-name">${t.name}</h3>
+<div class="trip-meta">
+<div class="trip-meta-item"><span class="icon">📅</span> ${t.date}</div>
+<div class="trip-meta-item"><span class="icon">🕐</span> ${t.time} - ${t.returnTime}</div>
+<div class="trip-meta-item"><span class="icon">⚓</span> ${t.marina}</div>
+<div class="trip-meta-item"><span class="icon">🚢</span> ${t.boatName} - ${t.captain}</div>
+<div class="trip-meta-item"><span class="icon">💰</span> ${t.price} EGP</div>
+</div>
+<div class="capacity-bar"><div class="fill" style="width:${pct}%;background:${color}"></div></div>
+<p style="font-size:12px;color:var(--text-secondary);margin-top:6px">${t.booked}/${t.capacity} راكب (${pct}%)</p>
+</div>`;}).join('');}
+
+function viewTripDetail(id){const t=AppData.trips.find(x=>x.id===id);if(!t)return;
+const bks=AppData.bookings.filter(b=>b.tripId===t.id);
+openModal(t.name,`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+<div><strong>النوع:</strong> ${t.typeName}</div><div><strong>التاريخ:</strong> ${t.date}</div>
+<div><strong>الوقت:</strong> ${t.time} - ${t.returnTime}</div><div><strong>المرسى:</strong> ${t.marina}</div>
+<div><strong>المركب:</strong> ${t.boatName}</div><div><strong>الكابتن:</strong> ${t.captain}</div>
+<div><strong>السعر:</strong> ${t.price} EGP</div><div><strong>الحالة:</strong> ${t.status}</div>
+<div style="grid-column:1/3"><strong>الحجوزات (${bks.length}):</strong> ${bks.slice(0,5).map(b=>b.passengerName).join(', ')}${bks.length>5?'...':''}</div>
+</div>`);}
+
+function showAddTripModal(){
+openModal('إضافة رحلة جديدة',`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="form-group"><label>اسم الرحلة</label><input type="text" id="newTripName"></div>
+<div class="form-group"><label>النوع</label><select id="newTripType"><option value="snorkeling">سنوركلينج</option><option value="diving">غوص</option><option value="fishing">صيد</option><option value="glass">زورق زجاجي</option><option value="sunset">غروب</option></select></div>
+<div class="form-group"><label>التاريخ</label><input type="date" id="newTripDate"></div>
+<div class="form-group"><label>وقت الانطلاق</label><input type="time" id="newTripTime"></div>
+<div class="form-group"><label>وقت العودة</label><input type="time" id="newTripReturn"></div>
+<div class="form-group"><label>السعة</label><input type="number" id="newTripCap" value="30"></div>
+<div class="form-group"><label>المركب</label><input type="text" id="newTripBoat"></div>
+<div class="form-group"><label>الكابتن</label><input type="text" id="newTripCaptain"></div>
+<div class="form-group"><label>السعر (EGP)</label><input type="number" id="newTripPrice" value="500"></div>
+</div>`,function(){
+const nm=document.getElementById('newTripName').value;if(!nm){showToast('أدخل اسم الرحلة','error');return;}
+AppData.trips.push({id:'TRP-'+String(AppData.trips.length+1).padStart(3,'0'),name:nm,
+type:document.getElementById('newTripType').value,typeName:document.getElementById('newTripType').selectedOptions[0].text,
+date:document.getElementById('newTripDate').value,time:document.getElementById('newTripTime').value,
+returnTime:document.getElementById('newTripReturn').value,marina:'مارينا هورجادة',
+capacity:parseInt(document.getElementById('newTripCap').value)||30,booked:0,status:'active',
+boatName:document.getElementById('newTripBoat').value||'مركب جديد',
+captain:document.getElementById('newTripCaptain').value||'كابتن جديد',
+price:parseInt(document.getElementById('newTripPrice').value)||500});
+addAudit('trip','create','إنشاء رحلة '+nm);showToast('تم إنشاء الرحلة','success');closeModal();initTrips();});}
+
+// ===== TRACKING =====
+function initTracking(){
+const cols=['pending','confirmed','picked_up','in_transit','arrived_marina','trip_active','completed'];
+const labels=['معلق','مؤكد','تم الاستلام','في الطريق','وصل المرسى','رحلة نشطة','مكتمل'];
+document.getElementById('trackingBoard').innerHTML=cols.map((c,i)=>{
+const bks=AppData.bookings.filter(b=>b.status==='confirmed'||b.status==='pending').filter(b=>b.transferStatus===c||(i===0&&b.status==='pending')||(i===1&&b.status==='confirmed'&&b.transferStatus==='pending'));
+return`<div class="tracking-column"><div class="col-header">${labels[i]}<span class="col-count">${bks.length}</span></div>
+${bks.slice(0,10).map(b=>`<div class="tracking-card"><div class="tc-id">${b.id}</div><div class="tc-name">${b.passengerName}</div>
+<div class="tc-detail">📍 ${b.hotelZone} | ${b.hotelName}</div>
+<div class="tc-detail">🚢 ${b.tripName}</div></div>`).join('')}
+</div>`;}).join('');}
+
+// ===== TRANSFERS =====
+function initTransfers(){
+let sheets=[...AppData.transferSheets];
+const f=document.getElementById('tsFilterStatus').value;
+if(f)sheets=sheets.filter(s=>s.status===f);
+document.getElementById('transfersBody').innerHTML=sheets.length?sheets.map(s=>`<tr>
+<td><strong>${s.id}</strong></td><td>${s.driverName||'غير معيّن'}</td><td><span class="badge badge-info">${s.zone}</span></td>
+<td>${s.tripName}</td><td>${s.passengerCount} راكب</td>
+<td><span class="badge badge-primary">${getTransferLabel(s.status)}</span></td>
+<td><button class="btn btn-sm btn-outline" onclick="viewTransferDetail('${s.id}')">👁️</button></td>
+</tr>`).join(''):'<tr><td colspan="7" class="empty-state"><p>لا توجد شيتات</p></td></tr>';}
+
+// ===== DRIVER =====
+function initDriver(){
+const driver=AppData.currentUser.role==='driver'?AppData.drivers[0]:AppData.drivers[0];
+const sheets=AppData.transferSheets.filter(s=>s.driverId===driver.id);
+document.getElementById('driverInfo').innerHTML=`<div class="driver-card">
+<h2>🚗 ${driver.name}</h2>
+<div class="driver-meta"><span>📱 ${driver.phone}</span><span>🚙 ${driver.vehicle}</span><span>📋 ${sheets.length} شيتات</span></div>
+</div>`;
+document.getElementById('driverSheets').innerHTML=sheets.length?sheets.map(s=>`<div class="sheet-card">
+<div class="sheet-header"><div><h4>${s.id} - ${s.zone}</h4><p style="font-size:12px;color:var(--text-secondary)">${s.tripName} | ${s.vehiclePlate}</p></div>
+<span class="badge badge-primary">${getTransferLabel(s.status)}</span></div>
+${s.passengers.map((p,i)=>`<div class="passenger-row">
+<div class="p-info"><div class="p-name">${p.passengerName}</div><div class="p-detail">📍 ${p.hotelName} غرفة ${p.roomNumber} | 🕐 ${p.timeSlot||'09:00'}</div></div>
+<button class="p-status-btn" style="background:${getTransferColor(p.transferStatus)}" onclick="advancePassenger('${s.id}',${i})">${getTransferLabel(p.transferStatus)}</button>
+</div>`).join('')}</div>`).join(''):'<div class="empty-state"><div class="icon">🚗</div><p>لا توجد شيتات مخصصة لك</p></div>';}
+
+function advancePassenger(sheetId,idx){
+const s=AppData.transferSheets.find(x=>x.id===sheetId);if(!s||!s.passengers[idx])return;
+const p=s.passengers[idx];const ci=TRANSFER_STEPS.indexOf(p.transferStatus);
+if(ci<TRANSFER_STEPS.length-1){
+const ns=TRANSFER_STEPS[ci+1];p.transferStatus=ns;p.transferStatusAr=getTransferLabel(ns);
+const bk=AppData.bookings.find(b=>b.id===p.id);if(bk){bk.transferStatus=ns;bk.transferStatusAr=getTransferLabel(ns);}
+addAudit('transfer','update',p.passengerName+': '+getTransferLabel(ns));showToast(p.passengerName+': '+getTransferLabel(ns),'success');initDriver();}}
+
+// ===== AUDIT =====
+function initAudit(){renderAuditLog();}
+function renderAuditLog(){
+let logs=[...AppData.auditLog];
+const e=document.getElementById('auditEntityFilter').value;const d=document.getElementById('auditDateFilter').value;
+if(e)logs=logs.filter(l=>l.entity===e);if(d)logs=logs.filter(l=>l.timestamp.startsWith(d));
+document.getElementById('auditBody').innerHTML=logs.map(l=>`<tr>
+<td style="white-space:nowrap">${formatDateTime(l.timestamp)}</td><td>${l.user}</td>
+<td><span class="badge badge-secondary">${l.entity}</span></td><td><span class="badge badge-info">${l.action}</span></td>
+<td>${l.description}</td></tr>`).join('')||'<tr><td colspan="5" class="empty-state"><p>لا توجد سجلات</p></td></tr>';}
+
+function addAudit(entity,action,description){
+AppData.auditLog.unshift({id:Date.now(),entity,action,description,user:AppData.currentUser?AppData.currentUser.name:'System',timestamp:new Date().toISOString()});}
+
+function exportAuditCSV(){
+let csv='الوقت,المستخدم,الكيان,العملية,الوصف\n';
+AppData.auditLog.forEach(l=>{csv+=`"${formatDateTime(l.timestamp)}","${l.user}","${l.entity}","${l.action}","${l.description}"\n`;});
+const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);
+const a=document.createElement('a');a.href=url;a.download='audit_log.csv';a.click();showToast('تم التصدير','success');}
+
+// ===== SETTINGS =====
+function initSettings(){}
+function switchSettingsTab(tab){document.querySelectorAll('.settings-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.settings-panel').forEach(p=>p.classList.remove('active'));
+event.target.classList.add('active');document.getElementById('sp-'+tab).classList.add('active');}
+function saveSettings(s){addAudit('settings','update','تحديث إعدادات '+s);showToast('تم حفظ الإعدادات','success');}
+
+// ===== UTILS =====
+function getRoleLabel(r){return{admin:'مدير النظام',agency:'وكالة سياحية',transport:'شركة نقل',driver:'سائق'}[r]||r;}
+function formatDate(d){return new Date(d).toLocaleDateString('ar-EG',{day:'numeric',month:'long',year:'numeric'});}
+function formatDateTime(d){return new Date(d).toLocaleDateString('ar-EG',{day:'numeric',month:'short'})+' '+new Date(d).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});}
+function getRelativeTime(d){const diff=Date.now()-new Date(d);const m=Math.floor(diff/60000);if(m<1)return'الآن';if(m<60)return'منذ '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'منذ '+h+' ساعة';return'منذ '+Math.floor(h/24)+' يوم';}
+function paginate(items,pg,per){const total=items.length;const tp=Math.ceil(total/per);const cp=Math.max(1,Math.min(pg,tp||1));return{data:items.slice((cp-1)*per,cp*per),totalPages:tp,currentPage:cp,total};}
+function renderPagination(id,pg,cb){const el=document.getElementById(id);if(!el||pg.totalPages<=1){if(el)el.innerHTML='';return;}
+let h='';for(let i=1;i<=pg.totalPages;i++){h+=`<button class="${i===pg.currentPage?'active':''}" onclick="(${cb})(${i})">${i}</button>`;}
+el.innerHTML=h;}
+function showToast(msg,type='info'){const c=document.getElementById('toastContainer');const t=document.createElement('div');t.className='toast toast-'+type;t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3000);}
+let modalCallback=null;
+function openModal(title,body,onConfirm){document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML=body;modalCallback=onConfirm||null;
+document.getElementById('modalConfirm').style.display=onConfirm?'':'none';
+document.getElementById('modalConfirm').onclick=()=>{if(modalCallback)modalCallback();closeModal();};
+document.getElementById('modalOverlay').classList.add('show');}
+function closeModal(){document.getElementById('modalOverlay').classList.remove('show');}
+function toggleNotifications(){const p=document.getElementById('notifPanel');const o=document.getElementById('panelOverlay');
+const isOpen=p.classList.contains('open');if(isOpen){p.classList.remove('open');o.classList.remove('show');}
+else{renderNotifList();p.classList.add('open');o.classList.add('show');}}
+function renderNotifList(){document.getElementById('notifList').innerHTML=AppData.notifications.map(n=>`<div class="notification-item" style="opacity:${n.read?.5:1}"><div class="n-icon" style="background:var(--primary-light)">${n.icon}</div><div class="n-content"><div class="n-message">${n.message}</div><div class="n-time">${getRelativeTime(n.time)}</div></div></div>`).join('');}
+function clearNotifs(){AppData.notifications=[];renderNotifList();renderNotifBadge();}
+function renderNotifBadge(){document.getElementById('notifBadge').textContent=AppData.notifications.filter(n=>!n.read).length;}
+function handleGlobalSearch(v){if(!v||currentPage!=='bookings')return;renderBookingsTable();}
+
+// ===== INIT =====
+(function(){generateBookings();generateTransferSheets();generateAudit();generateNotifs();
+const stored=localStorage.getItem('poseidon_user');
+if(stored){try{AppData.currentUser=JSON.parse(stored);showApp();}catch(e){localStorage.removeItem('poseidon_user');}}
+document.getElementById('topbarDate').textContent=new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});})();
 </script>
 </body>
 </html>
