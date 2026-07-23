@@ -2,7 +2,11 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0ea5e9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiUG9zZWlkb24gQ1JNIiwic2hvcnRfbmFtZSI6IlBvc2VpZG9uIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwZjE3MmEiOiJ0aGVtZV9jb2xvciI6IiMwZWE1ZTkifQ==">
 <title>Poseidon CRM - نظام إدارة الرحلات البحرية</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -45,6 +49,15 @@ table{width:100%;border-collapse:collapse;}
 ::-webkit-scrollbar-track{background:#f1f5f9;}
 ::-webkit-scrollbar-thumb{background:#94a3b8;border-radius:3px;}
 ::-webkit-scrollbar-thumb:hover{background:#64748b;}
+
+.offline-bar{position:fixed;top:0;left:0;right:0;background:var(--warning);color:#000;padding:8px;text-align:center;font-size:13px;font-weight:600;z-index:500;display:none;direction:rtl;}
+.offline-bar.show{display:block;}
+body.has-offline-bar .topbar{top:32px;}
+
+.install-banner{position:fixed;bottom:0;left:0;right:0;background:var(--secondary);color:#fff;padding:12px 24px;display:none;align-items:center;justify-content:space-between;z-index:400;direction:rtl;}
+.install-banner.show{display:flex;}
+.install-banner .btn-install{background:var(--primary);color:#fff;padding:10px 24px;border-radius:var(--radius-sm);font-weight:700;font-size:14px;}
+.install-banner .btn-dismiss{background:none;color:var(--text-light);font-size:13px;padding:8px 12px;}
 
 .login-page{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);padding:20px;}
 .login-card{background:#fff;border-radius:var(--radius-lg);padding:48px 40px;width:100%;max-width:420px;box-shadow:var(--shadow-lg);text-align:center;}
@@ -278,6 +291,37 @@ table{width:100%;border-collapse:collapse;}
 .import-preview{margin-top:20px;}
 .import-history{margin-top:24px;}
 
+.touch-btn{min-height:56px;min-width:56px;padding:16px 24px;font-size:16px;font-weight:700;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;touch-action:manipulation;-webkit-tap-highlight-color:transparent;border:none;color:#fff;}
+.touch-btn:active{transform:scale(0.96);}
+.touch-btn-lg{min-height:72px;font-size:18px;padding:20px 32px;}
+.touch-btn-success{background:var(--success);}
+.touch-btn-primary{background:var(--primary);}
+.touch-btn-warning{background:var(--warning);}
+.touch-btn-danger{background:var(--danger);}
+.touch-btn-outline{background:transparent;border:3px solid var(--border);color:var(--text);}
+
+.driver-passenger-card{background:#fff;border:3px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px;transition:border-color .3s;}
+.driver-passenger-card.status-pending{border-color:var(--border);}
+.driver-passenger-card.status-picked_up{border-color:var(--warning);background:#fffbeb;}
+.driver-passenger-card.status-in_transit{border-color:#f97316;background:#fff7ed;}
+.driver-passenger-card.status-arrived_marina{border-color:var(--primary);background:#eff6ff;}
+.driver-passenger-card .dp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;}
+.driver-passenger-card .dp-name{font-size:18px;font-weight:700;}
+.driver-passenger-card .dp-detail{font-size:13px;color:var(--text-secondary);margin-bottom:4px;}
+.driver-passenger-card .dp-actions{display:flex;gap:8px;margin-top:12px;}
+
+.checkin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+.checkin-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;border:3px solid var(--border);transition:border-color .3s;}
+.checkin-card.checked-in{border-color:var(--success);background:#f0fdf4;}
+.checkin-card.no-show{border-color:var(--danger);background:#fef2f2;}
+.checkin-card .cc-header{padding:16px 20px;background:var(--bg);display:flex;justify-content:space-between;align-items:center;}
+.checkin-card .cc-body{padding:20px;}
+.checkin-card .cc-detail{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-secondary);margin-bottom:6px;}
+.checkin-card .cc-actions{display:flex;gap:8px;padding:16px 20px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.checkin-card .cc-status{text-align:center;padding:12px;font-size:14px;font-weight:700;}
+
+.alert-banner{background:var(--danger);color:#fff;padding:12px 20px;border-radius:var(--radius-sm);margin-bottom:16px;display:flex;align-items:center;gap:12px;font-weight:600;}
+
 @media(max-width:1024px){
 .stat-cards{grid-template-columns:repeat(2,1fr);}
 .tracking-board{flex-wrap:nowrap;}
@@ -294,18 +338,28 @@ table{width:100%;border-collapse:collapse;}
 .notification-panel{width:100%;}
 .driver-card .driver-meta{flex-direction:column;gap:8px;}
 .zone-grid{grid-template-columns:1fr;}
+.touch-btn{min-height:52px;font-size:15px;}
+.touch-btn-lg{min-height:64px;font-size:17px;}
+.driver-passenger-card{padding:16px;}
+.checkin-grid{grid-template-columns:1fr;}
+.driver-passenger-card .dp-actions{flex-direction:column;}
+.driver-passenger-card .dp-actions .touch-btn{width:100%;}
+.checkin-card .cc-actions{flex-direction:column;}
+.checkin-card .cc-actions .touch-btn{width:100%;}
 }
 @media(max-width:480px){
 .stat-cards{grid-template-columns:1fr;}
 .content{padding:12px;}
 .topbar{padding:0 12px;}
 .login-card{padding:32px 24px;}
+.touch-btn{min-height:56px;width:100%;}
 }
 </style>
 </head>
 <body>
 
-<!-- LOGIN PAGE -->
+<div id="offlineBar" class="offline-bar">⚠️ اتصال الإنترنت ضعيف - تعمل في وضع عدم الاتصال - ستُ同步 البيانات عند عودة الاتصال</div>
+
 <div id="loginPage" class="login-page">
 <div class="login-card">
 <div class="logo">🔱</div>
@@ -324,32 +378,34 @@ table{width:100%;border-collapse:collapse;}
 <label>الدور</label>
 <select id="loginRole" required>
 <option value="">اختر الدور</option>
+<option value="super_admin">مدير الشركة (Super Admin)</option>
 <option value="admin">مدير النظام</option>
 <option value="agency">وكالة سياحية</option>
 <option value="transport">شركة نقل</option>
 <option value="driver">سائق</option>
+<option value="supervisor">مشرف رحلة</option>
 </select>
 </div>
 <button type="submit" class="btn-login">تسجيل الدخول</button>
 </form>
 <div class="demo-buttons">
+<button onclick="demoLogin('super_admin')">👑 Super</button>
 <button onclick="demoLogin('admin')">👤 Admin</button>
 <button onclick="demoLogin('agency')">🏢 Agency</button>
 <button onclick="demoLogin('transport')">🚚 Transport</button>
 <button onclick="demoLogin('driver')">🚗 Driver</button>
+<button onclick="demoLogin('supervisor')">📋 Supervisor</button>
 </div>
 </div>
 </div>
 
-<!-- APP -->
 <div id="app" class="app">
-<!-- SIDEBAR -->
 <aside id="sidebar" class="sidebar">
 <div class="sidebar-header">
 <span class="logo-icon">🔱</span>
 <div>
 <h2>Poseidon CRM</h2>
-<span>v2.0 - Hurghada</span>
+<span>v3.0 - RBAC Enabled</span>
 </div>
 </div>
 <nav class="sidebar-nav" id="sidebarNav">
@@ -359,42 +415,45 @@ table{width:100%;border-collapse:collapse;}
 <span class="icon">📊</span> لوحة التحكم
 </div>
 </div>
-<div class="nav-section">
+<div class="nav-section" data-section="bookings-section">
 <div class="nav-section-title">الحجوزات</div>
-<div class="nav-item" data-page="bookings" data-roles="admin,agency" onclick="navigateTo('bookings')">
+<div class="nav-item" data-page="bookings" data-roles="super_admin,admin,agency" onclick="navigateTo('bookings')">
 <span class="icon">📋</span> الحجوزات
 </div>
-<div class="nav-item" data-page="import" data-roles="admin,agency" onclick="navigateTo('import')">
+<div class="nav-item" data-page="import" data-roles="super_admin,admin,agency" onclick="navigateTo('import')">
 <span class="icon">📥</span> استيراد Excel
 </div>
-<div class="nav-item" data-page="transferSync" data-roles="admin,agency" onclick="navigateTo('transferSync')">
+<div class="nav-item" data-page="transferSync" data-roles="super_admin,admin" onclick="navigateTo('transferSync')">
 <span class="icon">🚢</span> جدول الحركة
 </div>
 </div>
 <div class="nav-section">
 <div class="nav-section-title">الرحلات</div>
-<div class="nav-item" data-page="trips" data-roles="admin" onclick="navigateTo('trips')">
+<div class="nav-item" data-page="trips" data-roles="super_admin,admin" onclick="navigateTo('trips')">
 <span class="icon">🚢</span> الرحلات
 </div>
-<div class="nav-item" data-page="tracking" data-roles="admin,agency,transport" onclick="navigateTo('tracking')">
+<div class="nav-item" data-page="tracking" data-roles="super_admin,admin,agency,transport" onclick="navigateTo('tracking')">
 <span class="icon">📡</span> التتبع
 </div>
 </div>
 <div class="nav-section">
 <div class="nav-section-title">النقل</div>
-<div class="nav-item" data-page="transfers" data-roles="admin,transport" onclick="navigateTo('transfers')">
+<div class="nav-item" data-page="transfers" data-roles="super_admin,admin,transport" onclick="navigateTo('transfers')">
 <span class="icon">🚚</span> شيتات النقل
 </div>
 <div class="nav-item" data-page="driver" data-roles="driver" onclick="navigateTo('driver')">
 <span class="icon">🚗</span> واجهة السائق
 </div>
+<div class="nav-item" data-page="supervisor" data-roles="supervisor,admin,super_admin" onclick="navigateTo('supervisor')">
+<span class="icon">📋</span> مشرف الرحلة
+</div>
 </div>
 <div class="nav-section">
 <div class="nav-section-title">الإدارة</div>
-<div class="nav-item" data-page="audit" data-roles="admin" onclick="navigateTo('audit')">
+<div class="nav-item" data-page="audit" data-roles="super_admin,admin" onclick="navigateTo('audit')">
 <span class="icon">📜</span> سجل التدقيق
 </div>
-<div class="nav-item" data-page="settings" data-roles="admin" onclick="navigateTo('settings')">
+<div class="nav-item" data-page="settings" data-roles="super_admin,admin" onclick="navigateTo('settings')">
 <span class="icon">⚙️</span> الإعدادات
 </div>
 </div>
@@ -409,9 +468,7 @@ table{width:100%;border-collapse:collapse;}
 </div>
 </aside>
 
-<!-- MAIN AREA -->
 <div class="main-area">
-<!-- TOPBAR -->
 <header class="topbar">
 <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
 <h1 class="page-title" id="topbarTitle">لوحة التحكم</h1>
@@ -428,10 +485,8 @@ table{width:100%;border-collapse:collapse;}
 </div>
 </header>
 
-<!-- CONTENT -->
 <div class="content">
 
-<!-- DASHBOARD -->
 <div class="page active" id="page-dashboard">
 <div class="stat-cards" id="dashboardStats"></div>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
@@ -456,7 +511,6 @@ table{width:100%;border-collapse:collapse;}
 </div>
 </div>
 
-<!-- BOOKINGS -->
 <div class="page" id="page-bookings">
 <div class="filter-bar">
 <select id="filterStatus" onchange="renderBookingsTable()">
@@ -483,7 +537,6 @@ table{width:100%;border-collapse:collapse;}
 <div class="pagination" id="bookingsPag"></div>
 </div>
 
-<!-- IMPORT -->
 <div class="page" id="page-import">
 <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
 <div class="icon">📁</div>
@@ -503,7 +556,6 @@ table{width:100%;border-collapse:collapse;}
 <div class="table-container"><table class="data-table"><thead><tr><th>الدفعة</th><th>الملف</th><th>التاريخ</th><th>العدد</th><th>الحالة</th></tr></thead><tbody id="importHistoryBody"></tbody></table></div></div>
 </div>
 
-<!-- TRANSFER SYNC -->
 <div class="page" id="page-transferSync">
 <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap">
 <button class="btn btn-primary" onclick="autoDistribute()">🔄 توزيع تلقائي على المناطق</button>
@@ -515,18 +567,15 @@ table{width:100%;border-collapse:collapse;}
 <div id="activeTransfers"></div>
 </div>
 
-<!-- TRIPS -->
 <div class="page" id="page-trips">
 <div style="margin-bottom:16px"><button class="btn btn-primary" onclick="showAddTripModal()">+ رحلة جديدة</button></div>
 <div class="trip-cards" id="tripsGrid"></div>
 </div>
 
-<!-- TRACKING -->
 <div class="page" id="page-tracking">
 <div class="tracking-board" id="trackingBoard"></div>
 </div>
 
-<!-- TRANSFERS -->
 <div class="page" id="page-transfers">
 <div class="filter-bar">
 <select id="tsFilterStatus" onchange="renderTransfersTable()">
@@ -538,23 +587,25 @@ table{width:100%;border-collapse:collapse;}
 </tr></thead><tbody id="transfersBody"></tbody></table></div>
 </div>
 
-<!-- DRIVER -->
 <div class="page" id="page-driver">
 <div id="driverInfo"></div>
 <div id="driverSheets"></div>
 </div>
 
-<!-- AUDIT -->
+<div class="page" id="page-supervisor">
+<div id="supervisorHeader"></div>
+<div id="supervisorSheets"></div>
+</div>
+
 <div class="page" id="page-audit">
 <div class="audit-filters">
-<select id="auditEntityFilter" onchange="renderAuditLog()"><option value="">كل الكيانات</option><option value="booking">حجوزات</option><option value="transfer">نقل</option><option value="trip">رحلات</option><option value="settings">إعدادات</option></select>
+<select id="auditEntityFilter" onchange="renderAuditLog()"><option value="">كل الكيانات</option><option value="booking">حجوزات</option><option value="transfer">نقل</option><option value="trip">رحلات</option><option value="checkin">حضور</option><option value="settings">إعدادات</option></select>
 <input type="date" id="auditDateFilter" onchange="renderAuditLog()">
 <button class="btn btn-outline" onclick="exportAuditCSV()" style="margin-right:auto">📥 تصدير CSV</button>
 </div>
 <div class="table-container"><table class="data-table"><thead><tr><th>الوقت</th><th>المستخدم</th><th>الكيان</th><th>العملية</th><th>الوصف</th></tr></thead><tbody id="auditBody"></tbody></table></div>
 </div>
 
-<!-- SETTINGS -->
 <div class="page" id="page-settings">
 <div class="settings-tabs">
 <div class="settings-tab active" onclick="switchSettingsTab('whatsapp')">WhatsApp</div>
@@ -576,7 +627,7 @@ table{width:100%;border-collapse:collapse;}
 <button class="btn btn-primary" onclick="saveSettings('approval')" style="margin-top:16px">حفظ</button>
 </div>
 <div class="settings-panel" id="sp-encryption">
-<div class="settings-row"><div class="s-label"><h4>مفتاح AES-256</h4><p>تشفير الباسبور وأرقام الغرف</p></div><div style="display:flex;gap:8px"><input type="password" value="POSEIDON-2026-AES256-KEY" style="width:300px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)"><button class="btn btn-outline">👁️</button></div></div>
+<div class="settings-row"><div class="s-label"><h4>مفتاح AES-256</h4><p>تشفير الباسبور وأرقام الغرف</p></div><div style="display:flex;gap:8px"><input type="password" value="POSEIDON-2026-AES256-KEY" style="width:300px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)" id="settAESKey"><button class="btn btn-outline" onclick="toggleAESKeyVisibility()">👁️</button></div></div>
 <div class="settings-row"><div class="s-label"><h4>التدوير</h4><p>مدة صلاحية المفتاح بالأيام</p></div><input type="number" value="90" style="width:100px;padding:10px;border:2px solid var(--border);border-radius:var(--radius-sm)"></div>
 <button class="btn btn-primary" onclick="saveSettings('encryption')" style="margin-top:16px">حفظ</button>
 </div>
@@ -588,35 +639,104 @@ table{width:100%;border-collapse:collapse;}
 </div>
 </div>
 
-</div><!-- end content -->
-</div><!-- end main-area -->
-</div><!-- end app -->
+</div>
+</div>
+</div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
 <div class="modal"><div class="modal-header"><h3 id="modalTitle"></h3><button class="modal-close" onclick="closeModal()">✕</button></div>
 <div class="modal-body" id="modalBody"></div>
 <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">إلغاء</button><button class="btn btn-primary" id="modalConfirm">تأكيد</button></div></div>
 </div>
 
-<!-- NOTIFICATIONS PANEL -->
 <div class="panel-overlay" id="panelOverlay" onclick="toggleNotifications()"></div>
 <div class="notification-panel" id="notifPanel">
 <div class="panel-header"><h3>🔔 الإشعارات</h3><button class="btn btn-sm btn-outline" onclick="clearNotifs()">مسح الكل</button></div>
 <div id="notifList"></div>
 </div>
 
-<!-- TOAST -->
 <div class="toast-container" id="toastContainer"></div>
 
+<div class="install-banner" id="installBanner">
+<span>📲 تثبيت Poseidon CRM على هاتفك للوصول السريع</span>
+<div style="display:flex;gap:8px">
+<button class="btn-install" onclick="installPWA()">تثبيت</button>
+<button class="btn-dismiss" onclick="dismissInstall()">لاحقاً</button>
+</div>
+</div>
+
 <script>
-// ===== DATA =====
+const ROLES={
+super_admin:{label:'مدير الشركة',color:'#ef4444',pages:['dashboard','bookings','import','transferSync','trips','tracking','transfers','supervisor','audit','settings'],canApprove:true,canDelete:true,canSeeFinancials:true,canSeeAllAgencies:true,canManageUsers:true,dataScope:'all'},
+admin:{label:'مدير النظام',color:'#8b5cf6',pages:['dashboard','bookings','import','transferSync','trips','tracking','transfers','supervisor','audit','settings'],canApprove:true,canDelete:true,canSeeFinancials:true,canSeeAllAgencies:true,canManageUsers:false,dataScope:'all'},
+agency:{label:'وكالة سياحية',color:'#10b981',pages:['dashboard','bookings','import','tracking'],canApprove:false,canDelete:false,canSeeFinancials:false,canSeeAllAgencies:false,canManageUsers:false,dataScope:'own'},
+transport:{label:'شركة نقل',color:'#f59e0b',pages:['dashboard','tracking','transfers'],canApprove:false,canDelete:false,canSeeFinancials:false,canSeeAllAgencies:false,canManageUsers:false,dataScope:'transfers'},
+driver:{label:'سائق',color:'#0ea5e9',pages:['dashboard','driver'],canApprove:false,canDelete:false,canSeeFinancials:false,canSeeAllAgencies:false,canManageUsers:false,dataScope:'assigned'},
+supervisor:{label:'مشرف رحلة',color:'#06b6d4',pages:['dashboard','supervisor'],canApprove:false,canDelete:false,canSeeFinancials:false,canSeeAllAgencies:false,canManageUsers:false,dataScope:'trip'}
+};
+
+function hasPermission(action){
+if(!AppData.currentUser)return false;
+const r=ROLES[AppData.currentUser.role];
+if(!r)return false;
+return r[action]||false;
+}
+function getDataScope(){return AppData.currentUser?ROLES[AppData.currentUser.role]?.dataScope||'none':'none';}
+function canAccessPage(page){
+if(!AppData.currentUser)return false;
+const r=ROLES[AppData.currentUser.role];
+return r&&r.pages.includes(page);
+}
+
+const AES_KEY_STORAGE='poseidon_aes_key';
+let _aesKey=null;
+async function getAESKey(){
+if(_aesKey)return _aesKey;
+const raw='POSEIDON-2026-AES256-KEY';
+const enc=new TextEncoder();
+const keyMaterial=await crypto.subtle.importKey('raw',enc.encode(raw),{name:'PBKDF2'},false,['deriveKey']);
+_aesKey=await crypto.subtle.deriveKey({name:'PBKDF2',salt:enc.encode('poseidon-salt-2026'),iterations:100000,hash:'SHA-256'},keyMaterial,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+return _aesKey;}
+async function encryptSensitive(data){
+try{
+const key=await getAESKey();
+const iv=crypto.getRandomValues(new Uint8Array(12));
+const enc=new TextEncoder();
+const ct=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,enc.encode(data));
+return btoa(String.fromCharCode(...iv,...new Uint8Array(ct)));
+}catch(e){return btoa(data);}}
+async function decryptSensitive(ct){
+try{
+const key=await getAESKey();
+const raw=atob(ct);
+const bytes=new Uint8Array([...raw].map(c=>c.charCodeAt(0)));
+const iv=bytes.slice(0,12);const data=bytes.slice(12);
+const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv},key,data);
+return new TextDecoder().decode(pt);
+}catch(e){try{return atob(ct);}catch(e2){return '***';}}}
+
+const OfflineSync={queue:[],isOnline:navigator.onLine,
+init(){
+window.addEventListener('online',()=>{this.isOnline=true;document.getElementById('offlineBar').classList.remove('show');document.body.classList.remove('has-offline-bar');this.processQueue();showToast('تم استعادة الاتصال بالإنترنت','success');});
+window.addEventListener('offline',()=>{this.isOnline=false;document.getElementById('offlineBar').classList.add('show');document.body.classList.add('has-offline-bar');showToast('انقطع الاتصال - وضع عدم الاتصال','warning');});
+const stored=localStorage.getItem('poseidon_offline_queue');
+if(stored)try{this.queue=JSON.parse(stored);}catch(e){this.queue=[];}
+if(this.isOnline)this.processQueue();},
+add(action){this.queue.push({action,timestamp:new Date().toISOString(),id:Date.now()});localStorage.setItem('poseidon_offline_queue',JSON.stringify(this.queue));},
+async processQueue(){
+if(!this.isOnline||!this.queue.length)return;
+const items=[...this.queue];this.queue=[];localStorage.removeItem('poseidon_offline_queue');
+items.forEach(item=>{addAudit(item.action.entity||'transfer',item.action.type||'update',item.action.desc||'�� offline sync');});
+if(items.length)showToast('تم مزامنة '+items.length+' عملية','success');}};
+
 const AppData={currentUser:null,
 users:[
-{id:1,name:'مدير النظام',email:'admin@poseidon.com',role:'admin',phone:'+20 100 000 0001'},
-{id:2,name:'وكالة الأهرام',email:'agency@poseidon.com',role:'agency',phone:'+20 100 000 0002',companyName:'وكالة الأهرام السياحية',zone:'الصيف'},
-{id:3,name:'شركة النقل البحري',email:'transport@poseidon.com',role:'transport',phone:'+20 100 000 0003',companyName:'شركة النقل البحري'},
-{id:4,name:'محمود علي',email:'driver@poseidon.com',role:'driver',phone:'+20 111 222 3333',driverId:'DRV-001'}
+{id:1,name:'مدير الشركة',email:'super@poseidon.com',role:'super_admin',phone:'+20 100 000 0000',companyName:'Poseidon Marine'},
+{id:2,name:'مدير النظام',email:'admin@poseidon.com',role:'admin',phone:'+20 100 000 0001'},
+{id:3,name:'وكالة الأهرام',email:'agency@poseidon.com',role:'agency',phone:'+20 100 000 0002',companyName:'وكالة الأهرام السياحية',zone:'الصيف',agencyId:'AGC-001'},
+{id:4,name:'شركة النقل البحري',email:'transport@poseidon.com',role:'transport',phone:'+20 100 000 0003',companyName:'شركة النقل البحري',transportId:'TRN-001'},
+{id:5,name:'محمود علي',email:'driver@poseidon.com',role:'driver',phone:'+20 111 222 3333',driverId:'DRV-001'},
+{id:6,name:'حسن إبراهيم',email:'supervisor@poseidon.com',role:'supervisor',phone:'+20 119 888 7777',supervisorId:'SUP-001'}
 ],
 trips:[
 {id:'TRP-001',name:'رحلة جزيرة الجفتون',type:'snorkeling',typeName:'سنوركلينج',date:'2026-07-25',time:'09:00',returnTime:'16:00',marina:'مارينا هورجادة',capacity:45,booked:32,status:'active',boatName:'موتور ميراج',captain:'كابتن حسن',price:650},
@@ -628,8 +748,7 @@ trips:[
 {id:'TRP-007',name:'جزيرة ماهيمي',type:'snorkeling',typeName:'سنوركلينج',date:'2026-07-27',time:'08:30',returnTime:'15:30',marina:'مارينا هورجادة',capacity:35,booked:20,status:'active',boatName:'أكوا ميراج',captain:'كابتن أحمد',price:700},
 {id:'TRP-008',name:'رحلة خاصة بحرية',type:'private',typeName:'خاصة',date:'2026-07-25',time:'09:00',returnTime:'18:00',marina:'مارينا هورجادة',capacity:10,booked:6,status:'active',boatName:'يخت فاخِر',captain:'كابتن محمد',price:5000}
 ],
-bookings:[],
-transferSheets:[],
+bookings:[],transferSheets:[],
 drivers:[
 {id:'DRV-001',name:'محمود علي',phone:'+20 111 222 3333',vehicle:'باص مكيف 21 مقعد',status:'active',currentSheet:'TS-001'},
 {id:'DRV-002',name:'عمر حسن',phone:'+20 112 333 4444',vehicle:'فان 7 مقاعد',status:'active',currentSheet:null},
@@ -637,8 +756,7 @@ drivers:[
 {id:'DRV-004',name:'يوسف إبراهيم',phone:'+20 114 555 6666',vehicle:'فان 7 مقاعد',status:'active',currentSheet:null},
 {id:'DRV-005',name:'خالد مصطفى',phone:'+20 115 666 7777',vehicle:'باص مكيف 21 مقعد',status:'busy',currentSheet:'TS-003'}
 ],
-auditLog:[],notifications:[]
-};
+auditLog:[],notifications:[]};
 
 const HOTEL_ZONES=['الصيف','الشتاء','مرسى علم','الجونة','سهل حشيش'];
 const HOTELS=['Jaz Aquamarine','Hilton Hurghada','Marriott Beach','Steigenberger','Sunrise Resort','Citadins','AMC Royal','Continental'];
@@ -663,9 +781,11 @@ hotelName:hotel,hotelZone:zone,roomNumber:String(100+Math.floor(Math.random()*90
 phone:'+20 10'+Math.floor(10000000+Math.floor(Math.random()*90000000)),
 tripId:trip.id,tripName:trip.name,tripType:trip.type,date:trip.date,timeSlot:trip.time+' - '+trip.returnTime,
 passengers:1+Math.floor(Math.random()*4),status:s,statusAr:s==='confirmed'?'مؤكد':s==='pending'?'معلق':'ملغي',
-transferStatus:tr,transferStatusAr:getTransferLabel(tr),agencyId:2,agencyName:'وكالة الأهرام السياحية',
-notes:'',createdAt:new Date(2026,6,20+i%5).toISOString()});
-}AppData.bookings=bks;}
+transferStatus:tr,transferStatusAr:getTransferLabel(tr),
+agencyId:'AGC-001',agencyName:'وكالة الأهرام السياحية',
+checkedIn:false,noShow:false,
+notes:'',createdAt:new Date(2026,6,20+i%5).toISOString()});}
+AppData.bookings=bks;}
 
 function generateTransferSheets(){
 const sheets=[];
@@ -678,13 +798,13 @@ const statuses=['pending','assigned','pickup_scheduled','in_transit','arrived','
 sheets.push({id:'TS-'+String(i+1).padStart(3,'0'),tripId:bks[0].tripId,tripName:bks[0].tripName,
 date:bks[0].date,driverId:driver.id,driverName:driver.name,zone:z,
 passengers:bks,passengerCount:bks.length,status:statuses[i%statuses.length],
-vehicleType:i%2===0?'باص مكيف':'فان',vehiclePlate:'س ع د '+Math.floor(1000+Math.random()*9000),
+vehicleType:i%2===0?'باص مكيف':'فان',vehiclePlate:'س ع د '+Math.floor(1000+Math.floor(Math.random()*9000)),
 departureTime:'08:00',returnTime:'16:30',notes:''});});
 AppData.transferSheets=sheets;}
 
 function generateAudit(){
-const ops=[{e:'booking',a:'create',d:'إنشاء حجز BK-001'},{e:'booking',a:'approve',d:'الموافقة على حجز BK-003'},{e:'transfer',a:'create',d:'إنشاء شيت TS-001 للصيف'},{e:'trip',a:'update',d:'تحديث حالة الرحلة TRP-001'},{e:'booking',a:'reject',d:'رفض حجز BK-007'},{e:'transfer',a:'update',d:'تعيين سائق محمود علي TS-001'},{e:'settings',a:'update',d:'تحديث إعدادات WhatsApp'},{e:'booking',a:'create',d:'استيراد 12 حجز من Excel'},{e:'transfer',a:'update',d:'تحديث حالة النقل TS-002'},{e:'booking',a:'update',d:'تعديل بيانات حجز BK-012'},{e:'trip',a:'create',d:'إنشاء رحلة TRP-008'},{e:'transfer',a:'update',d:'تأكيد وصول المرسى TS-003'},{e:'booking',a:'update',d:'تحديث حالة النقل BK-015'},{e:'transfer',a:'create',d:'إنشاء شيت TS-004 للشتاء'},{e:'booking',a:'cancel',d:'إلغاء حجز BK-020'},{e:'settings',a:'update',d:'تدوير مفتاح التشفير'},{e:'transfer',a:'update',d:'تأكيد التوصيل TS-001'},{e:'booking',a:'approve',d:'الموافقة على حجز BK-022'},{e:'trip',a:'update',d:'تحديث طاقم الرحلة TRP-002'},{e:'transfer',a:'update',d:'بدء رحلة العودة TS-005'}];
-const users=['مدير النظام','وكالة الأهرام','شركة النقل البحري','محمود علي'];
+const ops=[{e:'booking',a:'create',d:'إنشاء حجز BK-001'},{e:'booking',a:'approve',d:'الموافقة على حجز BK-003'},{e:'transfer',a:'create',d:'إنشاء شيت TS-001 للصيف'},{e:'trip',a:'update',d:'تحديث حالة الرحلة TRP-001'},{e:'booking',a:'reject',d:'رفض حجز BK-007'},{e:'transfer',a:'update',d:'تعيين سائق محمود علي TS-001'},{e:'settings',a:'update',d:'تحديث إعدادات WhatsApp'},{e:'booking',a:'create',d:'استيراد 12 حجز من Excel'},{e:'transfer',a:'update',d:'تحديث حالة النقل TS-002'},{e:'booking',a:'update',d:'تعديل بيانات حجز BK-012'},{e:'trip',a:'create',d:'إنشاء رحلة TRP-008'},{e:'transfer',a:'update',d:'تأكيد وصول المرسى TS-003'},{e:'booking',a:'update',d:'تحديث حالة النقل BK-015'},{e:'transfer',a:'create',d:'إنشاء شيت TS-004 للشتاء'},{e:'booking',a:'cancel',d:'إلغاء حجز BK-020'},{e:'settings',a:'update',d:'تدوير مفتاح التشفير'},{e:'transfer',a:'update',d:'تأكيد التوصيل TS-001'},{e:'booking',a:'approve',d:'الموافقة على حجز BK-022'},{e:'trip',a:'update',d:'تحديث طاقم الرحلة TRP-002'},{e:'transfer',a:'update',d:'بدء رحلة العودة TS-005'},{e:'checkin',a:'checkin',d:'تسجيل حضور أحمد حسن - TRP-001'},{e:'checkin',a:'no_show',d:'غياب مسجل - فاطمة علي - TRP-002'},{e:'checkin',a:'alert',d:'تنبيه طبي - كريم فتحي - TRP-003'}];
+const users=['مدير الشركة','مدير النظام','وكالة الأهرام','شركة النقل البحري','محمود علي','حسن إبراهيم'];
 AppData.auditLog=ops.map((o,i)=>({id:i+1,entity:o.e,action:o.a,description:o.d,user:users[i%users.length],
 timestamp:new Date(2026,6,20+i%5,8+i,Math.floor(Math.random()*60)).toISOString()}));}
 
@@ -693,7 +813,7 @@ AppData.notifications=[
 {id:1,icon:'📋',message:'حجز جديد BK-025 من وكالة الأهرام - رحلة جزيرة الجفتون',time:new Date(2026,6,24,9,30).toISOString(),read:false},
 {id:2,icon:'✅',message:'تمت الموافقة على حجز BK-012',time:new Date(2026,6,24,10,15).toISOString(),read:false},
 {id:3,icon:'🚚',message:'تم تعيين شيت TS-001 للسائق محمود علي - منطقة الصيف',time:new Date(2026,6,24,11,0).toISOString(),read:false},
-{id:4,icon:'🚢',message:'وصل الزبون إلى المرسى - BK-005',time:new Date(2026,6,24,12,30).toISOString(),read:true},
+{id:4,icon:'⚓',message:'وصل الزبون إلى المرسى - BK-005',time:new Date(2026,6,24,12,30).toISOString(),read:true},
 {id:5,icon:'⚠️',message:'تأخير في الاستلام - منطقة الشتاء (15 دقيقة)',time:new Date(2026,6,24,13,0).toISOString(),read:true},
 {id:6,icon:'🔄',message:'تم تحديث حالة العودة لـ 8 زبائن - TS-002',time:new Date(2026,6,24,14,0).toISOString(),read:true},
 {id:7,icon:'✅',message:'اكتملت رحلة جزيرة الجفتون - 32 راكب',time:new Date(2026,6,24,16,30).toISOString(),read:true},
@@ -702,62 +822,108 @@ AppData.notifications=[
 {id:10,icon:'⚠️',message:'تنبيه: الرحلة TRP-005 اكتملت الحجوزات',time:new Date(2026,6,24,8,0).toISOString(),read:false}
 ];}
 
-// ===== TRANSFER STATUS HELPERS =====
 function getTransferLabel(s){const m={pending:'في الانتظار',pickup_scheduled:'جدول الاستلام',picked_up:'تم الاستلام',in_transit:'في الطريق',arrived_marina:'وصل المرسى',boarded_boat:'على المركب',trip_active:'رحلة نشطة',returning:'عودة',drop_off:'تم التوصيل',completed:'مكتمل',assigned:'تم التعيين',arrived:'وصل'};return m[s]||s;}
 function getTransferColor(s){const m={pending:'#94a3b8',pickup_scheduled:'#3b82f6',picked_up:'#eab308',in_transit:'#f97316',arrived_marina:'#06b6d4',boarded_boat:'#8b5cf6',trip_active:'#10b981',returning:'#f59e0b',drop_off:'#059669',completed:'#047857',assigned:'#6366f1',arrived:'#0891b2'};return m[s]||'#6b7280';}
 const TRANSFER_STEPS=['pending','pickup_scheduled','picked_up','in_transit','arrived_marina','boarded_boat','trip_active','returning','drop_off','completed'];
 const TRANSFER_STEP_LABELS=['انتظار','جدول','استلام','طريق','مرسى','ركوب','رحلة','عودة','وصول','اكتمال'];
 const TRANSFER_STEP_ICONS=['⏳','📋','🟡','🚗','⚓','🚢','🌊','🔄','🏁','✅'];
 
-// ===== AUTH & NAVIGATION =====
+function getVisibleBookings(){
+let b=[...AppData.bookings];
+const scope=getDataScope();const user=AppData.currentUser;
+if(scope==='own'&&user.role==='agency')b=b.filter(x=>x.agencyId===user.agencyId);
+else if(scope==='assigned'&&user.role==='driver'){
+const driver=AppData.drivers.find(d=>d.id===user.driverId);
+if(driver){
+const sheetIds=AppData.transferSheets.filter(s=>s.driverId===driver.id).map(s=>s.id);
+const bkIds=AppData.transferSheets.filter(s=>sheetIds.includes(s.id)).flatMap(s=>s.passengers.map(p=>p.id));
+b=b.filter(x=>bkIds.includes(x.id));}}
+return b;}
+
+function getVisibleSheets(){
+let sheets=[...AppData.transferSheets];
+const scope=getDataScope();const user=AppData.currentUser;
+if(scope==='assigned'&&user.role==='driver'){
+const driver=AppData.drivers.find(d=>d.id===user.driverId);
+if(driver)sheets=sheets.filter(s=>s.driverId===driver.id);
+}else if(scope==='trip'&&user.role==='supervisor'){
+const tripIds=AppData.trips.filter(t=>t.status==='active'||t.status==='boarding').map(t=>t.id);
+sheets=sheets.filter(s=>tripIds.includes(s.tripId));}
+return sheets;}
+
 function demoLogin(role){const u=AppData.users.find(x=>x.role===role);if(u){document.getElementById('loginEmail').value=u.email;document.getElementById('loginPassword').value='demo';document.getElementById('loginRole').value=role;handleLogin({preventDefault:function(){}});}}
-function handleLogin(e){e.preventDefault();const email=document.getElementById('loginEmail').value;const role=document.getElementById('loginRole').value;const user=AppData.users.find(u=>u.email===email&&u.role===role);if(!user){showToast('بيانات غير صحيحة','error');return false;}AppData.currentUser=user;localStorage.setItem('poseidon_user',JSON.stringify(user));showApp();return false;}
-function logout(){AppData.currentUser=null;localStorage.removeItem('poseidon_user');document.getElementById('loginPage').classList.remove('hidden');document.getElementById('app').classList.remove('active');document.getElementById('loginForm').reset();}
-function showApp(){document.getElementById('loginPage').classList.add('hidden');document.getElementById('app').classList.add('active');const u=AppData.currentUser;
-const colors=['#0ea5e9','#10b981','#f59e0b','#ef4444','#8b5cf6'];
-document.getElementById('sidebarAvatar').style.background=colors[u.role.charCodeAt(0)%5];
+function handleLogin(e){
+e.preventDefault();
+const email=document.getElementById('loginEmail').value;
+const role=document.getElementById('loginRole').value;
+const user=AppData.users.find(u=>u.email===email&&u.role===role);
+if(!user){showToast('بيانات غير صحيحة','error');return false;}
+AppData.currentUser=user;
+addAudit('settings','login','تسجيل دخول: '+user.name+' ('+ROLES[user.role].label+')');
+localStorage.setItem('poseidon_user',JSON.stringify(user));
+showApp();return false;}
+function logout(){
+addAudit('settings','logout','تسجيل خروج: '+(AppData.currentUser?AppData.currentUser.name:''));
+AppData.currentUser=null;localStorage.removeItem('poseidon_user');
+document.getElementById('loginPage').classList.remove('hidden');document.getElementById('app').classList.remove('active');
+document.getElementById('loginForm').reset();}
+function showApp(){
+document.getElementById('loginPage').classList.add('hidden');document.getElementById('app').classList.add('active');
+const u=AppData.currentUser;const roleData=ROLES[u.role];
+document.getElementById('sidebarAvatar').style.background=roleData.color;
 document.getElementById('sidebarAvatar').textContent=u.name.charAt(0);
 document.getElementById('sidebarUserName').textContent=u.name;
-document.getElementById('sidebarUserRole').textContent=getRoleLabel(u.role);
+document.getElementById('sidebarUserRole').textContent=roleData.label;
 filterNav();navigateTo('dashboard');renderNotifBadge();}
 
 let currentPage='dashboard';
-const PAGE_TITLES={dashboard:'لوحة التحكم',bookings:'الحجوزات',import:'استيراد Excel',transferSync:'جدول الحركة',trips:'الرحلات',tracking:'التتبع',transfers:'شيتات النقل',driver:'واجهة السائق',audit:'سجل التدقيق',settings:'الإعدادات'};
+const PAGE_TITLES={dashboard:'لوحة التحكم',bookings:'الحجوزات',import:'استيراد Excel',transferSync:'جدول الحركة',trips:'الرحلات',tracking:'التتبع',transfers:'شيتات النقل',driver:'واجهة السائق',supervisor:'مشرف الرحلة',audit:'سجل التدقيق',settings:'الإعدادات'};
 
 function navigateTo(page){
+if(!canAccessPage(page)){showToast('لا تملك صلاحية الوصول لهذه الصفحة','error');return;}
 currentPage=page;document.getElementById('topbarTitle').textContent=PAGE_TITLES[page]||page;
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 const el=document.getElementById('page-'+page);if(el)el.classList.add('active');
 document.querySelectorAll('.nav-item').forEach(n=>{n.classList.toggle('active',n.dataset.page===page);});
 document.getElementById('sidebar').classList.remove('open');
-const inits={dashboard:initDashboard,bookings:initBookings,import:initImport,transferSync:initTransferSync,trips:initTrips,tracking:initTracking,transfers:initTransfers,driver:initDriver,audit:initAudit,settings:initSettings};
+const inits={dashboard:initDashboard,bookings:initBookings,import:initImport,transferSync:initTransferSync,trips:initTrips,tracking:initTracking,transfers:initTransfers,driver:initDriver,supervisor:initSupervisor,audit:initAudit,settings:initSettings};
 if(inits[page])inits[page]();}
 
-function filterNav(){const role=AppData.currentUser.role;
-document.querySelectorAll('.nav-item[data-roles]').forEach(n=>{const r=n.dataset.roles.split(',');n.style.display=r.includes(role)?'':'none';});}
+function filterNav(){
+const role=AppData.currentUser.role;
+document.querySelectorAll('.nav-item[data-roles]').forEach(n=>{
+const r=n.dataset.roles.split(',');
+n.style.display=r.includes(role)?'':'none';});}
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
 
-// ===== DASHBOARD =====
 function initDashboard(){
-const bks=AppData.bookings;const trips=AppData.trips.filter(t=>t.status==='active');
+const user=AppData.currentUser;const scope=getDataScope();
+const bks=scope==='own'?getVisibleBookings():AppData.bookings;
+const sheets=scope==='assigned'?getVisibleSheets():AppData.transferSheets;
+const trips=AppData.trips.filter(t=>t.status==='active');
 const confirmed=bks.filter(b=>b.status==='confirmed').length;
 const pending=bks.filter(b=>b.status==='pending').length;
-document.getElementById('dashboardStats').innerHTML=[
+const stats=[
 {icon:'📋',bg:'var(--primary-light)',color:'var(--primary)',val:bks.length,label:'إجمالي الحجوزات'},
 {icon:'✅',bg:'var(--success-light)',color:'var(--success)',val:confirmed,label:'مؤكدة'},
-{icon:'⏳',bg:'var(--warning-light)',color:'var(--warning)',val:pending,label:'معلقة'},
-{icon:'🚢',bg:'var(--info-light)',color:'var(--info)',val:trips.length,label:'رحلات نشطة'}
-].map(s=>`<div class="stat-card"><div class="stat-icon" style="background:${s.bg};color:${s.color}">${s.icon}</div><div class="stat-info"><h3>${s.val}</h3><p>${s.label}</p></div></div>`).join('');
+{icon:'⏳',bg:'var(--warning-light)',color:'var(--warning)',val:pending,label:'معلقة'}
+];
+if(user.role==='driver'){
+const myDriver=AppData.drivers.find(d=>d.id===user.driverId);
+const myTrips=sheets.reduce((a,s)=>a+s.passengerCount,0);
+stats.push({icon:'🚗',bg:'var(--info-light)',color:'var(--info)',val:myTrips,label:'ركابي اليوم'});
+}else{
+stats.push({icon:'🚢',bg:'var(--info-light)',color:'var(--info)',val:trips.length,label:'رحلات نشطة'});
+}
+document.getElementById('dashboardStats').innerHTML=stats.map(s=>`<div class="stat-card"><div class="stat-icon" style="background:${s.bg};color:${s.color}">${s.icon}</div><div class="stat-info"><h3>${s.val}</h3><p>${s.label}</p></div></div>`).join('');
 
-document.getElementById('activeTripsList').innerHTML=trips.length?trips.map(t=>`<div class="trip-list-item"><div class="status-dot" style="background:var(--success)"></div><div class="trip-info"><h4>${t.name}</h4><span>${t.time} - ${t.returnTime} | ${t.boatName} | ${t.booked}/${t.capacity} راكب</span></div><span class="badge badge-success">${t.statusAr||'نشط'}</span></div>`).join(''):'<div class="empty-state"><p>لا توجد رحلات نشطة</p></div>';
+document.getElementById('activeTripsList').innerHTML=trips.length?trips.map(t=>`<div class="trip-list-item"><div class="status-dot" style="background:var(--success)"></div><div class="trip-info"><h4>${t.name}</h4><span>${t.time} - ${t.returnTime} | ${t.boatName} | ${t.booked}/${t.capacity} راكب</span></div><span class="badge badge-success">نشط</span></div>`).join(''):'<div class="empty-state"><p>لا توجد رحلات نشطة</p></div>';
 
-const ts=AppData.transferSheets;
-const overview=[{label:'قيد التوزيع',count:ts.filter(t=>t.status==='pending').length,color:'var(--warning)'},{label:'في الطريق',count:ts.filter(t=>t.status==='in_transit').length,color:'var(--primary)'},{label:'وصل المرسى',count:ts.filter(t=>['arrived','completed'].includes(t.status)).length,color:'var(--success)'}];
+const overview=[{label:'قيد التوزيع',count:sheets.filter(t=>t.status==='pending').length,color:'var(--warning)'},{label:'في الطريق',count:sheets.filter(t=>t.status==='in_transit').length,color:'var(--primary)'},{label:'وصل المرسى',count:sheets.filter(t=>['arrived','completed'].includes(t.status)).length,color:'var(--success)'}];
 document.getElementById('transferOverview').innerHTML=overview.map(o=>`<div class="overview-item"><div class="ov-num" style="color:${o.color}">${o.count}</div><div class="ov-label">${o.label}</div></div>`).join('');
 
 document.getElementById('recentNotifications').innerHTML=AppData.notifications.slice(0,5).map(n=>`<div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)"><span style="font-size:20px">${n.icon}</span><div style="flex:1"><p style="font-size:13px">${n.message}</p><span style="font-size:11px;color:var(--text-light)">${getRelativeTime(n.time)}</span></div></div>`).join('');}
 
-// ===== BOOKINGS =====
 let bkPage=1;
 function initBookings(){
 const sel=document.getElementById('filterTrip');
@@ -765,8 +931,12 @@ sel.innerHTML='<option value="">كل الرحلات</option>'+AppData.trips.map(
 renderBookingsTable();}
 
 function renderBookingsTable(){
-let bks=getFilteredBookings();const pg=paginate(bks,bkPage,10);
-document.getElementById('bookingsBody').innerHTML=pg.data.length?pg.data.map(b=>`<tr>
+let bks=getVisibleBookings();const pg=paginate(bks,bkPage,10);
+const user=AppData.currentUser;
+document.getElementById('bookingsBody').innerHTML=pg.data.length?pg.data.map(b=>{
+const showApprove=user.role==='admin'||user.role==='super_admin';
+const canEdit=user.role==='admin'||user.role==='super_admin'||(user.role==='agency'&&b.status==='pending');
+return`<tr>
 <td>${b.id}</td><td><strong>${b.passengerName}</strong><br><small style="color:var(--text-secondary)">${b.nationality}</small></td>
 <td>${b.age}</td><td>${b.nationality}</td><td>${b.hotelName}</td><td><span class="badge badge-info">${b.hotelZone}</span></td>
 <td>${b.tripName}</td><td>${b.date}<br><small>${b.timeSlot}</small></td><td>${b.passengers}</td>
@@ -774,25 +944,28 @@ document.getElementById('bookingsBody').innerHTML=pg.data.length?pg.data.map(b=>
 <td><span class="badge" style="background:${getTransferColor(b.transferStatus)}20;color:${getTransferColor(b.transferStatus)}">${b.transferStatusAr}</span></td>
 <td><div style="display:flex;gap:4px">
 <button class="btn btn-sm btn-outline" onclick="viewBooking('${b.id}')">👁️</button>
-${b.status==='pending'?`<button class="btn btn-sm btn-success" onclick="approveBooking('${b.id}')">✓</button><button class="btn btn-sm btn-danger" onclick="rejectBooking('${b.id}')">✕</button>`:''}
-</div></td></tr>`).join(''):'<tr><td colspan="12" class="empty-state"><p>لا توجد حجوزات</p></td></tr>';
+${showApprove&&b.status==='pending'?`<button class="btn btn-sm btn-success" onclick="approveBooking('${b.id}')">✓</button><button class="btn btn-sm btn-danger" onclick="rejectBooking('${b.id}')">✕</button>`:''}
+</div></td></tr>`;}).join(''):'<tr><td colspan="12" class="empty-state"><p>لا توجد حجوزات</p></td></tr>';
 renderPagination('bookingsPag',pg,(p)=>{bkPage=p;renderBookingsTable();});}
 
-function getFilteredBookings(){let b=[...AppData.bookings];const s=document.getElementById('filterStatus').value;const t=document.getElementById('filterTrip').value;const d=document.getElementById('filterDate').value;const z=document.getElementById('filterZone').value;
-if(s)b=b.filter(x=>x.status===s);if(t)b=b.filter(x=>x.tripId===t);if(d)b=b.filter(x=>x.date===d);if(z)b=b.filter(x=>x.hotelZone===z);return b;}
-
-function approveBooking(id){const b=AppData.bookings.find(x=>x.id===id);if(b){b.status='confirmed';b.statusAr='مؤكد';addAudit('booking','approve','الموافقة على حجز '+id);showToast('تمت الموافقة على حجز '+id,'success');renderBookingsTable();}}
-function rejectBooking(id){const b=AppData.bookings.find(x=>x.id===id);if(b){b.status='cancelled';b.statusAr='ملغي';addAudit('booking','reject','رفض حجز '+id);showToast('تم رفض حجز '+id,'warning');renderBookingsTable();}}
-function viewBooking(id){const b=AppData.bookings.find(x=>x.id===id);if(!b)return;
+function approveBooking(id){if(!hasPermission('canApprove')){showToast('لا تملك صلاحية الاعتماد','error');return;}
+const b=AppData.bookings.find(x=>x.id===id);if(b){b.status='confirmed';b.statusAr='مؤكد';addAudit('booking','approve','الموافقة على حجز '+id);showToast('تمت الموافقة على حجز '+id,'success');renderBookingsTable();}}
+function rejectBooking(id){if(!hasPermission('canApprove')){showToast('لا تملك صلاحية الرفض','error');return;}
+const b=AppData.bookings.find(x=>x.id===id);if(b){b.status='cancelled';b.statusAr='ملغي';addAudit('booking','reject','رفض حجز '+id);showToast('تم رفض حجز '+id,'warning');renderBookingsTable();}}
+function viewBooking(id){
+const b=AppData.bookings.find(x=>x.id===id);if(!b)return;
+const user=AppData.currentUser;const canSeeSensitive=user.role==='admin'||user.role==='super_admin';
 openModal('تفاصيل الحجز '+b.id,`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
 <div><strong>المسافر:</strong> ${b.passengerName}</div><div><strong>العمر:</strong> ${b.age} سنة</div>
-<div><strong>الجنسية:</strong> ${b.nationality}</div><div><strong>الباسبور:</strong> ***${b.passportNumber.slice(-4)}</div>
-<div><strong>الفندق:</strong> ${b.hotelName}</div><div><strong>الغرفة:</strong> ***${b.roomNumber.slice(-2)}</div>
+<div><strong>الجنسية:</strong> ${b.nationality}</div><div><strong>الباسبور:</strong> ${canSeeSensitive?'****'+b.passportNumber.slice(-4):'🔒 مشفّر'}</div>
+<div><strong>الفندق:</strong> ${b.hotelName}</div><div><strong>الغرفة:</strong> ${canSeeSensitive?'****'+b.roomNumber.slice(-2):'🔒 مشفّر'}</div>
 <div><strong>المنطقة:</strong> ${b.hotelZone}</div><div><strong>الهاتف:</strong> ${b.phone}</div>
 <div><strong>الرحلة:</strong> ${b.tripName}</div><div><strong>التاريخ:</strong> ${b.date}</div>
-<div><strong>Time Slot:</strong> ${b.timeSlot}</div><div><strong>العدد:</strong> ${b.passengers}</div>
+<div><strong>وقت الانطلاق:</strong> ${b.timeSlot}</div><div><strong>العدد:</strong> ${b.passengers}</div>
 <div><strong>حالة الحجز:</strong> <span class="badge ${b.status==='confirmed'?'badge-success':b.status==='pending'?'badge-warning':'badge-danger'}">${b.statusAr}</span></div>
 <div><strong>حالة النقل:</strong> <span class="badge" style="background:${getTransferColor(b.transferStatus)}20;color:${getTransferColor(b.transferStatus)}">${b.transferStatusAr}</span></div>
+${b.checkedIn?'<div><strong>الحضور:</strong> <span class="badge badge-success">تم التسجيل</span></div>':''}
+${b.noShow?'<div><strong>الحضور:</strong> <span class="badge badge-danger">غياب</span></div>':''}
 <div style="grid-column:1/3"><strong>ملاحظات:</strong> ${b.notes||'-'}</div>
 </div>`);}
 
@@ -827,17 +1000,17 @@ date:document.getElementById('newBkDate').value,
 timeSlot:trip.time+' - '+trip.returnTime,
 passengers:parseInt(document.getElementById('newBkCount').value)||1,
 status:'pending',statusAr:'معلق',transferStatus:'pending',transferStatusAr:'في الانتظار',
-agencyId:2,agencyName:'وكالة الأهرام السياحية',
+agencyId:AppData.currentUser.agencyId||'AGC-001',agencyName:AppData.currentUser.companyName||'وكالة الأهرام السياحية',
+checkedIn:false,noShow:false,
 notes:document.getElementById('newBkNotes').value,createdAt:new Date().toISOString()};
 AppData.bookings.push(nb);addAudit('booking','create','إنشاء حجز '+nb.id);showToast('تم إنشاء الحجز '+nb.id,'success');closeModal();renderBookingsTable();});}
 
-// ===== IMPORT =====
 let importData=[];
 function initImport(){renderImportHistory();const z=document.getElementById('uploadZone');z.ondragover=e=>{e.preventDefault();z.classList.add('dragover');};z.ondragleave=()=>z.classList.remove('dragover');z.ondrop=e=>{e.preventDefault();z.classList.remove('dragover');simulateImport();};}
 function handleFileUpload(el){if(el.files.length)simulateImport();}
 function simulateImport(){
 importData=[];const names=['محمد سعيد','فاطمة حسن','عمر علي','سارة أحمد','كريم محمود'];
-for(let i=0;i<8;i++){const valid=i!==3&&i!==6;importData.push({name:names[i%5]+' '+String.fromCharCode(65+i),phone:'+20 10'+Math.floor(10000000+Math.random()*90000000),
+for(let i=0;i<8;i++){const valid=i!==3&&i!==6;importData.push({name:names[i%5]+' '+String.fromCharCode(65+i),phone:'+20 10'+Math.floor(10000000+Math.floor(Math.random()*90000000)),
 nationality:NATIONALITIES[i%NATIONALITIES.length],hotel:HOTELS[i%HOTELS.length],zone:HOTEL_ZONES[i%HOTEL_ZONES.length],
 trip:AppData.trips[i%AppData.trips.length].name,date:'2026-07-25',passengers:1+Math.floor(Math.random()*4),valid,errors:valid?[]:['بيانات ناقصة']});}
 const valid=importData.filter(d=>d.valid).length;const err=importData.length-valid;
@@ -850,14 +1023,14 @@ function confirmImport(){
 const valid=importData.filter(d=>d.valid);if(!valid.length){showToast('لا توجد بيانات صحيحة','error');return;}
 valid.forEach(d=>{const trip=AppData.trips.find(t=>t.name===d.trip)||AppData.trips[0];
 AppData.bookings.push({id:'BK-'+String(AppData.bookings.length+1).padStart(3,'0'),passengerName:d.name,age:30,nationality:d.nationality,
-passportNumber:'P'+Math.floor(10000000+Math.random()*90000000),hotelName:d.hotel,hotelZone:d.zone,roomNumber:String(Math.floor(100+Math.random()*900)),
+passportNumber:'P'+Math.floor(10000000+Math.floor(Math.random()*90000000)),hotelName:d.hotel,hotelZone:d.zone,roomNumber:String(Math.floor(100+Math.floor(Math.random()*900))),
 phone:d.phone,tripId:trip.id,tripName:trip.name,tripType:trip.type,date:d.date,timeSlot:trip.time+' - '+trip.returnTime,
 passengers:d.passengers,status:'pending',statusAr:'معلق',transferStatus:'pending',transferStatusAr:'في الانتظار',
-agencyId:2,agencyName:'وكالة الأهرام السياحية',notes:'مستورد من Excel',createdAt:new Date().toISOString()});});
+agencyId:AppData.currentUser.agencyId||'AGC-001',agencyName:AppData.currentUser.companyName||'وكالة الأهرام السياحية',
+checkedIn:false,noShow:false,notes:'مستورد من Excel',createdAt:new Date().toISOString()});});
 addAudit('booking','create','استيراد '+valid.length+' حجز من Excel');showToast('تم استيراد '+valid.length+' حجز','success');cancelImport();renderImportHistory();}
 function renderImportHistory(){document.getElementById('importHistoryBody').innerHTML='<tr><td>IMP-001</td><td>bookings_july.xlsx</td><td>2026-07-20</td><td>15/18</td><td><span class="badge badge-warning">جزئي</span></td></tr><tr><td>IMP-002</td><td>groups_aug.csv</td><td>2026-07-22</td><td>12/12</td><td><span class="badge badge-success">مكتمل</span></td></tr>';}
 
-// ===== TRANSFER SYNC =====
 function initTransferSync(){renderZoneGrid();renderActiveTransfers();}
 function renderZoneGrid(){
 const zones=HOTEL_ZONES;
@@ -887,13 +1060,14 @@ ${currentIdx<TRANSFER_STEPS.length-1?`<button class="btn btn-sm btn-primary" onc
 <button class="btn btn-sm btn-outline" onclick="viewTransferDetail('${s.id}')">تفاصيل</button>
 </div></div>`;}).join(''):'<div class="empty-state"><p>لا توجد تنقلات نشطة</p></div>';}
 
-function advanceTransfer(id){const s=AppData.transferSheets.find(x=>x.id===id);if(!s)return;
+function advanceTransfer(id){if(!hasPermission('canApprove')&&AppData.currentUser.role==='driver'){showToast('لا تملك صلاحية تحديث هذا الشيت','error');return;}
+const s=AppData.transferSheets.find(x=>x.id===id);if(!s)return;
 const idx=TRANSFER_STEPS.indexOf(s.status);if(idx<TRANSFER_STEPS.length-1){
 s.status=TRANSFER_STEPS[idx+1];
-s.passengers.forEach(p=>{const bk=AppData.bookings.find(b=>b.id===p.id);if(bk)bk.transferStatus=s.status;bk.transferStatusAr=getTransferLabel(s.status);});
+s.passengers.forEach(p=>{const bk=AppData.bookings.find(b=>b.id===p.id);if(bk){bk.transferStatus=s.status;bk.transferStatusAr=getTransferLabel(s.status);}});
 addAudit('transfer','update','تحديث '+s.id+' إلى '+getTransferLabel(s.status));showToast('تم تحديث الحالة إلى '+getTransferLabel(s.status),'success');initTransferSync();}}
 
-function autoDistribute(){
+function autoDistribute(){if(!hasPermission('canApprove')){showToast('لا تملك صلاحية التوزيع','error');return;}
 const pending=AppData.bookings.filter(b=>b.status==='confirmed'&&b.transferStatus==='pending');
 if(!pending.length){showToast('لا توجد حجوزات للتوزيع','warning');return;}
 const grouped={};pending.forEach(b=>{if(!grouped[b.hotelZone])grouped[b.hotelZone]=[];grouped[b.hotelZone].push(b);});
@@ -902,7 +1076,7 @@ const driver=AppData.drivers.find(d=>!AppData.transferSheets.some(s=>s.driverId=
 const sh={id:'TS-'+String(AppData.transferSheets.length+1).padStart(3,'0'),tripId:grouped[zone][0].tripId,tripName:grouped[zone][0].tripName,
 date:new Date().toISOString().split('T')[0],driverId:driver.id,driverName:driver.name,zone,
 passengers:grouped[zone],passengerCount:grouped[zone].length,status:'assigned',
-vehicleType:'باص مكيف',vehiclePlate:'س ع د '+Math.floor(1000+Math.random()*9000),
+vehicleType:'باص مكيف',vehiclePlate:'س ع د '+Math.floor(1000+Math.floor(Math.random()*9000)),
 departureTime:'08:00',returnTime:'16:30',notes:''};
 AppData.transferSheets.push(sh);
 grouped[zone].forEach(b=>{b.transferStatus='pickup_scheduled';b.transferStatusAr='جدول الاستلام';});
@@ -920,11 +1094,9 @@ openModal('تفاصيل الشيت '+s.id,`<div style="display:grid;grid-templat
 
 function refreshTransferSync(){showToast('تم التحديث','info');initTransferSync();}
 
-// ===== TRIPS =====
 function initTrips(){
 document.getElementById('tripsGrid').innerHTML=AppData.trips.map(t=>{
 const pct=Math.round(t.booked/t.capacity*100);const color=pct>80?'var(--danger)':pct>50?'var(--warning)':'var(--success)';
-const typeIcons={snorkeling:'🤿',diving:'🏊',fishing:'🎣',glass:'玻璃',submarine:'🔱',sunset:'🌅',private:'⛵'};
 return`<div class="trip-card" onclick="viewTripDetail('${t.id}')">
 <div class="trip-header"><span class="badge badge-info">${t.typeName}</span><span class="badge ${t.status==='active'?'badge-success':'badge-secondary'}">${t.status==='active'?'نشط':t.status}</span></div>
 <h3 class="trip-name">${t.name}</h3>
@@ -933,7 +1105,7 @@ return`<div class="trip-card" onclick="viewTripDetail('${t.id}')">
 <div class="trip-meta-item"><span class="icon">🕐</span> ${t.time} - ${t.returnTime}</div>
 <div class="trip-meta-item"><span class="icon">⚓</span> ${t.marina}</div>
 <div class="trip-meta-item"><span class="icon">🚢</span> ${t.boatName} - ${t.captain}</div>
-<div class="trip-meta-item"><span class="icon">💰</span> ${t.price} EGP</div>
+${hasPermission('canSeeFinancials')?`<div class="trip-meta-item"><span class="icon">💰</span> ${t.price} EGP</div>`:''}
 </div>
 <div class="capacity-bar"><div class="fill" style="width:${pct}%;background:${color}"></div></div>
 <p style="font-size:12px;color:var(--text-secondary);margin-top:6px">${t.booked}/${t.capacity} راكب (${pct}%)</p>
@@ -945,7 +1117,8 @@ openModal(t.name,`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12p
 <div><strong>النوع:</strong> ${t.typeName}</div><div><strong>التاريخ:</strong> ${t.date}</div>
 <div><strong>الوقت:</strong> ${t.time} - ${t.returnTime}</div><div><strong>المرسى:</strong> ${t.marina}</div>
 <div><strong>المركب:</strong> ${t.boatName}</div><div><strong>الكابتن:</strong> ${t.captain}</div>
-<div><strong>السعر:</strong> ${t.price} EGP</div><div><strong>الحالة:</strong> ${t.status}</div>
+${hasPermission('canSeeFinancials')?`<div><strong>السعر:</strong> ${t.price} EGP</div>`:''}
+<div><strong>الحالة:</strong> ${t.status}</div>
 <div style="grid-column:1/3"><strong>الحجوزات (${bks.length}):</strong> ${bks.slice(0,5).map(b=>b.passengerName).join(', ')}${bks.length>5?'...':''}</div>
 </div>`);}
 
@@ -972,7 +1145,6 @@ captain:document.getElementById('newTripCaptain').value||'كابتن جديد',
 price:parseInt(document.getElementById('newTripPrice').value)||500});
 addAudit('trip','create','إنشاء رحلة '+nm);showToast('تم إنشاء الرحلة','success');closeModal();initTrips();});}
 
-// ===== TRACKING =====
 function initTracking(){
 const cols=['pending','confirmed','picked_up','in_transit','arrived_marina','trip_active','completed'];
 const labels=['معلق','مؤكد','تم الاستلام','في الطريق','وصل المرسى','رحلة نشطة','مكتمل'];
@@ -984,7 +1156,6 @@ ${bks.slice(0,10).map(b=>`<div class="tracking-card"><div class="tc-id">${b.id}<
 <div class="tc-detail">🚢 ${b.tripName}</div></div>`).join('')}
 </div>`;}).join('');}
 
-// ===== TRANSFERS =====
 function initTransfers(){
 let sheets=[...AppData.transferSheets];
 const f=document.getElementById('tsFilterStatus').value;
@@ -996,31 +1167,172 @@ document.getElementById('transfersBody').innerHTML=sheets.length?sheets.map(s=>`
 <td><button class="btn btn-sm btn-outline" onclick="viewTransferDetail('${s.id}')">👁️</button></td>
 </tr>`).join(''):'<tr><td colspan="7" class="empty-state"><p>لا توجد شيتات</p></td></tr>';}
 
-// ===== DRIVER =====
 function initDriver(){
-const driver=AppData.currentUser.role==='driver'?AppData.drivers[0]:AppData.drivers[0];
+const user=AppData.currentUser;
+const driver=AppData.drivers.find(d=>d.id===user.driverId)||AppData.drivers[0];
 const sheets=AppData.transferSheets.filter(s=>s.driverId===driver.id);
+const totalPassengers=sheets.reduce((a,s)=>a+s.passengerCount,0);
+const completedPassengers=sheets.reduce((a,s)=>a+s.passengers.filter(p=>p.transferStatus==='completed').length,0);
+
 document.getElementById('driverInfo').innerHTML=`<div class="driver-card">
 <h2>🚗 ${driver.name}</h2>
-<div class="driver-meta"><span>📱 ${driver.phone}</span><span>🚙 ${driver.vehicle}</span><span>📋 ${sheets.length} شيتات</span></div>
+<div class="driver-meta"><span>📱 ${driver.phone}</span><span>🚙 ${driver.vehicle}</span><span>📋 ${sheets.length} شيتات | ${totalPassengers} راكب</span></div>
+<div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+<span style="font-size:14px">التقدم: ${completedPassengers}/${totalPassengers}</span>
+<div style="flex:1;height:8px;background:rgba(255,255,255,.3);border-radius:4px;overflow:hidden">
+<div style="height:100%;width:${totalPassengers?Math.round(completedPassengers/totalPassengers*100):0}%;background:#fff;border-radius:4px;transition:width .3s"></div>
+</div>
+</div>
 </div>`;
-document.getElementById('driverSheets').innerHTML=sheets.length?sheets.map(s=>`<div class="sheet-card">
+
+document.getElementById('driverSheets').innerHTML=sheets.length?sheets.map(s=>{
+const currentIdx=TRANSFER_STEPS.indexOf(s.status);
+return`<div class="sheet-card">
 <div class="sheet-header"><div><h4>${s.id} - ${s.zone}</h4><p style="font-size:12px;color:var(--text-secondary)">${s.tripName} | ${s.vehiclePlate}</p></div>
 <span class="badge badge-primary">${getTransferLabel(s.status)}</span></div>
-${s.passengers.map((p,i)=>`<div class="passenger-row">
-<div class="p-info"><div class="p-name">${p.passengerName}</div><div class="p-detail">📍 ${p.hotelName} غرفة ${p.roomNumber} | 🕐 ${p.timeSlot||'09:00'}</div></div>
-<button class="p-status-btn" style="background:${getTransferColor(p.transferStatus)}" onclick="advancePassenger('${s.id}',${i})">${getTransferLabel(p.transferStatus)}</button>
-</div>`).join('')}</div>`).join(''):'<div class="empty-state"><div class="icon">🚗</div><p>لا توجد شيتات مخصصة لك</p></div>';}
+<div class="transfer-timeline">${TRANSFER_STEPS.map((step,i)=>{
+const cls=i<currentIdx?'done':i===currentIdx?'active':'';
+return`<div class="timeline-step ${cls}"><div class="step-dot">${TRANSFER_STEP_ICONS[i]}</div><div class="step-label">${TRANSFER_STEP_LABELS[i]}</div></div>${i<TRANSFER_STEPS.length-1?'<div class="timeline-line '+(i<currentIdx?'done':i===currentIdx?'active':'')+'"></div>':''}`;
+}).join('')}</div>
+${s.passengers.map((p,i)=>{
+const pIdx=TRANSFER_STEPS.indexOf(p.transferStatus);
+const nextStatus=pIdx<TRANSFER_STEPS.length-1?TRANSFER_STEPS[pIdx+1]:null;
+const nextLabel=nextStatus?getTransferLabel(nextStatus):null;
+const cardClass='status-'+p.transferStatus;
+return`<div class="driver-passenger-card ${cardClass}">
+<div class="dp-header">
+<div>
+<div class="dp-name">${p.passengerName}</div>
+<div class="dp-detail">📍 ${p.hotelName} - منطقة ${p.hotelZone}</div>
+<div class="dp-detail">📞 ${p.phone}</div>
+</div>
+<span class="badge" style="background:${getTransferColor(p.transferStatus)}20;color:${getTransferColor(p.transferStatus)};font-size:13px;padding:6px 14px">${getTransferLabel(p.transferStatus)}</span>
+</div>
+<div class="dp-actions">
+${nextStatus?`<button class="touch-btn touch-btn-success" onclick="advanceDriverPassenger('${s.id}',${i})" style="flex:1">✅ ${nextLabel}</button>`:`<button class="touch-btn touch-btn-success" style="flex:1;opacity:.6" disabled>🏁 مكتمل</button>`}
+</div>
+</div>`;}).join('')}</div>`;}).join(''):'<div class="empty-state"><div class="icon">🚗</div><p>لا توجد شيتات مخصصة لك</p><p style="font-size:12px;margin-top:8px;color:var(--text-light)">سيظهر لك عملك عند تعيين شيت من شركة النقل</p></div>';}
 
-function advancePassenger(sheetId,idx){
+function advanceDriverPassenger(sheetId,idx){
 const s=AppData.transferSheets.find(x=>x.id===sheetId);if(!s||!s.passengers[idx])return;
 const p=s.passengers[idx];const ci=TRANSFER_STEPS.indexOf(p.transferStatus);
 if(ci<TRANSFER_STEPS.length-1){
 const ns=TRANSFER_STEPS[ci+1];p.transferStatus=ns;p.transferStatusAr=getTransferLabel(ns);
 const bk=AppData.bookings.find(b=>b.id===p.id);if(bk){bk.transferStatus=ns;bk.transferStatusAr=getTransferLabel(ns);}
+if(!OfflineSync.isOnline){OfflineSync.add({entity:'transfer',type:'update',desc:p.passengerName+': '+getTransferLabel(ns)+' (offline)'});}
 addAudit('transfer','update',p.passengerName+': '+getTransferLabel(ns));showToast(p.passengerName+': '+getTransferLabel(ns),'success');initDriver();}}
 
-// ===== AUDIT =====
+function initSupervisor(){
+const user=AppData.currentUser;
+const activeTrips=AppData.trips.filter(t=>t.status==='active'||t.status==='boarding');
+const sheets=AppData.transferSheets.filter(s=>s.status==='arrived'||s.status==='in_transit'||s.status==='pickup_scheduled');
+const totalPassengers=sheets.reduce((a,s)=>a+s.passengerCount,0);
+const checkedIn=AppData.bookings.filter(b=>b.checkedIn).length;
+const noShows=AppData.bookings.filter(b=>b.noShow).length;
+
+document.getElementById('supervisorHeader').innerHTML=`<div class="driver-card" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">
+<h2>📋 ${user.name} - مشرف الرحلة</h2>
+<div class="driver-meta">
+<span>📱 ${user.phone}</span>
+<span>🚢 ${activeTrips.length} رحلة نشطة</span>
+<span>👥 ${totalPassengers} راكب متوقع</span>
+</div>
+<div style="margin-top:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+<div style="background:rgba(255,255,255,.2);padding:12px;border-radius:8px;text-align:center">
+<div style="font-size:24px;font-weight:800">${checkedIn}</div>
+<div style="font-size:12px">حاضر</div>
+</div>
+<div style="background:rgba(255,255,255,.2);padding:12px;border-radius:8px;text-align:center">
+<div style="font-size:24px;font-weight:800">${noShows}</div>
+<div style="font-size:12px">غياب</div>
+</div>
+<div style="background:rgba(255,255,255,.2);padding:12px;border-radius:8px;text-align:center">
+<div style="font-size:24px;font-weight:800">${totalPassengers-checkedIn-noShows}</div>
+<div style="font-size:12px">في الطريق</div>
+</div>
+</div>
+</div>`;
+
+const allPassengers=[];
+sheets.forEach(s=>{
+s.passengers.forEach((p,i)=>{
+allPassengers.push({...p,sheetId:s.id,sheetZone:s.zone,sheetTrip:s.tripName,idx:i});
+});});
+if(!allPassengers.length){
+const allChecked=AppData.bookings.filter(b=>b.checkedIn||b.noShow);
+document.getElementById('supervisorSheets').innerHTML=allChecked.length?`<div class="card"><div class="card-header"><h3>✅ تم تسجيل جميع الحضور</h3></div><div class="card-body"><div class="empty-state"><div class="icon">⚓</div><p>تم تسجيل حضور جميع الركاب بنجاح</p></div></div></div>`:`<div class="empty-state"><div class="icon">📋</div><p>لا توجد ركاب في الانتظار حالياً</p><p style="font-size:12px;margin-top:8px;color:var(--text-light)">سيظهر الركاب عند وصولهم للمرسى</p></div>`;
+return;}
+
+document.getElementById('supervisorSheets').innerHTML=`<div class="card" style="margin-bottom:16px"><div class="card-header"><h3>👥 الركاب المتوقعين (${allPassengers.length})</h3>
+<div style="display:flex;gap:8px">
+<button class="btn btn-sm btn-outline" onclick="markAllCheckedIn()">✅ تسجيل الجميع</button>
+<button class="btn btn-sm btn-danger" onclick="sendEmergencyAlert()">🚨 تنبيه طارئ</button>
+</div></div></div>
+<div class="checkin-grid">${allPassengers.map(p=>{
+const statusClass=p.checkedIn?'checked-in':p.noShow?'no-show':'';
+return`<div class="checkin-card ${statusClass}">
+<div class="cc-header">
+<div>
+<strong style="font-size:16px">${p.passengerName}</strong>
+<div style="font-size:12px;color:var(--text-secondary)">${p.nationality} | ${p.age} سنة</div>
+</div>
+<span class="badge badge-info">${p.sheetZone}</span>
+</div>
+<div class="cc-body">
+<div class="cc-detail">📍 ${p.hotelName} - غرفة ${p.roomNumber}</div>
+<div class="cc-detail">🚢 ${p.sheetTrip}</div>
+<div class="cc-detail">📞 ${p.phone}</div>
+<div class="cc-detail">👥 ${p.passengers} أفراد</div>
+${p.checkedIn?'<div style="margin-top:8px"><span class="badge badge-success">✅ تم التسجيل</span></div>':''}
+${p.noShow?'<div style="margin-top:8px"><span class="badge badge-danger">❌ غياب</span></div>':''}
+</div>
+${!p.checkedIn&&!p.noShow?`<div class="cc-actions">
+<button class="touch-btn touch-btn-success" onclick="checkinPassenger('${p.sheetId}',${p.idx})" style="flex:1">✅ تسجيل حضور</button>
+<button class="touch-btn touch-btn-danger" onclick="markNoShow('${p.sheetId}',${p.idx})" style="flex:1">❌ غياب</button>
+</div>`:''}
+</div>`;}).join('')}</div>`;}
+
+function checkinPassenger(sheetId,idx){
+const s=AppData.transferSheets.find(x=>x.id===sheetId);if(!s||!s.passengers[idx])return;
+const p=s.passengers[idx];
+const bk=AppData.bookings.find(b=>b.id===p.id);
+if(bk){bk.checkedIn=true;bk.noShow=false;}
+addAudit('checkin','checkin','تسجيل حضور: '+p.passengerName+' - '+s.tripName);
+showToast('تم تسجيل حضور '+p.passengerName,'success');
+OfflineSync.add({entity:'checkin',type:'checkin',desc:p.passengerName});
+initSupervisor();}
+
+function markNoShow(sheetId,idx){
+const s=AppData.transferSheets.find(x=>x.id===sheetId);if(!s||!s.passengers[idx])return;
+const p=s.passengers[idx];
+const bk=AppData.bookings.find(b=>b.id===p.id);
+if(bk){bk.noShow=true;bk.checkedIn=false;}
+addAudit('checkin','no_show','غياب مسجل: '+p.passengerName+' - '+s.tripName);
+showToast('تم تسجيل غياب '+p.passengerName,'warning');
+OfflineSync.add({entity:'checkin',type:'no_show',desc:p.passengerName});
+initSupervisor();}
+
+function markAllCheckedIn(){
+const pending=AppData.transferSheets.filter(s=>s.status==='arrived'||s.status==='in_transit');
+let count=0;
+pending.forEach(s=>{
+s.passengers.forEach((p,i)=>{
+if(!p.checkedIn&&!p.noShow){
+const bk=AppData.bookings.find(b=>b.id===p.id);
+if(bk){bk.checkedIn=true;bk.noShow=false;}
+count++;}});
+});
+if(count){addAudit('checkin','checkin','تسجيل حضور جماعي: '+count+' راكب');showToast('تم تسجيل حضور '+count+' راكب','success');}
+else{showToast('لا يوجد ركاب معلقين','info');}
+initSupervisor();}
+
+function sendEmergencyAlert(){
+const msg='⚠️ تنبيه طارئ من مشرف الرحلة '+AppData.currentUser.name+' - '+new Date().toLocaleTimeString('ar-EG');
+addAudit('checkin','alert',msg);showToast('تم إرسال التنبيه الطارئ للإدارة','warning');
+OfflineSync.add({entity:'checkin',type:'alert',desc:msg});
+AppData.notifications.unshift({id:Date.now(),icon:'🚨',message:msg,time:new Date().toISOString(),read:false});
+renderNotifBadge();}
+
 function initAudit(){renderAuditLog();}
 function renderAuditLog(){
 let logs=[...AppData.auditLog];
@@ -1040,14 +1352,13 @@ AppData.auditLog.forEach(l=>{csv+=`"${formatDateTime(l.timestamp)}","${l.user}",
 const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);
 const a=document.createElement('a');a.href=url;a.download='audit_log.csv';a.click();showToast('تم التصدير','success');}
 
-// ===== SETTINGS =====
 function initSettings(){}
 function switchSettingsTab(tab){document.querySelectorAll('.settings-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.settings-panel').forEach(p=>p.classList.remove('active'));
 event.target.classList.add('active');document.getElementById('sp-'+tab).classList.add('active');}
 function saveSettings(s){addAudit('settings','update','تحديث إعدادات '+s);showToast('تم حفظ الإعدادات','success');}
+function toggleAESKeyVisibility(){const el=document.getElementById('settAESKey');el.type=el.type==='password'?'text':'password';}
 
-// ===== UTILS =====
-function getRoleLabel(r){return{admin:'مدير النظام',agency:'وكالة سياحية',transport:'شركة نقل',driver:'سائق'}[r]||r;}
+function getRoleLabel(r){return ROLES[r]?ROLES[r].label:r;}
 function formatDate(d){return new Date(d).toLocaleDateString('ar-EG',{day:'numeric',month:'long',year:'numeric'});}
 function formatDateTime(d){return new Date(d).toLocaleDateString('ar-EG',{day:'numeric',month:'short'})+' '+new Date(d).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});}
 function getRelativeTime(d){const diff=Date.now()-new Date(d);const m=Math.floor(diff/60000);if(m<1)return'الآن';if(m<60)return'منذ '+m+' دقيقة';const h=Math.floor(m/60);if(h<24)return'منذ '+h+' ساعة';return'منذ '+Math.floor(h/24)+' يوم';}
@@ -1070,10 +1381,23 @@ function clearNotifs(){AppData.notifications=[];renderNotifList();renderNotifBad
 function renderNotifBadge(){document.getElementById('notifBadge').textContent=AppData.notifications.filter(n=>!n.read).length;}
 function handleGlobalSearch(v){if(!v||currentPage!=='bookings')return;renderBookingsTable();}
 
-// ===== INIT =====
+let deferredPrompt=null;
+function installPWA(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(r=>{if(r.outcome==='accepted')showToast('تم تثبيت التطبيق','success');deferredPrompt=null;dismissInstall();});}}
+function dismissInstall(){document.getElementById('installBanner').classList.remove('show');localStorage.setItem('poseidon_install_dismissed','1');}
+
+if('serviceWorker' in navigator){
+const swCode=`self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(resp=>{const clone=resp.clone();caches.open('poseidon-v3').then(cache=>cache.put(e.request,clone));return resp;}).catch(()=>new Response('Offline',{status:503}))));});`;
+const swBlob=new Blob([swCode],{type:'application/javascript'});
+const swUrl=URL.createObjectURL(swBlob);
+navigator.serviceWorker.register(swUrl).catch(()=>{});}
+
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;
+if(!localStorage.getItem('poseidon_install_dismissed')){setTimeout(()=>{document.getElementById('installBanner').classList.add('show');},5000);}});
+
 (function(){generateBookings();generateTransferSheets();generateAudit();generateNotifs();
+OfflineSync.init();
 const stored=localStorage.getItem('poseidon_user');
-if(stored){try{AppData.currentUser=JSON.parse(stored);showApp();}catch(e){localStorage.removeItem('poseidon_user');}}
+if(stored){try{AppData.currentUser=JSON.parse(stored);if(AppData.currentUser&&ROLES[AppData.currentUser.role])showApp();else localStorage.removeItem('poseidon_user');}catch(e){localStorage.removeItem('poseidon_user');}}
 document.getElementById('topbarDate').textContent=new Date().toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});})();
 </script>
 </body>
